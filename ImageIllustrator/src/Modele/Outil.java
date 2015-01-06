@@ -26,6 +26,7 @@ public class Outil {
     			cadreImage.setImage(ImageIO.read(monFichier));
     			tmp.add("Onglet "+(it.getTabbedPane().getTabCount()+1), cadreImage);
     			it.setTabbedPane(tmp);
+    			it.getTabbedPane().setSelectedIndex(it.getTabbedPane().getTabCount()-1);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
