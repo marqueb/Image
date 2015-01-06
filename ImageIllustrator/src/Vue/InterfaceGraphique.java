@@ -16,12 +16,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 
-import Controleur.BoutonListener;
 import Controleur.Controler;
 import Modele.Modele;
 
 public class InterfaceGraphique implements Runnable{
-
+	private JTextArea PixelCouleur;
 	private JTabbedPane tabbedPane;
 	private Modele modele;
 	private Controler controler;
@@ -64,6 +63,35 @@ public class InterfaceGraphique implements Runnable{
 		modele = m;
 		controler = c;
 		//cadreImage=new CadreImage();
+	}
+	
+	public void ajouterOnglet(CadreImage cadreImage){
+		JTabbedPane tmp = getTabbedPane();
+		tmp.add("Onglet "+(getTabbedPane().getTabCount()+1), cadreImage);
+		setTabbedPane(tmp);
+		getTabbedPane().setSelectedIndex(getTabbedPane().getTabCount()-1);
+		modele.addCadreImage(cadreImage);
+		cadreImage.addMouseMotionListener(controler);
+	}
+	
+	public int getAlpha(int rgb){
+		return (rgb >> 24 ) & 0XFF;
+	}
+	
+	public int getR(int rgb){
+		return (rgb >> 16 ) & 0XFF;
+	}
+	
+	public int getG(int rgb){
+		return (rgb >> 8 ) & 0XFF;
+	}
+	
+	public int getB(int rgb){
+		return rgb  & 0XFF;
+	}
+	
+	public void afficherValeurCouleur(int couleur, int x , int y){
+		PixelCouleur.setText("pixel: ("+x+" , "+y+"), Couleur: (Rouge :"+ getR(couleur)+ ", Vert :"+getG(couleur)+", Bleu :"+getB(couleur)+")");
 	}
 
 	public void run(){
@@ -121,6 +149,7 @@ public class InterfaceGraphique implements Runnable{
 		JMenu image = new JMenu("Image");
 		//Image => Couleur du pixel
 		JMenuItem couleurpixel = new JMenuItem("Couleur pixel");
+		couleurpixel.addActionListener(controler);
 		image.add(couleurpixel);
 		//Image => Redimenssioner
 		JMenuItem redimensionner = new JMenuItem("Redimensionner");
@@ -211,8 +240,8 @@ public class InterfaceGraphique implements Runnable{
 		frame.add(panelOption,BorderLayout.EAST);
 
 		JPanel panelOption2 = new JPanel();
-		JTextArea texte2= new JTextArea("Zone d'affichage");
-		panelOption2.add(texte2);
+		PixelCouleur= new JTextArea();
+		panelOption2.add(PixelCouleur);
 		frame.add(panelOption2,BorderLayout.SOUTH);
 
 		// Un clic sur le bouton de fermeture clos l'application

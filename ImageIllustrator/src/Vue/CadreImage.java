@@ -27,7 +27,7 @@ public class CadreImage extends JComponent {
         if (image==null)
         {
             image = new BufferedImage(width, height,
-                     BufferedImage.TYPE_INT_RGB);
+                     BufferedImage.TYPE_INT_ARGB);
             buffer = this.image.createGraphics();
        	    buffer.setPaint(Color.white);
      	    buffer.fillRect(0, 0, width, height);

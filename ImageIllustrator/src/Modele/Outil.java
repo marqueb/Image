@@ -1,5 +1,6 @@
 package Modele;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -16,26 +17,23 @@ public class Outil {
 		File monFichier;
     	int controle;
     	CadreImage cadreImage = new CadreImage();
-    	
     	JFileChooser j = new JFileChooser();
     	controle=j.showOpenDialog(cadreImage);
     	if(controle==JFileChooser.APPROVE_OPTION){
     		monFichier=j.getSelectedFile();
     		try {
-    			JTabbedPane tmp = it.getTabbedPane();
     			cadreImage.setImage(ImageIO.read(monFichier));
-    			tmp.add("Onglet "+(it.getTabbedPane().getTabCount()+1), cadreImage);
-    			it.setTabbedPane(tmp);
-    			it.getTabbedPane().setSelectedIndex(it.getTabbedPane().getTabCount()-1);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-    		cadreImage.repaint();
     	}
     	return cadreImage;
 	}
 	
-	
+	public int CouleurPixel(BufferedImage image, int x, int y)
+	{
+		return image.getRGB(x,y);	
+	}
 	//TODO
 	//Copier
 	//Coller

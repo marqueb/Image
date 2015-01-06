@@ -58,4 +58,11 @@ public class Modele {
 		listCadreImage.add(cadreImage);
 	}
 
+	public ArrayList<CadreImage> getListCadreImage() {
+		return listCadreImage;
+	}
+
+	public void setListCadreImage(ArrayList<CadreImage> listCadreImage) {
+		this.listCadreImage = listCadreImage;
+	}
 }
