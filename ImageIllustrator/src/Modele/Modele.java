@@ -1,16 +1,41 @@
 package Modele;
 
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
 import Controleur.Controler;
+import Vue.CadreImage;
 import Vue.InterfaceGraphique;
 
 public class Modele {
 	
-	Controler controler;
-	InterfaceGraphique interfaceGraphique;
+	private Controler controler;
+	private InterfaceGraphique interfaceGraphique;
+	private TraiteurImage traiteurImage;
+	private Outil outil;
+	
+	private ArrayList<CadreImage> listCadreImage;
 	
 	public Modele()
 	{
-		
+		listCadreImage = new ArrayList<CadreImage>();
+		outil = new Outil();
+	}	
+	
+	public Outil getOutil() {
+		return outil;
+	}
+
+	public void setOutil(Outil outil) {
+		this.outil = outil;
+	}
+
+	public TraiteurImage getTraiteurImage() {
+		return traiteurImage;
+	}
+
+	public void setTraiteurImage(TraiteurImage traiteurImage) {
+		this.traiteurImage = traiteurImage;
 	}
 
 	public Controler getControler() {
@@ -27,6 +52,10 @@ public class Modele {
 
 	public void setInterfaceGraphique(InterfaceGraphique interfaceGraphique) {
 		this.interfaceGraphique = interfaceGraphique;
+	}
+	
+	public void addCadreImage(CadreImage cadreImage){
+		listCadreImage.add(cadreImage);
 	}
 
 }

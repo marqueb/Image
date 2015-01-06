@@ -1,14 +1,16 @@
 package Controleur;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import Modele.Modele;
 import Vue.InterfaceGraphique;
 
-public class Controler {
+public class Controler implements ActionListener{
 	
 	private Modele modele;
 	private InterfaceGraphique interfaceGraphique;
-
-	BoutonListener boutonListener;
+	private BoutonListener boutonListener;
 	
 	public Modele getModele() {
 		return modele;
@@ -26,7 +28,12 @@ public class Controler {
 		this.interfaceGraphique = interfaceGraphique;
 	}
 
-	
-	//listener pour chaque bouton du menu
-	//mouse listener combiner à un etat (exemple decouper)
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getActionCommand().equals("Charger")){
+			modele.getOutil().Charger(interfaceGraphique);
+		}		
+		else
+			System.out.println("jambon3");
+	}
 }
