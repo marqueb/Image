@@ -3,11 +3,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -25,7 +29,7 @@ public class InterfaceGraphique implements Runnable{
 	private Modele modele;
 	private Controler controler;
 	//private CadreImage cadreImage;
-	
+
 	public JTabbedPane getTabbedPane() {
 		return tabbedPane;
 	}
@@ -49,7 +53,7 @@ public class InterfaceGraphique implements Runnable{
 	public void setControler(Controler controler) {
 		this.controler = controler;
 	}
-/*
+	/*
 	public CadreImage getCadreImage() {
 		return cadreImage;
 	}
@@ -57,40 +61,49 @@ public class InterfaceGraphique implements Runnable{
 	public void setCadreImage(CadreImage cadreImage) {
 		this.cadreImage = cadreImage;
 	}
-*/
+	*/
 	public InterfaceGraphique(Modele m, Controler c)
 	{
 		modele = m;
 		controler = c;
 		//cadreImage=new CadreImage();
 	}
-	
+
 	public void ajouterOnglet(CadreImage cadreImage){
+		final JPanel content = new JPanel();
+		JPanel tab = new JPanel();
+		tab.setOpaque(false);
+		
 		JTabbedPane tmp = getTabbedPane();
-		tmp.add("Onglet "+(getTabbedPane().getTabCount()+1), cadreImage);
-		setTabbedPane(tmp);
-		getTabbedPane().setSelectedIndex(getTabbedPane().getTabCount()-1);
+
+		cadreImage.addMouseMotionListener(controler);
+		
+		//partie onglet nom
+		JLabel labelOnglet = new JLabel(cadreImage.getNomFichier()+(getTabbedPane().getTabCount()+1));
+		//partie onglet fermer
+		JButton boutonFermer = new JButton("X");
+		boutonFermer.addActionListener(controler);
+		
+		//Ajout au panel de la partie nom+fermer
+		tab.add(labelOnglet, BorderLayout.WEST);
+		tab.add(boutonFermer, BorderLayout.EAST);
+		//Ajout panel à l'onglet
+		tmp.addTab(null, content);
+
+		//Parametre de l'onglet
+		tmp.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);
+		//Ajout image à l'onglet
+		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
+		
 		cadreImage.addMouseMotionListener(controler);
 	}
-	
-	public int getAlpha(int rgb){
-		return (rgb >> 24 ) & 0XFF;
+
+	public void afficherValeurCouleur(int x , int y, int r, int g, int b){
+		PixelCouleur.setText("pixel: ("+x+" , "+y+"), Couleur: (Rouge :"+ r+ ", Vert :"+g+", Bleu :"+b+")");
 	}
 	
-	public int getR(int rgb){
-		return (rgb >> 16 ) & 0XFF;
-	}
-	
-	public int getG(int rgb){
-		return (rgb >> 8 ) & 0XFF;
-	}
-	
-	public int getB(int rgb){
-		return rgb  & 0XFF;
-	}
-	
-	public void afficherValeurCouleur(int couleur, int x , int y){
-		PixelCouleur.setText("pixel: ("+x+" , "+y+"), Couleur: (Rouge :"+ getR(couleur)+ ", Vert :"+getG(couleur)+", Bleu :"+getB(couleur)+")");
+	public void enleverCouleurPixel(){
+		PixelCouleur.setText("");
 	}
 
 	public void run(){
@@ -101,7 +114,7 @@ public class InterfaceGraphique implements Runnable{
 		/////////////////////////
 		// Creation d'un menu  //
 		/////////////////////////
-		
+
 		// Menu principal
 		JMenu principal = new JMenu("Fichier");
 
@@ -228,9 +241,10 @@ public class InterfaceGraphique implements Runnable{
 		frame.add(panel,BorderLayout.NORTH);
 
 		tabbedPane = new JTabbedPane();
+		tabbedPane.addChangeListener(controler);
 		tabbedPane.setOpaque(true);
 		tabbedPane.setBackground(Color.WHITE);
-		
+
 		frame.add(tabbedPane,BorderLayout.CENTER);
 
 		JPanel panelOption = new JPanel();

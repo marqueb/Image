@@ -4,19 +4,20 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+
 import javax.swing.JComponent;
 
 public class CadreImage extends JComponent {
 	private BufferedImage image;
     private Graphics2D buffer;
-    
+    private String nomFichier;
     //constructeur a implementer
-    public CadreImage( BufferedImage i)
+    public CadreImage(BufferedImage i)
     {
     	image = i;
     }
     
-    public CadreImage( )
+    public CadreImage()
     {
     }
     
@@ -35,7 +36,15 @@ public class CadreImage extends JComponent {
         }
        ((Graphics2D)g).drawImage(image,0,0,null);
     }
-
+	
+	public void setNomFichier(String nomFichier) {
+		this.nomFichier = nomFichier;
+	}
+	
+	public String getNomFichier(){
+		return this.nomFichier;
+	}
+	
 	public BufferedImage getImage() {
 		return image;
 	}

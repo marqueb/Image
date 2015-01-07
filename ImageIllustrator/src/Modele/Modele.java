@@ -69,6 +69,7 @@ public class Modele {
 	public void charger(){
 		//charge l'image et l'insert dans cadre image
 		CadreImage cadreImage=outil.charger(interfaceGraphique);
+		//ajoute le cadre image à la liste de cadre image
 		addCadreImage(cadreImage);
 		//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image
 		interfaceGraphique.ajouterOnglet(cadreImage);
@@ -76,10 +77,17 @@ public class Modele {
 	}
 	
 	public void couleurPixel(int x, int y){
-		int couleur = outil.CouleurPixel(getListCadreImage().get(getInterfaceGraphique().getTabbedPane().getSelectedIndex()).getImage(), x, y);
-		//calcul et affiche les differentes intensités de couleur en fonction de la valeur du pixel (si on est dans le cadreImage)
-		if(couleur!=-1){
-			interfaceGraphique.afficherValeurCouleur(couleur, x, y);
+		if(x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight()){
+			//recupere la valeur du pixel en fonction de l'image et des coordonnées
+			int couleur = outil.couleurPixel(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage(), x, y);
+			//calcul et affiche les differentes intensités de couleur en fonction de la valeur du pixel
+			interfaceGraphique.afficherValeurCouleur(x, y, outil.getR(couleur), outil.getG(couleur), outil.getR(couleur));
+		}else{
+			enleverCouleurPixel();
 		}
+	}
+	
+	public void enleverCouleurPixel(){
+		interfaceGraphique.enleverCouleurPixel();
 	}
 }

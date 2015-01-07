@@ -25,17 +25,31 @@ public class Outil {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
+    		int index = monFichier.getName().indexOf('.');     
+        	cadreImage.setNomFichier(monFichier.getName().substring(0,index));
     	}
     	return cadreImage;
 	}
 	
-	public int CouleurPixel(BufferedImage image, int x, int y)
-	{
-		try{
-			return image.getRGB(x,y);
-		}catch(ArrayIndexOutOfBoundsException e){
-			return -1;
-		}
+	public int getAlpha(int rgb){
+		return (rgb >> 24 ) & 0XFF;
+	}
+
+	public int getR(int rgb){
+		return (rgb >> 16 ) & 0XFF;
+	}
+
+	public int getG(int rgb){
+		return (rgb >> 8 ) & 0XFF;
+	}
+
+	public int getB(int rgb){
+		return rgb  & 0XFF;
+	}
+	
+	public int couleurPixel(BufferedImage image, int x, int y)
+	{ 
+		return image.getRGB(x,y);	
 	}
 	//TODO
 	//Copier
