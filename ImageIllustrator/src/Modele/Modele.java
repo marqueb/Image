@@ -81,7 +81,7 @@ public class Modele {
 			//recupere la valeur du pixel en fonction de l'image et des coordonnées
 			int couleur = outil.couleurPixel(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage(), x, y);
 			//calcul et affiche les differentes intensités de couleur en fonction de la valeur du pixel
-			interfaceGraphique.afficherValeurCouleur(couleur, x, y);
+			interfaceGraphique.afficherValeurCouleur(x, y, outil.getR(couleur), outil.getG(couleur), outil.getR(couleur));
 		}else{
 			enleverCouleurPixel();
 		}

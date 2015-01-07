@@ -21,6 +21,7 @@ public class Controler extends MouseMotionAdapter implements ActionListener, Cha
 	private boolean echantillonageActif=false;
 	private boolean fermerOnglet=false;
 
+
 	public Modele getModele() {
 		return modele;
 	}
@@ -48,9 +49,9 @@ public class Controler extends MouseMotionAdapter implements ActionListener, Cha
 				echantillonageActif = true;
 			break;
 			case "X":
-				fermerOnglet=true;
-				/*int closeTabNumber = it.getTabbedPane().getSelectedIndex();
-				it.getTabbedPane().removeTabAt(closeTabNumber);*/
+				//fermerOnglet=true;
+				int closeTabNumber = it.getTabbedPane().getSelectedIndex();
+				it.getTabbedPane().removeTabAt(closeTabNumber);
 			break;
 		}
 	}
@@ -65,13 +66,14 @@ public class Controler extends MouseMotionAdapter implements ActionListener, Cha
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		System.out.println("salut");
-		System.out.println(e.getSource());
+		/*
+		//System.out.println("salut");
+		//System.out.println(e.getSource());
 		if(fermerOnglet){
-			System.out.println(it.getTabbedPane().getTabComponentAt(0));
-			System.out.println(it.getTabbedPane().getTabComponentAt(1));
-		}
-			if(echantillonageActif){
+			//System.out.println(it.getTabbedPane().getTabComponentAt(0));
+			//System.out.println(it.getTabbedPane().getTabComponentAt(1));
+		}*/
+		if(echantillonageActif){
 				echantillonageActif = false;
 				modele.enleverCouleurPixel();
 			}

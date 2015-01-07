@@ -72,45 +72,34 @@ public class InterfaceGraphique implements Runnable{
 	public void ajouterOnglet(CadreImage cadreImage){
 		final JPanel content = new JPanel();
 		JPanel tab = new JPanel();
-		JTabbedPane tmp = getTabbedPane();
-		setTabbedPane(tmp);	
-			//tmp.add(cadreImage.getNomFichier()+(getTabbedPane().getTabCount()+1), cadreImage);
+		tab.setOpaque(false);
 		
-		//getTabbedPane().setSelectedIndex(getTabbedPane().getTabCount()-1);
-		cadreImage.addMouseMotionListener(controler);
-		tmp.setOpaque(false);
+		JTabbedPane tmp = getTabbedPane();
 
-	
+		cadreImage.addMouseMotionListener(controler);
+		
+		//partie onglet nom
 		JLabel labelOnglet = new JLabel(cadreImage.getNomFichier()+(getTabbedPane().getTabCount()+1));
+		//partie onglet fermer
 		JButton boutonFermer = new JButton("X");
 		boutonFermer.addActionListener(controler);
-
+		
+		//Ajout au panel de la partie nom+fermer
 		tab.add(labelOnglet, BorderLayout.WEST);
 		tab.add(boutonFermer, BorderLayout.EAST);
-		
+		//Ajout panel à l'onglet
 		tmp.addTab(null, content);
-		tmp.setTabComponentAt(tabbedPane.getTabCount() - 1, tab);
+
+		//Parametre de l'onglet
+		tmp.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);
+		//Ajout image à l'onglet
+		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
+		
 		cadreImage.addMouseMotionListener(controler);
 	}
 
-	public int getAlpha(int rgb){
-		return (rgb >> 24 ) & 0XFF;
-	}
-
-	public int getR(int rgb){
-		return (rgb >> 16 ) & 0XFF;
-	}
-
-	public int getG(int rgb){
-		return (rgb >> 8 ) & 0XFF;
-	}
-
-	public int getB(int rgb){
-		return rgb  & 0XFF;
-	}
-
-	public void afficherValeurCouleur(int couleur, int x , int y){
-		PixelCouleur.setText("pixel: ("+x+" , "+y+"), Couleur: (Rouge :"+ getR(couleur)+ ", Vert :"+getG(couleur)+", Bleu :"+getB(couleur)+")");
+	public void afficherValeurCouleur(int x , int y, int r, int g, int b){
+		PixelCouleur.setText("pixel: ("+x+" , "+y+"), Couleur: (Rouge :"+ r+ ", Vert :"+g+", Bleu :"+b+")");
 	}
 	
 	public void enleverCouleurPixel(){

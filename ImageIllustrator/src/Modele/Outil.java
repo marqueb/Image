@@ -32,8 +32,24 @@ public class Outil {
     	return cadreImage;
 	}
 	
+	public int getAlpha(int rgb){
+		return (rgb >> 24 ) & 0XFF;
+	}
+
+	public int getR(int rgb){
+		return (rgb >> 16 ) & 0XFF;
+	}
+
+	public int getG(int rgb){
+		return (rgb >> 8 ) & 0XFF;
+	}
+
+	public int getB(int rgb){
+		return rgb  & 0XFF;
+	}
+	
 	public int couleurPixel(BufferedImage image, int x, int y)
-	{
+	{ 
 		return image.getRGB(x,y);	
 	}
 	//TODO
