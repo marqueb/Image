@@ -61,19 +61,17 @@ public class Controler extends MouseMotionAdapter implements ActionListener, Cha
 			modele.couleurPixel(e.getX(), e.getY());
 		}
 	}
-	
-
-	/*
-	public void mouseClicked(MouseEvent e){
-		System.out.println("salut");
-	}*/
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-	/*	if(fermerOnglet){
-			
+		/*
+		//System.out.println("salut");
+		//System.out.println(e.getSource());
+		if(fermerOnglet){
+			//System.out.println(it.getTabbedPane().getTabComponentAt(0));
+			//System.out.println(it.getTabbedPane().getTabComponentAt(1));
 		}*/
-			if(echantillonageActif){
+		if(echantillonageActif){
 				echantillonageActif = false;
 				modele.enleverCouleurPixel();
 			}

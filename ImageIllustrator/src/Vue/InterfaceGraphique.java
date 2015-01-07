@@ -61,7 +61,7 @@ public class InterfaceGraphique implements Runnable{
 	public void setCadreImage(CadreImage cadreImage) {
 		this.cadreImage = cadreImage;
 	}
-	 */
+	*/
 	public InterfaceGraphique(Modele m, Controler c)
 	{
 		modele = m;
@@ -74,6 +74,9 @@ public class InterfaceGraphique implements Runnable{
 		JPanel tab = new JPanel();
 		tab.setOpaque(false);		
 		JTabbedPane tmp = getTabbedPane();		
+
+
+		cadreImage.addMouseMotionListener(controler);
 		
 		//partie onglet nom
 		JLabel labelOnglet = new JLabel(cadreImage.getNomFichier()+(getTabbedPane().getTabCount()+1));
@@ -86,32 +89,18 @@ public class InterfaceGraphique implements Runnable{
 		tab.add(boutonFermer, BorderLayout.EAST);
 		//Ajout panel à l'onglet
 		tmp.addTab(null, content);
+
 		//Parametre de l'onglet
 		tmp.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);
 		//Ajout image à l'onglet
 		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
 		tmp.setSelectedIndex(tabbedPane.getTabCount()-1);
+
 		cadreImage.addMouseMotionListener(controler);
 	}
 
-	public int getAlpha(int rgb){
-		return (rgb >> 24 ) & 0XFF;
-	}
-
-	public int getR(int rgb){
-		return (rgb >> 16 ) & 0XFF;
-	}
-
-	public int getG(int rgb){
-		return (rgb >> 8 ) & 0XFF;
-	}
-
-	public int getB(int rgb){
-		return rgb  & 0XFF;
-	}
-
-	public void afficherValeurCouleur(int couleur, int x , int y){
-		PixelCouleur.setText("pixel: ("+x+" , "+y+"), Couleur: (Rouge :"+ getR(couleur)+ ", Vert :"+getG(couleur)+", Bleu :"+getB(couleur)+")");
+	public void afficherValeurCouleur(int x , int y, int r, int g, int b){
+		PixelCouleur.setText("pixel: ("+x+" , "+y+"), Couleur: (Rouge :"+ r+ ", Vert :"+g+", Bleu :"+b+")");
 	}
 	
 	public void enleverCouleurPixel(){
@@ -243,6 +232,7 @@ public class InterfaceGraphique implements Runnable{
 		toolBar.setForeground(Color.BLACK);
 		JButton btnCharger = new JButton("Charger");
 		btnCharger.setFocusable(false);
+		btnCharger.addActionListener(controler);
 		toolBar.add(btnCharger);
 		JButton btnAnnuler = new JButton("Annuler");
 		btnAnnuler.setFocusable(false);
