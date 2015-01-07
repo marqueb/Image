@@ -61,7 +61,7 @@ public class InterfaceGraphique implements Runnable{
 	public void setCadreImage(CadreImage cadreImage) {
 		this.cadreImage = cadreImage;
 	}
-	 */
+	*/
 	public InterfaceGraphique(Modele m, Controler c)
 	{
 		modele = m;
@@ -90,10 +90,6 @@ public class InterfaceGraphique implements Runnable{
 		
 		tmp.addTab(null, content);
 		tmp.setTabComponentAt(tabbedPane.getTabCount() - 1, tab);
-		
-
-
-
 		cadreImage.addMouseMotionListener(controler);
 	}
 
