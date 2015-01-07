@@ -72,27 +72,31 @@ public class InterfaceGraphique implements Runnable{
 	public void ajouterOnglet(CadreImage cadreImage){
 		final JPanel content = new JPanel();
 		JPanel tab = new JPanel();
+		tab.setOpaque(false);
+		
 		JTabbedPane tmp = getTabbedPane();
-		setTabbedPane(tmp);	
+		//setTabbedPane(tmp);	
 			//tmp.add(cadreImage.getNomFichier()+(getTabbedPane().getTabCount()+1), cadreImage);
 		
 		//getTabbedPane().setSelectedIndex(getTabbedPane().getTabCount()-1);
 		cadreImage.addMouseMotionListener(controler);
-		tmp.setOpaque(false);
+		//tmp.setOpaque(false);
 
-	
+		//partie onglet nom
 		JLabel labelOnglet = new JLabel(cadreImage.getNomFichier()+(getTabbedPane().getTabCount()+1));
+		//partie onglet fermer
 		JButton boutonFermer = new JButton("X");
 		boutonFermer.addActionListener(controler);
-
+		
+		//Ajout au panel de la partie nom+fermer
 		tab.add(labelOnglet, BorderLayout.WEST);
 		tab.add(boutonFermer, BorderLayout.EAST);
-		
+		//Ajout panel à l'onglet
 		tmp.addTab(null, content);
-		tmp.setTabComponentAt(tabbedPane.getTabCount() - 1, tab);
-		
-
-
+		//Parametre de l'onglet
+		tmp.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);
+		//Ajout image à l'onglet
+		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
 
 		cadreImage.addMouseMotionListener(controler);
 	}
