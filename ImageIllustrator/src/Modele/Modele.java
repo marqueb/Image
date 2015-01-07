@@ -1,7 +1,5 @@
 package Modele;
 
-
-
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -85,7 +83,8 @@ public class Modele {
 		//charge l'image et l'insert dans cadre image
 		CadreImage cadreImage=outil.charger(interfaceGraphique);
 		if(cadreImage != null)
-		{
+		{		
+			interfaceGraphique.setEnableSauvegarde(true);
 			//ajoute le cadre image à la liste de cadre image
 			listCadreImage.add(cadreImage);
 			//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image, ajoute le bouton creer a liste de bouton
@@ -125,6 +124,9 @@ public class Modele {
 		int i = listBoutonFermeture.indexOf(j);
 		//supprime le cadre de la liste de cadre
 		suppCadreImage(i);
+		if(listCadreImage.isEmpty()){
+			interfaceGraphique.setEnableSauvegarde(false);
+		}
 		//supprime le bouton de la liste de bouton
 		listBoutonFermeture.remove(i);
 		//supprime l'onglet correspondant

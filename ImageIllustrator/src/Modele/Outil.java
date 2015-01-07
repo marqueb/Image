@@ -25,7 +25,6 @@ public class Outil {
     			cadreImage.setImage(ImageIO.read(monFichier));
         		int index = monFichier.getName().indexOf('.');     
             	cadreImage.setNomFichier(monFichier.getName().substring(0,index));
-            	
             	return cadreImage;
 			} catch (IOException e1) {
 				e1.printStackTrace();

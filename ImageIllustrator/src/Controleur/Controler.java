@@ -40,7 +40,19 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e) {/*
+		if(e.getActionCommand().equals("Charger")){
+			System.out.println("jambon1");
+			modele.charger();
+		}else if(e.getActionCommand().equals("Sauvegarde")){
+			modele.sauvegarder();
+		}else if(e.getActionCommand().equals("Couleur pixel")){
+			echantillonageActif = true;
+		}else if(e.getActionCommand().equals("X")){
+			modele.fermerOnglet(e.getSource());
+		}else if(e.getActionCommand().equals("Image grise")){
+			modele.imagris();
+		}*/
 		switch(e.getActionCommand()){
 			case "Charger":
 				modele.charger();
@@ -57,6 +69,7 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 			break;
 			case "Image grise":
 				modele.imagris();
+			break;
 		}
 	}
 	//utiliser pour relever les coordonnées du pixel a evalué
