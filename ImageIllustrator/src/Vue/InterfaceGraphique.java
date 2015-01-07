@@ -28,7 +28,6 @@ public class InterfaceGraphique implements Runnable{
 	private JTabbedPane tabbedPane;
 	private Modele modele;
 	private Controler controler;
-	//private CadreImage cadreImage;
 
 	public JTabbedPane getTabbedPane() {
 		return tabbedPane;
@@ -53,28 +52,19 @@ public class InterfaceGraphique implements Runnable{
 	public void setControler(Controler controler) {
 		this.controler = controler;
 	}
-	/*
-	public CadreImage getCadreImage() {
-		return cadreImage;
-	}
-
-	public void setCadreImage(CadreImage cadreImage) {
-		this.cadreImage = cadreImage;
-	}
-	*/
+	
 	public InterfaceGraphique(Modele m, Controler c)
 	{
 		modele = m;
 		controler = c;
-		//cadreImage=new CadreImage();
 	}
 
-	public void ajouterOnglet(CadreImage cadreImage){
+	//retourne un JButton pour completer la liste de bouton
+	public JButton ajouterOnglet(CadreImage cadreImage){
 		final JPanel content = new JPanel();
 		JPanel tab = new JPanel();
 		tab.setOpaque(false);		
 		JTabbedPane tmp = getTabbedPane();		
-
 
 		cadreImage.addMouseMotionListener(controler);
 		cadreImage.addMouseListener(controler);
@@ -84,7 +74,7 @@ public class InterfaceGraphique implements Runnable{
 		//partie onglet fermer
 		JButton boutonFermer = new JButton("X");
 		boutonFermer.addActionListener(controler);
-
+		//boutonFermer.addMouseListener(controler);
 		//Ajout au panel de la partie nom+fermer
 		tab.add(labelOnglet, BorderLayout.WEST);
 		tab.add(boutonFermer, BorderLayout.EAST);
@@ -96,6 +86,7 @@ public class InterfaceGraphique implements Runnable{
 		//Ajout image à l'onglet
 		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
 		tmp.setSelectedIndex(tabbedPane.getTabCount()-1);
+		return boutonFermer;
 	}
 
 	public void afficherValeurCouleur(int x , int y, int r, int g, int b){
@@ -124,7 +115,7 @@ public class InterfaceGraphique implements Runnable{
 		principal.add(nouveau);
 		//Menu principal => Sauvegarde
 		JMenuItem sauvegarde = new JMenuItem("Sauvegarde");
-		//sauvegarde.addActionListener(new SauvegardeApplication(mon_dessin));
+		sauvegarde.addActionListener(controler);
 		principal.add(sauvegarde);
 		//Menu principal => Imprimer
 		JMenuItem charger = new JMenuItem("Charger");
@@ -244,6 +235,7 @@ public class InterfaceGraphique implements Runnable{
 
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addChangeListener(controler);
+		//tabbedPane.addMouseListener(controler);
 		tabbedPane.setOpaque(true);
 		tabbedPane.setBackground(Color.WHITE);
 
