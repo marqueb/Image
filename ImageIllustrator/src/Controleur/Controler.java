@@ -45,14 +45,15 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 			case "Charger":
 				modele.charger();
 			break;
+			case "Sauvegarde":
+				modele.sauvegarder();
+			break;
 			case "Couleur pixel":
 				//autorise l'ecoute à la souris
 				echantillonageActif = true;
 			break;
 			case "X":	
-				if(fermeOnglet){
-					modele.fermerOnglet();
-				}
+				modele.fermerOnglet(e.getSource());
 			break;
 		}
 	}
@@ -66,35 +67,20 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 	}
 	
 	public void mouseEntered(MouseEvent e){
-		if(e.getSource().getClass().getName().equals("javax.swing.JTabbedPane")){
-			fermeOnglet=true;
-		}else{
-			if(echantillonageActif){
-				estDansImage=true;
-			}
+		if(echantillonageActif){
+			estDansImage=true;
 		}
 	}
 	
 	public void mouseExited(MouseEvent e){
-		if(e.getSource().getClass().getName().equals("javax.swing.JTabbedPane")){
-			fermeOnglet=false;
-		}else{
-			if(echantillonageActif){
-				estDansImage=false;
-				modele.enleverCouleurPixel();
-			}
+		if(echantillonageActif){
+			estDansImage=false;
+			modele.enleverCouleurPixel();
 		}
 	}	
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		/*
-		//System.out.println("salut");
-		//System.out.println(e.getSource());
-		if(fermerOnglet){
-			//System.out.println(it.getTabbedPane().getTabComponentAt(0));
-			//System.out.println(it.getTabbedPane().getTabComponentAt(1));
-		}*/
 		if(echantillonageActif){
 			echantillonageActif = false;
 			modele.enleverCouleurPixel();
@@ -102,19 +88,14 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		System.out.println("jambon");		
+	public void mouseClicked(MouseEvent e) {		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 }
