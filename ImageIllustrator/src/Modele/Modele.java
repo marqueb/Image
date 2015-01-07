@@ -28,6 +28,7 @@ public class Modele {
 		listCadreImage = new ArrayList<CadreImage>();
 		listBoutonFermeture = new ArrayList<JButton>();
 		outil = new Outil();
+		traiteurImage = new TraiteurImage();
 	}	
 
 	public Outil getOutil() {
@@ -91,6 +92,7 @@ public class Modele {
 			listBoutonFermeture.add(interfaceGraphique.ajouterOnglet(cadreImage));
 			cadreImage.repaint();
 		}
+
 	}
 
 	public void sauvegarder(){
@@ -118,6 +120,22 @@ public class Modele {
 	public void enleverCouleurPixel(){
 		interfaceGraphique.enleverCouleurPixel();
 	}
+
+	public void appliquerFiltre(TypeFiltre filtre)
+	{
+		switch(filtre){
+		case MOYENNEUR:
+			int[][] noyau = {{3,3,3},{3,3,3},{3,3,3}};
+			BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
+			BufferedImage res = traiteurImage.convoluer(noyau, bufImage);
+			getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
+			getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
+		break;
+
+		}
+	}
+
+
 	
 	public void fermerOnglet(Object j){
 		//cherche l'index de l'onglet à l'aide de la table de bouton
