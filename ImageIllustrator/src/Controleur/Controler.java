@@ -48,6 +48,7 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 			break;
 			case "Moyenneur (flouter)":
 				modele.appliquerFiltre(TypeFiltre.MOYENNEUR);
+			break;
 			case "Sauvegarde":
 				modele.sauvegarder();
 			break;
