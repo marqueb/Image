@@ -22,7 +22,6 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 	private boolean echantillonageActif=false, estDansImage=false, fermeOnglet=false;
 	private boolean fermerOnglet=false;
 
-
 	public Modele getModele() {
 		return modele;
 	}
