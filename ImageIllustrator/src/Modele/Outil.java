@@ -3,6 +3,7 @@ package Modele;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
@@ -38,6 +39,18 @@ public class Outil {
     	return null;
 	}
 	
+	public void sauvegarder(BufferedImage image){
+		JFileChooser nom_fichier =new JFileChooser();
+		int result =nom_fichier.showSaveDialog(null);
+		if(result ==JFileChooser.APPROVE_OPTION){
+			try {			
+				ImageIO.write(image, "png",nom_fichier.getSelectedFile() );
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+	}
 	public int getAlpha(int rgb){
 		return (rgb >> 24 ) & 0XFF;
 	}

@@ -28,7 +28,6 @@ public class InterfaceGraphique implements Runnable{
 	private JTabbedPane tabbedPane;
 	private Modele modele;
 	private Controler controler;
-	//private CadreImage cadreImage;
 
 	public JTabbedPane getTabbedPane() {
 		return tabbedPane;
@@ -53,20 +52,11 @@ public class InterfaceGraphique implements Runnable{
 	public void setControler(Controler controler) {
 		this.controler = controler;
 	}
-	/*
-	public CadreImage getCadreImage() {
-		return cadreImage;
-	}
-
-	public void setCadreImage(CadreImage cadreImage) {
-		this.cadreImage = cadreImage;
-	}
-	*/
+	
 	public InterfaceGraphique(Modele m, Controler c)
 	{
 		modele = m;
 		controler = c;
-		//cadreImage=new CadreImage();
 	}
 
 	public void ajouterOnglet(CadreImage cadreImage){
@@ -124,7 +114,7 @@ public class InterfaceGraphique implements Runnable{
 		principal.add(nouveau);
 		//Menu principal => Sauvegarde
 		JMenuItem sauvegarde = new JMenuItem("Sauvegarde");
-		//sauvegarde.addActionListener(new SauvegardeApplication(mon_dessin));
+		sauvegarde.addActionListener(controler);
 		principal.add(sauvegarde);
 		//Menu principal => Imprimer
 		JMenuItem charger = new JMenuItem("Charger");

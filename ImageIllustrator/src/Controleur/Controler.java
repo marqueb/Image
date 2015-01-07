@@ -45,12 +45,16 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 			case "Charger":
 				modele.charger();
 			break;
+			case "Sauvegarde":
+				modele.sauvegarder();
+			break;
 			case "Couleur pixel":
 				//autorise l'ecoute à la souris
 				echantillonageActif = true;
 			break;
 			case "X":
 				int closeTabNumber = it.getTabbedPane().getSelectedIndex();
+				modele.suppCadreImage(it.getTabbedPane().getSelectedIndex());
 				it.getTabbedPane().removeTabAt(closeTabNumber);
 			break;
 		}

@@ -1,7 +1,14 @@
 package Modele;
 
+
+
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 
 import Controleur.Controler;
 import Vue.CadreImage;
@@ -57,7 +64,11 @@ public class Modele {
 	public void addCadreImage(CadreImage cadreImage){
 		listCadreImage.add(cadreImage);
 	}
-
+	
+	public void suppCadreImage(int index){
+		listCadreImage.remove(index);
+	}
+	
 	public ArrayList<CadreImage> getListCadreImage() {
 		return listCadreImage;
 	}
@@ -79,6 +90,12 @@ public class Modele {
 		}
 	}
 
+	public void sauvegarder(){
+		//sauvegarde image 
+		if(!listCadreImage.isEmpty())
+			outil.sauvegarder(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
+	}	
+	
 	public void couleurPixel(int x, int y){
 		if(x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight()){
 			//recupere la valeur du pixel en fonction de l'image et des coordonnées
