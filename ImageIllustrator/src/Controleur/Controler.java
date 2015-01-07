@@ -52,6 +52,10 @@ public class Controler extends MouseMotionAdapter implements ActionListener{
 				//autorise l'ecoute à la souris
 				echantillonageActif = true;
 			break;
+			case "X":
+				int closeTabNumber = it.getTabbedPane().getSelectedIndex();
+				it.getTabbedPane().removeTabAt(closeTabNumber);
+			break;
 		}
 	}
 	
@@ -66,6 +70,8 @@ public class Controler extends MouseMotionAdapter implements ActionListener{
 			it.afficherValeurCouleur(couleur, e.getX(), e.getY());*/
 		}
 	}
+	
+	
 	/*
 	public void mouseClicked(MouseEvent e){
 		System.out.println("salut");
