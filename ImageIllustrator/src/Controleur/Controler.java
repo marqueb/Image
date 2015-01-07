@@ -19,7 +19,7 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 
 	private Modele modele;
 	private InterfaceGraphique it;
-	private boolean echantillonageActif=false, estDansImage=false;
+	private boolean echantillonageActif=false, estDansImage=false, fermeOnglet=false;
 	private boolean fermerOnglet=false;
 
 
@@ -52,10 +52,8 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 				//autorise l'ecoute à la souris
 				echantillonageActif = true;
 			break;
-			case "X":
-				int closeTabNumber = it.getTabbedPane().getSelectedIndex();
-				modele.suppCadreImage(it.getTabbedPane().getSelectedIndex());
-				it.getTabbedPane().removeTabAt(closeTabNumber);
+			case "X":	
+				modele.fermerOnglet(e.getSource());
 			break;
 			case "Image grise":
 				modele.imagris();
@@ -85,34 +83,21 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		/*
-		//System.out.println("salut");
-		//System.out.println(e.getSource());
-		if(fermerOnglet){
-			//System.out.println(it.getTabbedPane().getTabComponentAt(0));
-			//System.out.println(it.getTabbedPane().getTabComponentAt(1));
-		}*/
 		if(echantillonageActif){
-				echantillonageActif = false;
-				modele.enleverCouleurPixel();
-			}
+			echantillonageActif = false;
+			modele.enleverCouleurPixel();
+		}
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void mouseClicked(MouseEvent e) {		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 }

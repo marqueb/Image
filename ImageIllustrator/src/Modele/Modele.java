@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 import Controleur.Controler;
@@ -22,10 +23,12 @@ public class Modele {
 	private Outil outil;
 
 	private ArrayList<CadreImage> listCadreImage;
+	private ArrayList<JButton> listBoutonFermeture;
 
 	public Modele()
 	{
 		listCadreImage = new ArrayList<CadreImage>();
+		listBoutonFermeture = new ArrayList<JButton>();
 		outil = new Outil();
 	}	
 
@@ -84,9 +87,9 @@ public class Modele {
 		if(cadreImage != null)
 		{
 			//ajoute le cadre image à la liste de cadre image
-			addCadreImage(cadreImage);
-			//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image
-			interfaceGraphique.ajouterOnglet(cadreImage);
+			listCadreImage.add(cadreImage);
+			//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image, ajoute le bouton creer a liste de bouton
+			listBoutonFermeture.add(interfaceGraphique.ajouterOnglet(cadreImage));
 			cadreImage.repaint();
 		}
 	}
@@ -115,5 +118,16 @@ public class Modele {
 	
 	public void enleverCouleurPixel(){
 		interfaceGraphique.enleverCouleurPixel();
+	}
+	
+	public void fermerOnglet(Object j){
+		//cherche l'index de l'onglet à l'aide de la table de bouton
+		int i = listBoutonFermeture.indexOf(j);
+		//supprime le cadre de la liste de cadre
+		suppCadreImage(i);
+		//supprime le bouton de la liste de bouton
+		listBoutonFermeture.remove(i);
+		//supprime l'onglet correspondant
+		interfaceGraphique.getTabbedPane().removeTabAt(i);
 	}
 }

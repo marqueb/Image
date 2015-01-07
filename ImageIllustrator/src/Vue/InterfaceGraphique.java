@@ -59,12 +59,12 @@ public class InterfaceGraphique implements Runnable{
 		controler = c;
 	}
 
-	public void ajouterOnglet(CadreImage cadreImage){
+	//retourne un JButton pour completer la liste de bouton
+	public JButton ajouterOnglet(CadreImage cadreImage){
 		final JPanel content = new JPanel();
 		JPanel tab = new JPanel();
 		tab.setOpaque(false);		
 		JTabbedPane tmp = getTabbedPane();		
-
 
 		cadreImage.addMouseMotionListener(controler);
 		cadreImage.addMouseListener(controler);
@@ -74,7 +74,7 @@ public class InterfaceGraphique implements Runnable{
 		//partie onglet fermer
 		JButton boutonFermer = new JButton("X");
 		boutonFermer.addActionListener(controler);
-
+		//boutonFermer.addMouseListener(controler);
 		//Ajout au panel de la partie nom+fermer
 		tab.add(labelOnglet, BorderLayout.WEST);
 		tab.add(boutonFermer, BorderLayout.EAST);
@@ -86,6 +86,7 @@ public class InterfaceGraphique implements Runnable{
 		//Ajout image à l'onglet
 		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
 		tmp.setSelectedIndex(tabbedPane.getTabCount()-1);
+		return boutonFermer;
 	}
 
 	public void afficherValeurCouleur(int x , int y, int r, int g, int b){
@@ -234,6 +235,7 @@ public class InterfaceGraphique implements Runnable{
 
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addChangeListener(controler);
+		//tabbedPane.addMouseListener(controler);
 		tabbedPane.setOpaque(true);
 		tabbedPane.setBackground(Color.WHITE);
 
