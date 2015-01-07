@@ -231,6 +231,7 @@ public class InterfaceGraphique implements Runnable{
 		toolBar.setForeground(Color.BLACK);
 		JButton btnCharger = new JButton("Charger");
 		btnCharger.setFocusable(false);
+		btnCharger.addActionListener(controler);
 		toolBar.add(btnCharger);
 		JButton btnAnnuler = new JButton("Annuler");
 		btnAnnuler.setFocusable(false);
