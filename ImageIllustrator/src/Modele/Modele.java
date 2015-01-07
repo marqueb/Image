@@ -76,6 +76,7 @@ public class Modele {
 	public void setListCadreImage(ArrayList<CadreImage> listCadreImage) {
 		this.listCadreImage = listCadreImage;
 	}
+	
 
 	public void charger(){
 		//charge l'image et l'insert dans cadre image
@@ -94,8 +95,8 @@ public class Modele {
 		//sauvegarde image 
 		if(!listCadreImage.isEmpty())
 			outil.sauvegarder(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
-	}	
-	
+	}		
+
 	public void couleurPixel(int x, int y){
 		if(x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight()){
 			//recupere la valeur du pixel en fonction de l'image et des coordonnées
@@ -107,6 +108,11 @@ public class Modele {
 		}
 	}
 
+	public void imagris(){
+		outil.imagris(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
+		listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
+	}
+	
 	public void enleverCouleurPixel(){
 		interfaceGraphique.enleverCouleurPixel();
 	}

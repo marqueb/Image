@@ -110,7 +110,7 @@ public class InterfaceGraphique implements Runnable{
 
 		//Menu principal => Nouveau
 		JMenuItem nouveau = new JMenuItem("Nouveau");       
-		//nouveau.addActionListener(new NouveauApplication(mon_dessin));
+		nouveau.addActionListener(controler);
 		principal.add(nouveau);
 		//Menu principal => Sauvegarde
 		JMenuItem sauvegarde = new JMenuItem("Sauvegarde");
@@ -166,6 +166,7 @@ public class InterfaceGraphique implements Runnable{
 		transformation.add(fusion);
 		//Image => transformation => Gris
 		JMenuItem imagris = new JMenuItem("Image grise");
+		imagris.addActionListener(controler);
 		transformation.add(imagris);       
 		image.add(transformation);
 

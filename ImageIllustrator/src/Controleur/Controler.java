@@ -57,6 +57,8 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 				modele.suppCadreImage(it.getTabbedPane().getSelectedIndex());
 				it.getTabbedPane().removeTabAt(closeTabNumber);
 			break;
+			case "Image grise":
+				modele.imagris();
 		}
 	}
 	//utiliser pour relever les coordonnées du pixel a evalué
