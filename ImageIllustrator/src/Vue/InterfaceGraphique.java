@@ -77,6 +77,7 @@ public class InterfaceGraphique implements Runnable{
 		JTabbedPane tmp = getTabbedPane();
 
 		cadreImage.addMouseMotionListener(controler);
+		cadreImage.addMouseListener(controler);
 		
 		//partie onglet nom
 		JLabel labelOnglet = new JLabel(cadreImage.getNomFichier()+(getTabbedPane().getTabCount()+1));
