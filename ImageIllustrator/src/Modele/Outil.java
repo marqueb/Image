@@ -32,7 +32,7 @@ public class Outil {
     	return cadreImage;
 	}
 	
-	public int CouleurPixel(BufferedImage image, int x, int y)
+	public int couleurPixel(BufferedImage image, int x, int y)
 	{
 		return image.getRGB(x,y);	
 	}

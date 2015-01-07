@@ -12,12 +12,12 @@ public class CadreImage extends JComponent {
     private Graphics2D buffer;
     private String nomFichier;
     //constructeur a implementer
-    public CadreImage( BufferedImage i)
+    public CadreImage(BufferedImage i)
     {
     	image = i;
     }
     
-    public CadreImage( )
+    public CadreImage()
     {
     }
     

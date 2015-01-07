@@ -62,6 +62,5 @@ public class Main {
 		
 		//lancement de l'interface graphique
 		EventQueue.invokeLater(it);
-		
 	}
 }
