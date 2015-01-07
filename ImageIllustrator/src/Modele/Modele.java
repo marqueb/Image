@@ -72,10 +72,10 @@ public class Modele {
 		CadreImage cadreImage=outil.charger(interfaceGraphique);
 		if(cadreImage != null)
 		{
-			//TO TEST !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			//int[][] noyau = {{0,-1,0},{-1,5,-1},{0,-1,0}};
-			//cadreImage = this.traiteurImage.convoluer(noyau, cadreImage, ModeConvolution.SAME);
-			//TO TEST !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			//BEGIN TEST{ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//			int[][] noyau = {{1,1,1},{1,1,1},{1,1,1}};
+//			cadreImage = this.traiteurImage.convoluer(noyau, cadreImage, ModeConvolution.SAME);
+			// }END TEST !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			//ajoute le cadre image à la liste de cadre image
 			addCadreImage(cadreImage);
 			//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image

@@ -54,6 +54,22 @@ public class Outil {
 		return rgb  & 0XFF;
 	}
 	
+	public int intToAlpha(int rgb){
+		return (rgb & 0XFF) << 24 ;
+	}
+
+	public int intToR(int rgb){
+		return (rgb & 0XFF) << 16 ;
+	}
+
+	public int intToG(int rgb){
+		return (rgb & 0XFF) << 8 ;
+	}
+
+	public int intToB(int rgb){
+		return rgb  & 0XFF;
+	}
+	
 	
 	public int couleurPixel(BufferedImage image, int x, int y)
 	{ 
