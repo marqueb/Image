@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
-import javax.swing.JTabbedPane;
 
 import Vue.CadreImage;
 import Vue.InterfaceGraphique;
@@ -32,7 +31,11 @@ public class Outil {
 	
 	public int CouleurPixel(BufferedImage image, int x, int y)
 	{
-		return image.getRGB(x,y);	
+		try{
+			return image.getRGB(x,y);
+		}catch(ArrayIndexOutOfBoundsException e){
+			return -1;
+		}
 	}
 	//TODO
 	//Copier

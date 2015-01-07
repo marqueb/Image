@@ -77,7 +77,9 @@ public class Modele {
 	
 	public void couleurPixel(int x, int y){
 		int couleur = outil.CouleurPixel(getListCadreImage().get(getInterfaceGraphique().getTabbedPane().getSelectedIndex()).getImage(), x, y);
-		//calcul et affiche les differentes intensités de couleur en fonction de la valeur du pixel
-		interfaceGraphique.afficherValeurCouleur(couleur, x, y);
+		//calcul et affiche les differentes intensités de couleur en fonction de la valeur du pixel (si on est dans le cadreImage)
+		if(couleur!=-1){
+			interfaceGraphique.afficherValeurCouleur(couleur, x, y);
+		}
 	}
 }
