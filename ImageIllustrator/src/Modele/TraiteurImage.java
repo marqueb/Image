@@ -19,4 +19,16 @@ public class TraiteurImage {
 	//Segmenter
 	//Transformation
 	//Filtre
+	
+	
+	public CadreImage convoluer(int[][] noyau, CadreImage ima_in, ModeConvolution mode)
+	{
+		CadreImage ima_out = new CadreImage();
+		
+		if(mode == ModeConvolution.FULL);
+		else if(mode == ModeConvolution.SAME);
+		else if(mode == ModeConvolution.VALID);
+		
+		return ima_out;
+	}
 }
