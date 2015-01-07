@@ -73,8 +73,8 @@ public class Modele {
 		if(cadreImage != null)
 		{
 			//BEGIN TEST{ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//			int[][] noyau = {{1,1,1},{1,1,1},{1,1,1}};
-//			cadreImage = this.traiteurImage.convoluer(noyau, cadreImage, ModeConvolution.SAME);
+			//			int[][] noyau = {{1,1,1},{1,1,1},{1,1,1}};
+			//			cadreImage = this.traiteurImage.convoluer(noyau, cadreImage, ModeConvolution.SAME);
 			// }END TEST !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			//ajoute le cadre image à la liste de cadre image
 			addCadreImage(cadreImage);
@@ -82,7 +82,7 @@ public class Modele {
 			interfaceGraphique.ajouterOnglet(cadreImage);
 			cadreImage.repaint();
 		}
-		
+
 	}
 
 	public void couleurPixel(int x, int y){
@@ -99,4 +99,20 @@ public class Modele {
 	public void enleverCouleurPixel(){
 		interfaceGraphique.enleverCouleurPixel();
 	}
+
+	public void appliquerFiltre(TypeFiltre filtre)
+	{
+		switch(filtre){
+		case MOYENNEUR:
+			int[][] noyau = {{3,3,3},{3,3,3},{3,3,3}};
+			BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
+			BufferedImage res = traiteurImage.convoluer(noyau, bufImage);
+			getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
+			getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
+		break;
+
+		}
+	}
+
+
 }
