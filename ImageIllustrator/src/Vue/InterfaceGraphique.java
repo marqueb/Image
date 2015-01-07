@@ -181,7 +181,8 @@ public class InterfaceGraphique implements Runnable{
 		//filtre => Traitement
 		JMenu traitement = new JMenu("Traitement");
 		//filtre => Traitement => moyen
-		JMenuItem moyen = new JMenuItem("Moyen");
+		JMenuItem moyen = new JMenuItem("Moyenneur (flouter)");
+		moyen.addActionListener(controler);
 		traitement.add(moyen);
 		//filtre => Traitement => gaussien
 		JMenuItem gaussien = new JMenuItem("Gaussien");

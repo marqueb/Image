@@ -12,6 +12,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import Modele.Modele;
+import Modele.TypeFiltre;
 import Vue.CadreImage;
 import Vue.InterfaceGraphique;
 
@@ -44,6 +45,8 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 			case "Charger":
 				modele.charger();
 			break;
+			case "Moyenneur (flouter)":
+				modele.appliquerFiltre(TypeFiltre.MOYENNEUR);
 			case "Sauvegarde":
 				modele.sauvegarder();
 			break;

@@ -30,11 +30,6 @@ public class Outil {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-
-    		int index = monFichier.getName().indexOf('.');     
-        	cadreImage.setNomFichier(monFichier.getName().substring(0,index));
-        	
-
     	}
     	return null;
 	}
@@ -64,6 +59,22 @@ public class Outil {
 	}
 
 	public int getB(int rgb){
+		return rgb  & 0XFF;
+	}
+	
+	public int intToAlpha(int rgb){
+		return (rgb & 0XFF) << 24 ;
+	}
+
+	public int intToR(int rgb){
+		return (rgb & 0XFF) << 16 ;
+	}
+
+	public int intToG(int rgb){
+		return (rgb & 0XFF) << 8 ;
+	}
+
+	public int intToB(int rgb){
 		return rgb  & 0XFF;
 	}
 	
