@@ -28,8 +28,13 @@ public class TraiteurImage {
 	public BufferedImage convoluer(int[][] noyau, BufferedImage buf_ima_in)
 	{
 		BufferedImage dst = new BufferedImage(buf_ima_in.getWidth(), buf_ima_in.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		Kernel ker = new Kernel(noyau.length, noyau[0].length, TabTabIntToTabFloat(noyau));
-		ConvolveOp convolveOp = new ConvolveOp(ker);
+		//Kernel ker = new Kernel(noyau.length, noyau[0].length, TabTabIntToTabFloat(noyau));
+		final float[] MOYENNE = {
+            0.11111f, 0.11111f, 0.11111f,
+            0.11111f, 0.11111f, 0.11111f,
+            0.11111f, 0.11111f, 0.11111f};
+		Kernel ker = new Kernel(3,3,MOYENNE);
+		ConvolveOp convolveOp = new ConvolveOp(ker, ConvolveOp.EDGE_NO_OP,null);
 
 		convolveOp.filter(buf_ima_in,dst);
 
