@@ -77,6 +77,7 @@ public class InterfaceGraphique implements Runnable{
 		JTabbedPane tmp = getTabbedPane();
 
 		cadreImage.addMouseMotionListener(controler);
+		cadreImage.addMouseListener(controler);
 		
 		//partie onglet nom
 		JLabel labelOnglet = new JLabel(cadreImage.getNomFichier()+(getTabbedPane().getTabCount()+1));
@@ -94,8 +95,7 @@ public class InterfaceGraphique implements Runnable{
 		tmp.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);
 		//Ajout image à l'onglet
 		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
-		
-		cadreImage.addMouseMotionListener(controler);
+		tmp.setSelectedIndex(tabbedPane.getTabCount()-1);
 	}
 
 	public void afficherValeurCouleur(int x , int y, int r, int g, int b){
