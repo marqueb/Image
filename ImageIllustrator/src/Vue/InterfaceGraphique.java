@@ -70,7 +70,6 @@ public class InterfaceGraphique implements Runnable{
 		tmp.add("Onglet "+(getTabbedPane().getTabCount()+1), cadreImage);
 		setTabbedPane(tmp);
 		getTabbedPane().setSelectedIndex(getTabbedPane().getTabCount()-1);
-		modele.addCadreImage(cadreImage);
 		cadreImage.addMouseMotionListener(controler);
 	}
 	

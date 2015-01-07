@@ -65,4 +65,19 @@ public class Modele {
 	public void setListCadreImage(ArrayList<CadreImage> listCadreImage) {
 		this.listCadreImage = listCadreImage;
 	}
+	
+	public void charger(){
+		//charge l'image et l'insert dans cadre image
+		CadreImage cadreImage=outil.charger(interfaceGraphique);
+		addCadreImage(cadreImage);
+		//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image
+		interfaceGraphique.ajouterOnglet(cadreImage);
+		cadreImage.repaint();
+	}
+	
+	public void couleurPixel(int x, int y){
+		int couleur = outil.CouleurPixel(getListCadreImage().get(getInterfaceGraphique().getTabbedPane().getSelectedIndex()).getImage(), x, y);
+		//calcul et affiche les differentes intensités de couleur en fonction de la valeur du pixel
+		interfaceGraphique.afficherValeurCouleur(couleur, x, y);
+	}
 }

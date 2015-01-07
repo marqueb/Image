@@ -13,7 +13,7 @@ import Vue.InterfaceGraphique;
 
 public class Outil {
 	
-	public CadreImage Charger(InterfaceGraphique it){
+	public CadreImage charger(InterfaceGraphique it){
 		File monFichier;
     	int controle;
     	CadreImage cadreImage = new CadreImage();
