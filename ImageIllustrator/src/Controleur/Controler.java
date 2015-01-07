@@ -19,7 +19,7 @@ public class Controler extends MouseMotionAdapter implements ActionListener, Cha
 	private Modele modele;
 	private InterfaceGraphique it;
 	private boolean echantillonageActif=false;
-	//private boolean fermerOnglet=false
+
 
 	public Modele getModele() {
 		return modele;
@@ -48,7 +48,6 @@ public class Controler extends MouseMotionAdapter implements ActionListener, Cha
 				echantillonageActif = true;
 			break;
 			case "X":
-				//fermerOnglet=true;
 				int closeTabNumber = it.getTabbedPane().getSelectedIndex();
 				it.getTabbedPane().removeTabAt(closeTabNumber);
 			break;
@@ -63,7 +62,7 @@ public class Controler extends MouseMotionAdapter implements ActionListener, Cha
 		}
 	}
 	
-	
+
 	/*
 	public void mouseClicked(MouseEvent e){
 		System.out.println("salut");

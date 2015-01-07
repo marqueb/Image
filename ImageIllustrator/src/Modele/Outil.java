@@ -28,9 +28,11 @@ public class Outil {
 			}
     		int index = monFichier.getName().indexOf('.');     
         	cadreImage.setNomFichier(monFichier.getName().substring(0,index));
+        	
     	}
     	return cadreImage;
 	}
+	
 	
 	public int couleurPixel(BufferedImage image, int x, int y)
 	{
