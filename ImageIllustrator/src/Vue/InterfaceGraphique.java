@@ -243,6 +243,7 @@ public class InterfaceGraphique implements Runnable{
 
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addChangeListener(controler);
+		tabbedPane.addMouseListener(controler);
 		tabbedPane.setOpaque(true);
 		tabbedPane.setBackground(Color.WHITE);
 

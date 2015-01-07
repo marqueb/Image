@@ -93,4 +93,8 @@ public class Modele {
 	public void enleverCouleurPixel(){
 		interfaceGraphique.enleverCouleurPixel();
 	}
+	
+	public void fermerOnglet(){
+		
+	}
 }
