@@ -95,8 +95,7 @@ public class InterfaceGraphique implements Runnable{
 		tmp.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);
 		//Ajout image à l'onglet
 		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
-		
-		cadreImage.addMouseMotionListener(controler);
+		tmp.setSelectedIndex(tabbedPane.getTabCount()-1);
 	}
 
 	public void afficherValeurCouleur(int x , int y, int r, int g, int b){
