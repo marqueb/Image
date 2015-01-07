@@ -92,6 +92,10 @@ public class InterfaceGraphique implements Runnable{
 	public void afficherValeurCouleur(int couleur, int x , int y){
 		PixelCouleur.setText("pixel: ("+x+" , "+y+"), Couleur: (Rouge :"+ getR(couleur)+ ", Vert :"+getG(couleur)+", Bleu :"+getB(couleur)+")");
 	}
+	
+	public void enleverCouleurPixel(){
+		PixelCouleur.setText("");
+	}
 
 	public void run(){
 		JFrame frame = new JFrame("Fenetre");
@@ -228,6 +232,7 @@ public class InterfaceGraphique implements Runnable{
 		frame.add(panel,BorderLayout.NORTH);
 
 		tabbedPane = new JTabbedPane();
+		tabbedPane.addChangeListener(controler);
 		tabbedPane.setOpaque(true);
 		tabbedPane.setBackground(Color.WHITE);
 		
