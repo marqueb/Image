@@ -8,20 +8,20 @@ import Vue.CadreImage;
 import Vue.InterfaceGraphique;
 
 public class Modele {
-	
+
 	private Controler controler;
 	private InterfaceGraphique interfaceGraphique;
 	private TraiteurImage traiteurImage;
 	private Outil outil;
-	
+
 	private ArrayList<CadreImage> listCadreImage;
-	
+
 	public Modele()
 	{
 		listCadreImage = new ArrayList<CadreImage>();
 		outil = new Outil();
 	}	
-	
+
 	public Outil getOutil() {
 		return outil;
 	}
@@ -53,7 +53,7 @@ public class Modele {
 	public void setInterfaceGraphique(InterfaceGraphique interfaceGraphique) {
 		this.interfaceGraphique = interfaceGraphique;
 	}
-	
+
 	public void addCadreImage(CadreImage cadreImage){
 		listCadreImage.add(cadreImage);
 	}
@@ -65,17 +65,20 @@ public class Modele {
 	public void setListCadreImage(ArrayList<CadreImage> listCadreImage) {
 		this.listCadreImage = listCadreImage;
 	}
-	
+
 	public void charger(){
 		//charge l'image et l'insert dans cadre image
 		CadreImage cadreImage=outil.charger(interfaceGraphique);
-		//ajoute le cadre image à la liste de cadre image
-		addCadreImage(cadreImage);
-		//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image
-		interfaceGraphique.ajouterOnglet(cadreImage);
-		cadreImage.repaint();
+		if(cadreImage != null)
+		{
+			//ajoute le cadre image à la liste de cadre image
+			addCadreImage(cadreImage);
+			//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image
+			interfaceGraphique.ajouterOnglet(cadreImage);
+			cadreImage.repaint();
+		}
 	}
-	
+
 	public void couleurPixel(int x, int y){
 		if(x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight()){
 			//recupere la valeur du pixel en fonction de l'image et des coordonnées
@@ -86,7 +89,7 @@ public class Modele {
 			enleverCouleurPixel();
 		}
 	}
-	
+
 	public void enleverCouleurPixel(){
 		interfaceGraphique.enleverCouleurPixel();
 	}
