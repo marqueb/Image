@@ -81,7 +81,6 @@ public class Modele {
 		this.listCadreImage = listCadreImage;
 	}
 
-
 	public void charger(){
 		//charge l'image et l'insert dans cadre image
 		CadreImage cadreImage=outil.charger(interfaceGraphique);
@@ -94,7 +93,6 @@ public class Modele {
 			listBoutonFermeture.add(interfaceGraphique.ajouterOnglet(cadreImage));
 			cadreImage.repaint();
 		}
-
 	}
 
 	public void sauvegarder(){
@@ -130,8 +128,6 @@ public class Modele {
 		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
 		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
 	}
-
-
 
 	public void fermerOnglet(Object j){
 		//cherche l'index de l'onglet à l'aide de la table de bouton

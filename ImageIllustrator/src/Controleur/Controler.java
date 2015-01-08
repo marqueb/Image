@@ -55,22 +55,43 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 		}*/
 		switch(e.getActionCommand()){
 			case "Charger":
+				if(echantillonageActif){
+					echantillonageActif=false;
+					modele.getInterfaceGraphique().retraitChoixRGB();
+				}
 				modele.charger();
 			break;
 			case "Moyenneur (flouter)":
+				if(echantillonageActif){
+					echantillonageActif=false;
+					modele.getInterfaceGraphique().retraitChoixRGB();
+				}
 				modele.appliquerFiltre(TypeFiltre.MOYENNEUR);
 			break;
 			case "Sauvegarde":
+				if(echantillonageActif){
+					echantillonageActif=false;
+					modele.getInterfaceGraphique().retraitChoixRGB();
+				}
 				modele.sauvegarder();
 			break;
 			case "Couleur pixel":
 				//autorise l'ecoute à la souris
 				echantillonageActif = true;
+				modele.getInterfaceGraphique().affichageChoixRGB();
 			break;
-			case "X":	
+			case "X":
+				if(echantillonageActif){
+					echantillonageActif=false;
+					modele.getInterfaceGraphique().retraitChoixRGB();
+				}
 				modele.fermerOnglet(e.getSource());
 			break;
 			case "Image grise":
+				if(echantillonageActif){
+					echantillonageActif=false;
+					modele.getInterfaceGraphique().retraitChoixRGB();
+				}
 				modele.imagris();
 			break;
 		}

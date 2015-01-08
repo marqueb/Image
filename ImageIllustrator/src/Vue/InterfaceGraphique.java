@@ -1,5 +1,7 @@
 package Vue;
 import java.awt.BorderLayout;
+import java.awt.Checkbox;
+import java.awt.CheckboxGroup;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -24,11 +26,16 @@ import Controleur.Controler;
 import Modele.Modele;
 
 public class InterfaceGraphique implements Runnable{
+	private JFrame frame;
+	private JPanel panelOption;
 	private JTextArea PixelCouleur;
 	private JTabbedPane tabbedPane;
 	private Modele modele;
 	private Controler controler;
 	private JMenuItem sauvegarde;
+	private CheckboxGroup groupe;
+	private Checkbox box1, box2;
+	
 	
 	public JMenuItem getSauvegarde() {
 		return sauvegarde;
@@ -108,9 +115,32 @@ public class InterfaceGraphique implements Runnable{
 	public void enleverCouleurPixel(){
 		PixelCouleur.setText("");
 	}
+	
+	public void affichageChoixRGB(){
+		groupe=new CheckboxGroup(); 
+	    box1=new Checkbox("RGB",groupe,true); 
+	    panelOption.add(box1); 
+	    box2=new Checkbox("YUV",groupe,false); 
+	    panelOption.add(box2); 
+	    frame.validate();
+	}
+	
+	public void retraitChoixRGB(){
+		panelOption.remove(box1);
+		panelOption.remove(box2); 
+		frame.validate();
+	}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
 
 	public void run(){
-		JFrame frame = new JFrame("Fenetre");
+		frame = new JFrame("Fenetre");
 		// Ajout de notre composant de dessin dans la fenetre
 		//frame.add(cadreImage);
 
@@ -249,13 +279,12 @@ public class InterfaceGraphique implements Runnable{
 
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addChangeListener(controler);
-		//tabbedPane.addMouseListener(controler);
 		tabbedPane.setOpaque(true);
 		tabbedPane.setBackground(Color.WHITE);
 
 		frame.add(tabbedPane,BorderLayout.CENTER);
 
-		JPanel panelOption = new JPanel();
+		panelOption = new JPanel();
 		JTextArea texte= new JTextArea("Zone d'option/bouton rapide");
 		panelOption.add(texte);
 		frame.add(panelOption,BorderLayout.EAST);
