@@ -1,6 +1,8 @@
 package Modele;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,27 +14,27 @@ import Vue.CadreImage;
 import Vue.InterfaceGraphique;
 
 public class Outil {
-	
+
 	public CadreImage charger(InterfaceGraphique it){
 		File monFichier;
-    	int controle;
-    	CadreImage cadreImage = new CadreImage();
-    	JFileChooser j = new JFileChooser();
-    	controle=j.showOpenDialog(cadreImage);
-    	if(controle==JFileChooser.APPROVE_OPTION){
-    		monFichier=j.getSelectedFile();
-    		try {
-    			cadreImage.setImage(ImageIO.read(monFichier));
-        		int index = monFichier.getName().indexOf('.');     
-            	cadreImage.setNomFichier(monFichier.getName().substring(0,index));
-            	return cadreImage;
+		int controle;
+		CadreImage cadreImage = new CadreImage();
+		JFileChooser j = new JFileChooser();
+		controle=j.showOpenDialog(cadreImage);
+		if(controle==JFileChooser.APPROVE_OPTION){
+			monFichier=j.getSelectedFile();
+			try {
+				cadreImage.setImage(ImageIO.read(monFichier));
+				int index = monFichier.getName().indexOf('.');     
+				cadreImage.setNomFichier(monFichier.getName().substring(0,index));
+				return cadreImage;
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-    	}
-    	return null;
+		}
+		return null;
 	}
-	
+
 	public void sauvegarder(BufferedImage image){
 		JFileChooser nom_fichier =new JFileChooser();
 		int result =nom_fichier.showSaveDialog(null);
@@ -43,7 +45,7 @@ public class Outil {
 				e1.printStackTrace();
 			}
 		}
-		
+
 	}
 	public int getAlpha(int rgb){
 		return (rgb >> 24 ) & 0XFF;
@@ -60,7 +62,7 @@ public class Outil {
 	public int getB(int rgb){
 		return rgb  & 0XFF;
 	}
-	
+
 	public int setR(int rgb){
 		return (rgb & 0XFF) << 16;
 	}
@@ -68,7 +70,7 @@ public class Outil {
 	public int setG(int rgb){
 		return (rgb & 0XFF) << 8;
 	}
-	
+
 	public int setB(int rgb){
 		return (rgb & 0XFF) ;
 	}
@@ -76,7 +78,7 @@ public class Outil {
 	public double getY(int r, int g, int b){
 		return (0.299*r+0.587*g+0.114*b);
 	}
-	
+
 	public double getU(int b, double y){
 		return 0.492*(b-y);
 	}
@@ -88,7 +90,7 @@ public class Outil {
 	{ 
 		return image.getRGB(x,y);	
 	}
-	
+
 	public void imagris(BufferedImage image){
 		int r,g,b,gris;
 		int couleur;
@@ -105,11 +107,19 @@ public class Outil {
 		}
 	}
 
-	
+	//copier une buffered image
+	public static BufferedImage deepCopy(BufferedImage bi) {
+		ColorModel cm = bi.getColorModel();
+		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		WritableRaster raster = bi.copyData(null);
+		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+	}
+
+
 	//TODO
 	//Copier
 	//Coller
 	//précédent
 	//suivant
-	
+
 }
