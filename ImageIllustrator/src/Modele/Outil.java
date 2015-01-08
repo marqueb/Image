@@ -100,6 +100,7 @@ public class Outil {
 				b=getB(couleur);
 				gris=(r+b+g)/3;
 				image.setRGB(i, j,setR(gris)+setB(gris)+setG(gris));
+				//image.setRGB(i, j,setR(r/3)+setB(b/3)+setG(g/3));
 			}
 		}
 	}
