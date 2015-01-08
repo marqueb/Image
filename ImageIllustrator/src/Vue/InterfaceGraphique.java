@@ -28,6 +28,19 @@ public class InterfaceGraphique implements Runnable{
 	private JTabbedPane tabbedPane;
 	private Modele modele;
 	private Controler controler;
+	private JMenuItem sauvegarde;
+	
+	public JMenuItem getSauvegarde() {
+		return sauvegarde;
+	}
+
+	public void setSauvegarde(JMenuItem sauvegarde) {
+		this.sauvegarde = sauvegarde;
+	}
+	
+	public void setEnableSauvegarde(boolean enable) {
+		this.sauvegarde.setEnabled(enable);
+	}
 
 	public JTabbedPane getTabbedPane() {
 		return tabbedPane;
@@ -64,11 +77,10 @@ public class InterfaceGraphique implements Runnable{
 		final JPanel content = new JPanel();
 		JPanel tab = new JPanel();
 		tab.setOpaque(false);		
-		JTabbedPane tmp = getTabbedPane();		
-
+		JTabbedPane tmp = getTabbedPane();	
 		cadreImage.addMouseMotionListener(controler);
 		cadreImage.addMouseListener(controler);
-		
+
 		//partie onglet nom
 		JLabel labelOnglet = new JLabel(cadreImage.getNomFichier()+(getTabbedPane().getTabCount()+1));
 		//partie onglet fermer
@@ -110,11 +122,12 @@ public class InterfaceGraphique implements Runnable{
 		JMenu principal = new JMenu("Fichier");
 
 		//Menu principal => Nouveau
-		JMenuItem nouveau = new JMenuItem("Nouveau");       
-		//nouveau.addActionListener(new NouveauApplication(mon_dessin));
-		principal.add(nouveau);
+		//JMenuItem nouveau = new JMenuItem("Nouveau");       
+		//nouveau.addActionListener(controler);
+		//principal.add(nouveau);
 		//Menu principal => Sauvegarde
-		JMenuItem sauvegarde = new JMenuItem("Sauvegarde");
+		sauvegarde = new JMenuItem("Sauvegarde");
+		sauvegarde.setEnabled(false);
 		sauvegarde.addActionListener(controler);
 		principal.add(sauvegarde);
 		//Menu principal => Imprimer
@@ -167,6 +180,7 @@ public class InterfaceGraphique implements Runnable{
 		transformation.add(fusion);
 		//Image => transformation => Gris
 		JMenuItem imagris = new JMenuItem("Image grise");
+		imagris.addActionListener(controler);
 		transformation.add(imagris);       
 		image.add(transformation);
 

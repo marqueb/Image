@@ -25,7 +25,6 @@ public class Outil {
     			cadreImage.setImage(ImageIO.read(monFichier));
         		int index = monFichier.getName().indexOf('.');     
             	cadreImage.setNomFichier(monFichier.getName().substring(0,index));
-            	
             	return cadreImage;
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -62,27 +61,51 @@ public class Outil {
 		return rgb  & 0XFF;
 	}
 	
-	public int intToAlpha(int rgb){
-		return (rgb & 0XFF) << 24 ;
+	public int setR(int rgb){
+		return (rgb & 0XFF) << 16;
 	}
 
-	public int intToR(int rgb){
-		return (rgb & 0XFF) << 16 ;
-	}
-
-	public int intToG(int rgb){
-		return (rgb & 0XFF) << 8 ;
-	}
-
-	public int intToB(int rgb){
-		return rgb  & 0XFF;
+	public int setG(int rgb){
+		return (rgb & 0XFF) << 8;
 	}
 	
+	public int setB(int rgb){
+		return (rgb & 0XFF) ;
+	}
+
+	public double getY(int r, int g, int b){
+		return (0.299*r+0.587*g+0.114*b);
+	}
 	
+	public double getU(int b, double y){
+		return 0.492*(b-y);
+	}
+	public double getV(int r, double y){
+		return 0.877*(r-y);
+	}
+
 	public int couleurPixel(BufferedImage image, int x, int y)
 	{ 
 		return image.getRGB(x,y);	
 	}
+	
+	public void imagris(BufferedImage image){
+		int r,g,b,gris;
+		int couleur;
+		for (int i=0;i<image.getWidth();i++){
+			for (int j=0;j<image.getHeight();j++){
+				couleur=couleurPixel(image,i,j);
+				r=getR(couleur);
+				g=getG(couleur);
+				b=getB(couleur);
+				gris=(r+b+g)/3;
+				image.setRGB(i, j,setR(gris)+setB(gris)+setG(gris));
+				//image.setRGB(i, j,setR(r/3)+setB(b/3)+setG(g/3));
+			}
+		}
+	}
+
+	
 	//TODO
 	//Copier
 	//Coller
