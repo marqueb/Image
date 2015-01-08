@@ -80,6 +80,7 @@ public class Outil {
 	public double getU(int b, double y){
 		return 0.492*(b-y);
 	}
+	
 	public double getV(int r, double y){
 		return 0.877*(r-y);
 	}
