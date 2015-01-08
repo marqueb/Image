@@ -23,6 +23,8 @@ public class Modele {
 	private ArrayList<CadreImage> listCadreImage;
 	private ArrayList<JButton> listBoutonFermeture;
 
+
+
 	public Modele()
 	{
 		listCadreImage = new ArrayList<CadreImage>();
@@ -66,11 +68,11 @@ public class Modele {
 	public void addCadreImage(CadreImage cadreImage){
 		listCadreImage.add(cadreImage);
 	}
-	
+
 	public void suppCadreImage(int index){
 		listCadreImage.remove(index);
 	}
-	
+
 	public ArrayList<CadreImage> getListCadreImage() {
 		return listCadreImage;
 	}
@@ -78,7 +80,7 @@ public class Modele {
 	public void setListCadreImage(ArrayList<CadreImage> listCadreImage) {
 		this.listCadreImage = listCadreImage;
 	}
-	
+
 
 	public void charger(){
 		//charge l'image et l'insert dans cadre image
@@ -116,27 +118,21 @@ public class Modele {
 		outil.imagris(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
 		listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
 	}
-	
+
 	public void enleverCouleurPixel(){
 		interfaceGraphique.enleverCouleurPixel();
 	}
 
 	public void appliquerFiltre(TypeFiltre filtre)
 	{
-		switch(filtre){
-		case MOYENNEUR:
-			int[][] noyau = {{3,3,3},{3,3,3},{3,3,3}};
-			BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
-			BufferedImage res = traiteurImage.convoluer(noyau, bufImage);
-			getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
-			getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
-		break;
-
-		}
+		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
+		BufferedImage res = traiteurImage.convoluer(filtre, bufImage);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
 	}
 
 
-	
+
 	public void fermerOnglet(Object j){
 		//cherche l'index de l'onglet à l'aide de la table de bouton
 		int i = listBoutonFermeture.indexOf(j);
