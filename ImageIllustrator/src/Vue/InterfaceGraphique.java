@@ -11,7 +11,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -59,6 +59,10 @@ public class InterfaceGraphique implements Runnable{
 	public void setTabbedPane(JTabbedPane tabbedPane) {
 		this.tabbedPane = tabbedPane;
 	}
+	
+	public JTabbedPane getTabbedPane(JTabbedPane tabbedPane) {
+		return tabbedPane;
+	}
 
 	public Modele getModele() {
 		return modele;
@@ -103,16 +107,22 @@ public class InterfaceGraphique implements Runnable{
 		//Ajout panel à l'onglet
 		tmp.addTab(null, content);
 
-		//Parametre de l'onglet
+		
+		/*aPanel myAPanel = new aPanel();
+			// ... maybe adding some components to myAPanel
+			JScrollPane jsp = new JScrollPane(myAPanel);
+			then add jsp to your JTabbedPane
+			
+		//Parametre de l'onglet*/
 		tmp.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);
 		
 
 		
 		JScrollPane scrollPane = new JScrollPane(cadreImage, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		tmp.setComponentAt(tabbedPane.getTabCount()-1, scrollPane);
-		
+	//	FilterTab tab = (FilterTab)tmp.getSelectedComponent();
 		//Ajout image à l'onglet
-//		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
+		tmp.setComponentAt(tabbedPane.getTabCount()-1, scrollPane);
 		tmp.setSelectedIndex(tabbedPane.getTabCount()-1);
 		return boutonFermer;
 	}
@@ -150,30 +160,16 @@ public class InterfaceGraphique implements Runnable{
 	public void ajouterHistoRgb(int[][] tabsHisto)
 	{
 		panelOption.removeAll();
-		//panelOption.setLayout(new BoxLayout(panelOption, BoxLayout.Y_AXIS));
-		
-		panelOption.setLayout(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridx = gbc.gridy = 0; // la grille commence en (0, 0)
-		gbc.anchor = GridBagConstraints.LINE_START; // ou BASELINE_LEADING mais pas WEST.
-		gbc.insets = new Insets(10, 15, 0, 0); // Marge � gauche de 15 et marge au dessus de 10.
-		
-		
-		//histoR = new Histogramme(tabsHisto[0], "Rouge");
-		histoR = new Histogramme(tabsHisto[0], "Rouge", new Dimension(panelOption.getWidth(), 400));
-		histoG = new Histogramme(tabsHisto[1], "Vert");
-		histoB = new Histogramme(tabsHisto[2], "Bleu");
-		
-		//panelOption.add(histoR);
-		//panelOption.add(histoR, Box.createHorizontalGlue());
-		//panelOption.add(histoR, Box.createRigidArea(new Dimension(panelOption.getWidth(), 400)));
-		panelOption.add(histoR, gbc);
-		
-//		System.out.println(panelOption.getComponent(0).getSize().toString());
-//		System.out.println(panelOption.getComponent(1).getSize().toString());
-		
-//		histoR.repaint();
-//		panelOption.repaint();
+		panelOption.setLayout(new BoxLayout(panelOption, BoxLayout.Y_AXIS));
+		histoR = new Histogramme(tabsHisto[0], "Rouge",new Dimension(panelOption.getWidth(),panelOption.getHeight()/3));
+		histoG = new Histogramme(tabsHisto[1], "Vert",new Dimension(panelOption.getWidth(),panelOption.getHeight()/3));
+		histoB = new Histogramme(tabsHisto[2], "Bleu",new Dimension(panelOption.getWidth(),panelOption.getHeight()/3));
+
+		panelOption.add(histoR);
+		panelOption.add(histoG);
+		panelOption.add(histoB);
+	
+		panelOption.repaint();
 		frame.validate();
 	}
 	
@@ -232,7 +228,7 @@ public class InterfaceGraphique implements Runnable{
 		sauvegarde.setEnabled(false);
 		sauvegarde.addActionListener(controler);
 		principal.add(sauvegarde);
-		//Menu principal => Imprimer
+		//Menu principal => Imprimer00,panelOption.getParent().getHeight())
 		JMenuItem charger = new JMenuItem("Charger");
 		charger.addActionListener(controler);
 		principal.add(charger);
@@ -337,6 +333,9 @@ public class InterfaceGraphique implements Runnable{
 		toolBar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		toolBar.setBackground(Color.WHITE);
 		toolBar.setForeground(Color.BLACK);
+		/*ImageIcon imagecharger = new ImageIcon("Charger");
+		JLabel label = new JLabel(imagecharger);
+		toolBar.add(charger);*/
 		JButton btnCharger = new JButton("Charger");
 		btnCharger.setFocusable(false);
 		btnCharger.addActionListener(controler);
@@ -356,13 +355,13 @@ public class InterfaceGraphique implements Runnable{
 		tabbedPane.setBackground(Color.WHITE);
 
 		frame.add(tabbedPane,BorderLayout.CENTER);
-
 		panelOption = new JPanel();
 		//JTextArea texte= new JTextArea("Zone d'option/bouton rapide");
 		//panelOption.add(texte);
+		
 		frame.add(panelOption,BorderLayout.EAST);
-		panelOption.setPreferredSize(new Dimension(200, panelOption.getParent().getHeight()));
-
+		panelOption.setPreferredSize(new Dimension(200,panelOption.getParent().getHeight()));
+		
 		JPanel panelOption2 = new JPanel();
 		PixelCouleur= new JTextArea();
 		panelOption2.add(PixelCouleur);

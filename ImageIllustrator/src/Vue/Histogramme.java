@@ -8,39 +8,35 @@ import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
 
 public class Histogramme extends JComponent{	
-	private BufferedImage image = null;
+	private BufferedImage im = null;
 	private String titre = null;
 	private int[] tab = null;
 	
-	public Histogramme(int[] tabHisto, String t)
-	{
-		image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
-		tab = tabHisto;
-		titre = t;
-	}
-	
+
 	public Histogramme(int[] tabHisto, String t, Dimension d)
 	{
-		image = new BufferedImage((int)d.getWidth(), (int)d.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		tab = tabHisto;
 		titre = t;
+		im = new BufferedImage((int)d.getWidth(),(int)d.getHeight(),BufferedImage.TYPE_INT_RGB);
 	}
 
 	public void paintComponent (Graphics g)
 	{	
-		System.out.println(this.getSize().toString());
-		Graphics2D hist = (Graphics2D)g;
-		Graphics2D zoneImage = image.createGraphics();
-		
-		zoneImage.setPaint(Color.black);
-		zoneImage.drawRect(0, 0, this.getWidth(), this.getHeight());
-		zoneImage.setPaint(Color.red);
-		
-		for (int x = 0; x < tab.length; x++) {
-			zoneImage.drawLine(x, getSize().height, x, tab[x]*100);
+		Graphics2D buffer;
+		int max=tab[0];
+		buffer = im.createGraphics();
+		buffer.setColor(Color.BLACK);		
+		buffer.fillRect(0, 0, getSize().width,getSize().height);
+		buffer.setColor(Color.WHITE);
+		for (int i=1;i<tab.length;i++){
+			if (max<tab[i])
+				max=tab[i];
+		}
+		for (int i=0;i<tab.length;i++){
+			buffer.drawLine(i,0, i, (int) (tab[i]*getSize().getHeight()/max));
 		}
 		
-        //on affiche l'image modifié
-		hist.drawImage(image, 0, 0,  null);
+		((Graphics2D)g).drawImage(im,0,0,null);
 	}
+
 }
