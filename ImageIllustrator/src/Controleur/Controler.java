@@ -125,6 +125,7 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 		if(echantillonageActif){
 			echantillonageActif = false;
 			modele.enleverCouleurPixel();
+			modele.getInterfaceGraphique().retraitChoixRGB();
 		}
 	}
 
@@ -136,6 +137,7 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 			}else{
 				isRGB=false;
 			}
+			
 		}
 	}
 
