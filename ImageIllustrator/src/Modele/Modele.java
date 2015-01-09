@@ -19,7 +19,7 @@ public class Modele {
 	private ArrayList<CadreImage> listCadreImage;
 	private ArrayList<JButton> listBoutonFermeture;
 	private CadreImage cadre_ima_fusion = null;
-
+	private BufferedImage imaAvantFusion = null;
 
 
 	public Modele()
@@ -155,9 +155,52 @@ public class Modele {
 	public void traiterFusion()
 	{
 		cadre_ima_fusion = outil.charger(interfaceGraphique);
+		imaAvantFusion = Outil.deepCopy(cadre_ima_fusion.getImage());
 		if(cadre_ima_fusion!=null){
 			interfaceGraphique.ajouterComponentFusion(cadre_ima_fusion);
 		}
+	}
+	
+	public void traiterVariationFusion(int pourcentImageSecondaire)
+	{
+		BufferedImage imaPrincipale = this.imaAvantFusion;
+		BufferedImage imaSecondaire = cadre_ima_fusion.getImage();
+		BufferedImage imaToChange = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
+		int coef1 = (100-pourcentImageSecondaire)/100;
+		int coef2 = pourcentImageSecondaire/100;
+		
+		//TODO redimensionner les images pour qu'elles aient les même dimensions ou trouver une autre solution
+		
+		int valR = 0, valG = 0, valB = 0, rgb1 = 0, rgb2 = 0, newRgb = 0;
+		int borneX = imaPrincipale.getWidth()<imaSecondaire.getWidth()?imaPrincipale.getWidth():imaPrincipale.getWidth();
+		int borneY = imaPrincipale.getHeight()<imaSecondaire.getHeight()?imaPrincipale.getHeight():imaPrincipale.getHeight();
+		for(int i=0; i<borneX; i++)
+		{
+			for(int j=0; j<borneY; j++)
+			{
+				rgb1 = imaPrincipale.getRGB(i, j);
+				rgb2 = imaSecondaire.getRGB(i, j);
+				
+				valR = outil.getR(rgb1)*coef1;
+				valR += outil.getR(rgb2)*coef2;
+				
+				valG = outil.getG(rgb1)*coef1;
+				valG += outil.getG(rgb2)*coef2;
+				
+				valB = outil.getB(rgb1)*coef1;
+				valB += outil.getB(rgb2)*coef2;
+				
+				newRgb = outil.setR(rgb)
+				imaToChange.setRGB(i, j, newRgb);
+			}
+		}
+		
+		
+	}
+	
+	public void modifierFusionImage(int pourcentageImageFond)
+	{
+		
 	}
 	
 }

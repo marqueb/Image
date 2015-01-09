@@ -20,6 +20,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
@@ -184,9 +185,25 @@ public class InterfaceGraphique implements Runnable{
 	
 	public void ajouterComponentFusion(CadreImage cadre_ima_fusion)
 	{
-		ComponentFusion cf = new ComponentFusion(cadre_ima_fusion, controler);
+		CadreImage cadre_ima = cadre_ima_fusion;
+		//TODO redimensionner l'image pour qu'elle rentre dans le panelOption.
+		JSlider slider = new JSlider(0,100,0);
+		JButton appliquer = new JButton("Appliquer fusion");
+			
+		slider.addChangeListener(controler);
+		appliquer.addActionListener(controler);
 		
-		panelOption.add(cf);
+		panelOption.removeAll();
+		panelOption.add(appliquer);
+		panelOption.add(slider);
+		panelOption.add(cadre_ima);
+		panelOption.repaint();
+		frame.validate();
+	}
+	
+	public void retirerComponentFusion(CadreImage cadre_ima_fusion)
+	{
+		panelOption.removeAll();
 		panelOption.repaint();
 		frame.validate();
 	}
@@ -275,6 +292,7 @@ public class InterfaceGraphique implements Runnable{
 		JMenu  transformation = new JMenu("Transformation");      
 		//Image => transformation => fusion
 		JMenuItem fusion = new JMenuItem("Fusion");
+		fusion.addActionListener(controler);
 		transformation.add(fusion);
 		//Image => transformation => Gris
 		JMenuItem imagris = new JMenuItem("Image grise");

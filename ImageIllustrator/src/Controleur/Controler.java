@@ -12,6 +12,7 @@ import javax.swing.event.ChangeListener;
 
 import Modele.Modele;
 import Modele.TypeFiltre;
+import Vue.CadreImage;
 import Vue.InterfaceGraphique;
 
 public class Controler extends MouseMotionAdapter implements MouseListener, ActionListener, ChangeListener{
@@ -20,6 +21,7 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 	private InterfaceGraphique it;
 	private boolean fermerOnglet=false, fusionActive = false;
 	private boolean echantillonageActif=false, estDansImage=false, fermeOnglet=false, isRGB=false;
+	
 
 	public Modele getModele() {
 		return modele;
@@ -97,6 +99,11 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 			break;
 			case "Fusion":
 				fusionActive = true;
+				
+				modele.traiterFusion();
+			break;
+			case "Appliquer fusion":
+				fusionActive = false;
 				modele.traiterFusion();
 			break;
 		}
@@ -134,6 +141,7 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 		else if(fusionActive && e.getSource() instanceof JSlider)
 		{
 			System.out.println(((JSlider)e.getSource()).getValue());
+			modele.traiterVariationFusion(((JSlider)e.getSource()).getValue());
 		}
 	}
 
