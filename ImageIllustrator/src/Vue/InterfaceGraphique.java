@@ -5,8 +5,13 @@ import java.awt.CheckboxGroup;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -139,17 +144,30 @@ public class InterfaceGraphique implements Runnable{
 	public void ajouterHistoRgb(int[][] tabsHisto)
 	{
 		panelOption.removeAll();
+		//panelOption.setLayout(new BoxLayout(panelOption, BoxLayout.Y_AXIS));
 		
-		histoR = new Histogramme(tabsHisto[0], "Rouge");
+		panelOption.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = gbc.gridy = 0; // la grille commence en (0, 0)
+		gbc.anchor = GridBagConstraints.LINE_START; // ou BASELINE_LEADING mais pas WEST.
+		gbc.insets = new Insets(10, 15, 0, 0); // Marge à gauche de 15 et marge au dessus de 10.
+		
+		
+		//histoR = new Histogramme(tabsHisto[0], "Rouge");
+		histoR = new Histogramme(tabsHisto[0], "Rouge", new Dimension(panelOption.getWidth(), 400));
 		histoG = new Histogramme(tabsHisto[1], "Vert");
 		histoB = new Histogramme(tabsHisto[2], "Bleu");
 		
-		panelOption.add(histoR);
-		panelOption.add(histoG);
-		panelOption.add(histoB);
+		//panelOption.add(histoR);
+		//panelOption.add(histoR, Box.createHorizontalGlue());
+		//panelOption.add(histoR, Box.createRigidArea(new Dimension(panelOption.getWidth(), 400)));
+		panelOption.add(histoR, gbc);
 		
-		histoR.repaint();
-		panelOption.repaint();
+//		System.out.println(panelOption.getComponent(0).getSize().toString());
+//		System.out.println(panelOption.getComponent(1).getSize().toString());
+		
+//		histoR.repaint();
+//		panelOption.repaint();
 		frame.validate();
 	}
 	
@@ -161,7 +179,16 @@ public class InterfaceGraphique implements Runnable{
 		panelOption.repaint();
 		frame.validate();
 	}
-
+	
+	public void ajouterComponentFusion(CadreImage cadre_ima_fusion)
+	{
+		ComponentFusion cf = new ComponentFusion(cadre_ima_fusion, controler);
+		
+		panelOption.add(cf);
+		panelOption.repaint();
+		frame.validate();
+	}
+	
 	public JFrame getFrame() {
 		return frame;
 	}
@@ -320,6 +347,7 @@ public class InterfaceGraphique implements Runnable{
 		JTextArea texte= new JTextArea("Zone d'option/bouton rapide");
 		panelOption.add(texte);
 		frame.add(panelOption,BorderLayout.EAST);
+		panelOption.setPreferredSize(new Dimension(200, panelOption.getParent().getHeight()));
 
 		JPanel panelOption2 = new JPanel();
 		PixelCouleur= new JTextArea();

@@ -4,11 +4,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.SwingUtilities;
 
 import Controleur.Controler;
 import Vue.CadreImage;
-import Vue.Histogramme;
 import Vue.InterfaceGraphique;
 
 public class Modele {
@@ -20,6 +18,7 @@ public class Modele {
 
 	private ArrayList<CadreImage> listCadreImage;
 	private ArrayList<JButton> listBoutonFermeture;
+	private CadreImage cadre_ima_fusion = null;
 
 
 
@@ -142,4 +141,13 @@ public class Modele {
 		//supprime l'onglet correspondant
 		interfaceGraphique.getTabbedPane().removeTabAt(i);
 	}
+	
+	public void traiterFusion()
+	{
+		cadre_ima_fusion = outil.charger(interfaceGraphique);
+		if(cadre_ima_fusion!=null){
+			interfaceGraphique.ajouterComponentFusion(cadre_ima_fusion);
+		}
+	}
+	
 }

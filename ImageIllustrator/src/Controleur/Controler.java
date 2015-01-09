@@ -2,18 +2,16 @@ package Controleur;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 
-import javax.swing.JTabbedPane;
+import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import Modele.Modele;
 import Modele.TypeFiltre;
-import Vue.CadreImage;
 import Vue.InterfaceGraphique;
 
 public class Controler extends MouseMotionAdapter implements MouseListener, ActionListener, ChangeListener{
@@ -21,7 +19,7 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 	private Modele modele;
 	private InterfaceGraphique it;
 	private boolean echantillonageActif=false, estDansImage=false, fermeOnglet=false;
-	private boolean fermerOnglet=false;
+	private boolean fermerOnglet=false, fusionActive = false;
 
 	public Modele getModele() {
 		return modele;
@@ -94,6 +92,10 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 				}
 				modele.imagris();
 			break;
+			case "Fusion":
+				fusionActive = true;
+				modele.traiterFusion();
+			break;
 		}
 	}
 	//utiliser pour relever les coordonnées du pixel a evalué
@@ -123,6 +125,11 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 		if(echantillonageActif){
 			echantillonageActif = false;
 			modele.enleverCouleurPixel();
+		}
+		//si on bouge le jslider de la fusion:
+		else if(fusionActive && e.getSource() instanceof JSlider)
+		{
+			System.out.println(((JSlider)e.getSource()).getValue());
 		}
 	}
 
