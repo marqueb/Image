@@ -132,15 +132,21 @@ public class InterfaceGraphique implements Runnable{
 		PixelCouleur.setText("pixel: ("+x+" , "+y+"), Couleur: (Rouge :"+ r+ ", Vert :"+g+", Bleu :"+b+")");
 	}
 	
+	public void afficherYUVCouleur(int x , int y, double yp, double u, double v){
+		PixelCouleur.setText("pixel: ("+x+" , "+y+"), YUV: (luminance :"+ yp+ ", chrominance :"+u+" et "+v+")");
+	}
+	
 	public void enleverCouleurPixel(){
 		PixelCouleur.setText("");
 	}
 	
 	public void affichageChoixRGB(){
 		groupe=new CheckboxGroup(); 
-	    box1=new Checkbox("RGB",groupe,true); 
+	    box1=new Checkbox("RGB",groupe,true);
+	    box1.addMouseListener(controler);
 	    panelOption.add(box1); 
-	    box2=new Checkbox("YUV",groupe,false); 
+	    box2=new Checkbox("YUV",groupe,false);
+	    box2.addMouseListener(controler);
 	    panelOption.add(box2); 
 	    frame.validate();
 	}
@@ -185,6 +191,14 @@ public class InterfaceGraphique implements Runnable{
 
 	public void setFrame(JFrame frame) {
 		this.frame = frame;
+	}
+	
+	public boolean isRGB(Object o){
+		boolean isRGB=false;
+		if(o==box1){
+			isRGB=true;
+		}
+		return isRGB;
 	}
 
 	public void run(){
@@ -335,11 +349,10 @@ public class InterfaceGraphique implements Runnable{
 		tabbedPane.setBackground(Color.WHITE);
 
 		frame.add(tabbedPane,BorderLayout.CENTER);
-
-		panelOption = new JPanel(); 
+		panelOption = new JPanel();
+		//JTextArea texte= new JTextArea("Zone d'option/bouton rapide");
+		//panelOption.add(texte);
 		
-		JTextArea texte= new JTextArea("Zone d'option/bouton rapide");
-		panelOption.add(texte);
 		frame.add(panelOption,BorderLayout.EAST);
 		panelOption.setPreferredSize(new Dimension(200,panelOption.getParent().getHeight()));
 		

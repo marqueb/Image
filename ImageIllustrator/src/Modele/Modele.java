@@ -101,12 +101,22 @@ public class Modele {
 			outil.sauvegarder(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
 	}		
 
-	public void couleurPixel(int x, int y){
+	public void couleurPixel(int x, int y, boolean isRGB){
 		if(x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight()){
 			//recupere la valeur du pixel en fonction de l'image et des coordonnées
 			int couleur = outil.couleurPixel(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage(), x, y);
 			//calcul et affiche les differentes intensités de couleur en fonction de la valeur du pixel
-			interfaceGraphique.afficherValeurCouleur(x, y, outil.getR(couleur), outil.getG(couleur), outil.getB(couleur));
+			int r=outil.getR(couleur);
+			int g=outil.getG(couleur);
+			int b=outil.getB(couleur);
+			if(isRGB){
+				interfaceGraphique.afficherValeurCouleur(x, y, r, g, b);
+			}else{
+				double yp=outil.getY(r, g, b);
+				double u=outil.getU(b, yp);
+				double v=outil.getV(r, yp);
+				interfaceGraphique.afficherYUVCouleur(x, y, Math.round(yp), Math.round(u), Math.round(v));
+			}
 		}else{
 			enleverCouleurPixel();
 		}
