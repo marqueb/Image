@@ -5,20 +5,24 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Scrollbar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
+import javax.swing.Scrollable;
 
 import Controleur.Controler;
 import Modele.Modele;
@@ -86,7 +90,6 @@ public class InterfaceGraphique implements Runnable{
 		//partie onglet fermer
 		JButton boutonFermer = new JButton("X");
 		boutonFermer.addActionListener(controler);
-		//boutonFermer.addMouseListener(controler);
 		//Ajout au panel de la partie nom+fermer
 		tab.add(labelOnglet, BorderLayout.WEST);
 		tab.add(boutonFermer, BorderLayout.EAST);
@@ -95,8 +98,39 @@ public class InterfaceGraphique implements Runnable{
 
 		//Parametre de l'onglet
 		tmp.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);
+		
+		
+		// Scrollable picture;
+		//Where the GUI is created:
+		//JScrollPane pictureScrollPane = new JScrollPane(cadreImage);
+		//JTextArea zonetexte = new JTextArea("blablabla");
+		//zonetexte.setPreferredSize(new Dimension(cadreImage.getWidth(),cadreImage.getHeight()));
+		//JScrollPane scroller = new JScrollPane(cadreImage);
+				
+		//cadreImage.add(scroller);
+		
+		//JPanel image = new JPanel();
+		//image.add(cadreImage);
+		//image.add(scroller);
+		JScrollPane scroll = new JScrollPane(cadreImage);
+		
+		scroll.setVisible(true);
+		scroll.setSize(cadreImage.getImage().getWidth(),cadreImage.getImage().getHeight());System.out.println(scroll.getSize());
+		scroll.setOpaque(false);
+		
+		/*Scrollbar horizontal=new Scrollbar (Scrollbar.HORIZONTAL), vertical=new Scrollbar (Scrollbar.VERTICAL);
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+		panel.add(cadreImage, BorderLayout.CENTER);
+		panel.add(horizontal,BorderLayout.SOUTH);
+		panel.add(vertical,BorderLayout.EAST);
+		//horizontal.addComponentListener()	;*/
+		
+		
+		
+	
 		//Ajout image à l'onglet
-		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
+		tmp.setComponentAt(tabbedPane.getTabCount()-1,scroll);
 		tmp.setSelectedIndex(tabbedPane.getTabCount()-1);
 		return boutonFermer;
 	}
@@ -255,11 +289,20 @@ public class InterfaceGraphique implements Runnable{
 
 		frame.add(tabbedPane,BorderLayout.CENTER);
 
-		JPanel panelOption = new JPanel();
+		/*JPanel panelOption = new JPanel();
 		JTextArea texte= new JTextArea("Zone d'option/bouton rapide");
 		panelOption.add(texte);
+		frame.add(panelOption,BorderLayout.EAST);*/
+		JInternalFrame panelOption = new JInternalFrame();
+		///A MODIFIER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		panelOption.setSize(10, 10);
+		JTabbedPane onglet1 = new JTabbedPane();
+		JTabbedPane onglet2 = new JTabbedPane();
+		panelOption.setVisible(true);
+		panelOption.add(onglet1);
+		panelOption.add(onglet2);
 		frame.add(panelOption,BorderLayout.EAST);
-
+///JUSQUE ICI
 		JPanel panelOption2 = new JPanel();
 		PixelCouleur= new JTextArea();
 		panelOption2.add(PixelCouleur);
