@@ -14,6 +14,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
@@ -90,30 +91,23 @@ public class InterfaceGraphique implements Runnable{
 		//partie onglet fermer
 		JButton boutonFermer = new JButton("X");
 		boutonFermer.addActionListener(controler);
+		//boutonFermer.addMouseListener(controler);
 		//Ajout au panel de la partie nom+fermer
 		tab.add(labelOnglet, BorderLayout.WEST);
 		tab.add(boutonFermer, BorderLayout.EAST);
 		//Ajout panel à l'onglet
 		tmp.addTab(null, content);
-		
-		
-		
-		/*	JScrollPane scroll = new JScrollPane(cadreImage);
-			
-			scroll.setVisible(true);
-			scroll.setSize(cadreImage.getImage().getWidth(),cadreImage.getImage().getHeight());System.out.println(scroll.getSize());
-			scroll.setOpaque(false);*/
-			
-
-			/*Jerem JScrollPane scrollPane = new JScrollPane(cadreImage, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-			tmp.setComponentAt(tabbedPane.getTabCount()-1, scrollPane);
-		*/
-			
-			
 
 		//Parametre de l'onglet
 		tmp.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);
-		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
+		
+
+		
+		JScrollPane scrollPane = new JScrollPane(cadreImage, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		tmp.setComponentAt(tabbedPane.getTabCount()-1, scrollPane);
+		
+		//Ajout image à l'onglet
+//		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
 		tmp.setSelectedIndex(tabbedPane.getTabCount()-1);
 		return boutonFermer;
 	}
@@ -145,6 +139,7 @@ public class InterfaceGraphique implements Runnable{
 	public void ajouterHistoRgb(int[][] tabsHisto)
 	{
 		panelOption.removeAll();
+		
 		histoR = new Histogramme(tabsHisto[0], "Rouge");
 		histoG = new Histogramme(tabsHisto[1], "Vert");
 		histoB = new Histogramme(tabsHisto[2], "Bleu");
@@ -321,25 +316,11 @@ public class InterfaceGraphique implements Runnable{
 
 		frame.add(tabbedPane,BorderLayout.CENTER);
 
-
-		JPanel panelOption = new JPanel();
+		panelOption = new JPanel();
 		JTextArea texte= new JTextArea("Zone d'option/bouton rapide");
 		panelOption.add(texte);
 		frame.add(panelOption,BorderLayout.EAST);
-		
-		
-		/*JInternalFrame panelOption = new JInternalFrame();
-		///A MODIFIER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		panelOption.setSize(10, 10);
-		JTabbedPane onglet1 = new JTabbedPane();
-		JTabbedPane onglet2 = new JTabbedPane();
-		panelOption.setVisible(true);
-		panelOption.add(onglet1);
-		panelOption.add(onglet2);
-		frame.add(panelOption,BorderLayout.EAST);
-///JUSQUE ICI
-		*/
-		
+
 		JPanel panelOption2 = new JPanel();
 		PixelCouleur= new JTextArea();
 		panelOption2.add(PixelCouleur);
