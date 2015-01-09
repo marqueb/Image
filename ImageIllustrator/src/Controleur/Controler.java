@@ -20,8 +20,7 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 
 	private Modele modele;
 	private InterfaceGraphique it;
-	private boolean echantillonageActif=false, estDansImage=false, fermeOnglet=false;
-	private boolean fermerOnglet=false;
+	private boolean echantillonageActif=false, estDansImage=false, fermeOnglet=false, isRGB;
 
 	public Modele getModele() {
 		return modele;
@@ -77,8 +76,11 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 			break;
 			case "Couleur pixel":
 				//autorise l'ecoute à la souris
-				echantillonageActif = true;
-				modele.getInterfaceGraphique().affichageChoixRGB();
+				if(!echantillonageActif){
+					echantillonageActif = true;
+					isRGB=true;
+					modele.getInterfaceGraphique().affichageChoixRGB();
+				}
 			break;
 			case "X":
 				if(echantillonageActif){
@@ -101,7 +103,7 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 		if(estDansImage){
 			//releve la valeur du pixel en fonction des coordonnées
 			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			modele.couleurPixel(e.getX(), e.getY());
+			modele.couleurPixel(e.getX(), e.getY(), isRGB);
 		}
 	}
 	
@@ -127,7 +129,14 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {		
+	public void mouseClicked(MouseEvent e) {
+		if(echantillonageActif){
+			if(modele.getInterfaceGraphique().isRGB(e.getSource())){
+				isRGB=true;
+			}else{
+				isRGB=false;
+			}
+		}
 	}
 
 	@Override
