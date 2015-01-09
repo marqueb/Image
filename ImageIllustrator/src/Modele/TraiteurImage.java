@@ -1,17 +1,6 @@
 package Modele;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.JTabbedPane;
-
-import Vue.CadreImage;
-import Vue.InterfaceGraphique;
 
 //classe outils
 public class TraiteurImage {
@@ -23,39 +12,115 @@ public class TraiteurImage {
 	//Transformation
 	//Filtre
 
+	private static final float[][] MOYENNE = {
+		{1.0f, 1.0f, 1.0f},
+		{1.0f, 1.0f, 1.0f},
+		{1.0f, 1.0f, 1.0f}};
+	private static float unNeuvieme = Float.valueOf((float)1/(float)9);
+	//	private static final float[][] MOYENNE = {
+	//		{unNeuvieme, unNeuvieme, unNeuvieme},
+	//		{unNeuvieme, unNeuvieme, unNeuvieme},
+	//		{unNeuvieme, unNeuvieme, unNeuvieme}};
 
-
-	public BufferedImage convoluer(int[][] noyau, BufferedImage buf_ima_in)
+	public BufferedImage convoluer(TypeFiltre type, BufferedImage buf_ima_in)
 	{
-		BufferedImage dst = new BufferedImage(buf_ima_in.getWidth(), buf_ima_in.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		//Kernel ker = new Kernel(noyau.length, noyau[0].length, TabTabIntToTabFloat(noyau));
-		final float[] MOYENNE = {
-            0.11111f, 0.11111f, 0.11111f,
-            0.11111f, 0.11111f, 0.11111f,
-            0.11111f, 0.11111f, 0.11111f};
-		Kernel ker = new Kernel(3,3,MOYENNE);
-		ConvolveOp convolveOp = new ConvolveOp(ker, ConvolveOp.EDGE_NO_OP,null);
+		//float[] noyau = null;
+		float[][] noyau = null;
 
-		convolveOp.filter(buf_ima_in,dst);
+		switch (type){
+		case MOYENNEUR:
+			noyau = TraiteurImage.MOYENNE;
+			break;
+		}
 
-		return dst;
+		//BufferedImage dst = new BufferedImage(buf_ima_in.getWidth(), buf_ima_in.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+		//		Kernel ker = new Kernel(3,3,noyau);
+		//		ConvolveOp convolveOp = new ConvolveOp(ker, ConvolveOp.EDGE_NO_OP,null);
+		//
+		//		convolveOp.filter(buf_ima_in,dst);
+		//		return dst;
+		//return convoluer(noyau, buf_ima_in, ModeConvolution.SAME);
+		return convoluer(noyau, buf_ima_in);
 	}
-	//convertir un tableau 2 dimensions d'entiers en un vecteur de float
-	private float[] TabTabIntToTabFloat(int[][] in)
+
+
+	public BufferedImage convoluer(float[][] ker_in, BufferedImage bufIma_in)
 	{
-		float[] out = new float[in.length*in[0].length];
+		float[][] ker = inverserNoyau(ker_in);
+		BufferedImage bufIma_out = Outil.deepCopy(bufIma_in);
+		int decalageBord = (ker.length-1)/2;
+		int i=0, j=0;
+		
+		//on recopie les parties ou on n'applique pas la convolution (on applique la convolution sur la partie "VALID" de l'image).
+		for(i=0; i<decalageBord; i++)
+		{
+			for(j=0; j<decalageBord; j++)
+			{
+				bufIma_out.setRGB(i, j, bufIma_in.getRGB(i,  j));
+				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
+				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, j, bufIma_in.getRGB(i,  j));
+				bufIma_out.setRGB(i, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
+			}
+		}
+
+		//on applique la convolution à la partie "VALID" de l'image.
+		for(i=decalageBord; i<bufIma_in.getWidth()-decalageBord-1; i++)
+		{
+			for(j=decalageBord; j<bufIma_in.getHeight()-decalageBord-1; j++)
+			{
+				bufIma_out.setRGB(i, j, convolutionOneStep(bufIma_in, i, j, ker));
+			}
+		}
+
+		return bufIma_out;
+	}
+
+	//retourne le noyau de convolution
+	private float[][] inverserNoyau(float[][] in)
+	{
+		float[][] out = new float[in.length][in[1].length];
 
 		for(int i = 0; i<in.length; i++)
 		{
-			for(int j=0; j<in[0].length; j++)
+			for(int j = 0; j<in[1].length; j++)
 			{
-				out[i*in[0].length+j] = in[i][j];
+				out[in.length-i-1][in[1].length-j-1] = in[i][j];
 			}
 		}
 
 		return out;
 	}
 
+	//applique un pas de convolution (centrée sur x, y)
+	private int convolutionOneStep(BufferedImage ima, int x, int y, float[][] ker)
+	{
+		Outil outil = new Outil();
+		int valR = 0, valG = 0, valB = 0, rgb = 0, resPix = 0, sommeCoef = 0;
+		int decalageBord = (ker.length-1)/2;
 
-	
+		for(int i=-decalageBord; i<=decalageBord; i++)
+		{
+			for(int j=-decalageBord; j<=decalageBord; j++)
+			{
+				rgb = ima.getRGB(x+i, y+j);
+				valR += outil.getR(rgb)*ker[i+decalageBord][j+decalageBord];
+				valG += outil.getG(rgb)*ker[i+decalageBord][j+decalageBord];
+				valB += outil.getB(rgb)*ker[i+decalageBord][j+decalageBord];
+				sommeCoef += ker[i+decalageBord][j+decalageBord];
+			}
+		}
+		
+		if(sommeCoef>1)
+		{
+			valR = valR/sommeCoef;
+			valG = valG/sommeCoef;
+			valB = valB/sommeCoef;
+		}
+		resPix = outil.setR(valR)+outil.setG(valG)+outil.setB(valB);
+		return resPix;
+	}
+
+
+
 }

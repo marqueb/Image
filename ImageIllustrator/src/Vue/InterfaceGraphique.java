@@ -1,38 +1,38 @@
 package Vue;
 import java.awt.BorderLayout;
+import java.awt.Checkbox;
+import java.awt.CheckboxGroup;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Scrollbar;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
-import javax.swing.Scrollable;
 
 import Controleur.Controler;
 import Modele.Modele;
 
 public class InterfaceGraphique implements Runnable{
+	private JFrame frame;
+	private JPanel panelOption;
 	private JTextArea PixelCouleur;
 	private JTabbedPane tabbedPane;
 	private Modele modele;
 	private Controler controler;
 	private JMenuItem sauvegarde;
+	private CheckboxGroup groupe;
+	private Checkbox box1, box2;
+	private Histogramme histoR, histoG, histoB;
+	
 	
 	public JMenuItem getSauvegarde() {
 		return sauvegarde;
@@ -80,7 +80,7 @@ public class InterfaceGraphique implements Runnable{
 	public JButton ajouterOnglet(CadreImage cadreImage){
 		final JPanel content = new JPanel();
 		JPanel tab = new JPanel();
-		tab.setOpaque(false);		
+		tab.setOpaque(false);	
 		JTabbedPane tmp = getTabbedPane();	
 		cadreImage.addMouseMotionListener(controler);
 		cadreImage.addMouseListener(controler);
@@ -98,39 +98,19 @@ public class InterfaceGraphique implements Runnable{
 
 		//Parametre de l'onglet
 		tmp.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);
-		
-		
-		// Scrollable picture;
-		//Where the GUI is created:
-		//JScrollPane pictureScrollPane = new JScrollPane(cadreImage);
-		//JTextArea zonetexte = new JTextArea("blablabla");
-		//zonetexte.setPreferredSize(new Dimension(cadreImage.getWidth(),cadreImage.getHeight()));
-		//JScrollPane scroller = new JScrollPane(cadreImage);
-				
-		//cadreImage.add(scroller);
-		
-		//JPanel image = new JPanel();
-		//image.add(cadreImage);
-		//image.add(scroller);
-		JScrollPane scroll = new JScrollPane(cadreImage);
+	
+	/*	JScrollPane scroll = new JScrollPane(cadreImage);
 		
 		scroll.setVisible(true);
 		scroll.setSize(cadreImage.getImage().getWidth(),cadreImage.getImage().getHeight());System.out.println(scroll.getSize());
-		scroll.setOpaque(false);
+		scroll.setOpaque(false);*/
 		
-		/*Scrollbar horizontal=new Scrollbar (Scrollbar.HORIZONTAL), vertical=new Scrollbar (Scrollbar.VERTICAL);
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
-		panel.add(cadreImage, BorderLayout.CENTER);
-		panel.add(horizontal,BorderLayout.SOUTH);
-		panel.add(vertical,BorderLayout.EAST);
-		//horizontal.addComponentListener()	;*/
+
+		/*Jerem JScrollPane scrollPane = new JScrollPane(cadreImage, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		tmp.setComponentAt(tabbedPane.getTabCount()-1, scrollPane);
+		*/
 		
-		
-		
-	
-		//Ajout image à l'onglet
-		tmp.setComponentAt(tabbedPane.getTabCount()-1,scroll);
+		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
 		tmp.setSelectedIndex(tabbedPane.getTabCount()-1);
 		return boutonFermer;
 	}
@@ -142,9 +122,58 @@ public class InterfaceGraphique implements Runnable{
 	public void enleverCouleurPixel(){
 		PixelCouleur.setText("");
 	}
+	
+	public void affichageChoixRGB(){
+		groupe=new CheckboxGroup(); 
+	    box1=new Checkbox("RGB",groupe,true); 
+	    panelOption.add(box1); 
+	    box2=new Checkbox("YUV",groupe,false); 
+	    panelOption.add(box2); 
+	    frame.validate();
+	}
+	
+	public void retraitChoixRGB(){
+		panelOption.remove(box1);
+		panelOption.remove(box2); 
+		frame.validate();
+	}
+	
+	public void ajouterHistoRgb(int[][] tabsHisto)
+	{
+		panelOption.removeAll();
+		
+		histoR = new Histogramme(tabsHisto[0], "Rouge");
+		histoG = new Histogramme(tabsHisto[1], "Vert");
+		histoB = new Histogramme(tabsHisto[2], "Bleu");
+		
+		panelOption.add(histoR);
+		panelOption.add(histoG);
+		panelOption.add(histoB);
+		
+		histoR.repaint();
+		panelOption.repaint();
+		frame.validate();
+	}
+	
+	public void retirerHistoRgb(int[][] tabsHisto)
+	{
+		panelOption.remove(histoR);
+		panelOption.remove(histoG);
+		panelOption.remove(histoB);
+		panelOption.repaint();
+		frame.validate();
+	}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
 
 	public void run(){
-		JFrame frame = new JFrame("Fenetre");
+		frame = new JFrame("Fenetre");
 		// Ajout de notre composant de dessin dans la fenetre
 		//frame.add(cadreImage);
 
@@ -282,18 +311,21 @@ public class InterfaceGraphique implements Runnable{
 		frame.add(panel,BorderLayout.NORTH);
 
 		tabbedPane = new JTabbedPane();
+		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		tabbedPane.addChangeListener(controler);
-		//tabbedPane.addMouseListener(controler);
 		tabbedPane.setOpaque(true);
 		tabbedPane.setBackground(Color.WHITE);
 
 		frame.add(tabbedPane,BorderLayout.CENTER);
 
-		/*JPanel panelOption = new JPanel();
+
+		JPanel panelOption = new JPanel();
 		JTextArea texte= new JTextArea("Zone d'option/bouton rapide");
 		panelOption.add(texte);
-		frame.add(panelOption,BorderLayout.EAST);*/
-		JInternalFrame panelOption = new JInternalFrame();
+		frame.add(panelOption,BorderLayout.EAST);
+		
+		
+		/*JInternalFrame panelOption = new JInternalFrame();
 		///A MODIFIER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		panelOption.setSize(10, 10);
 		JTabbedPane onglet1 = new JTabbedPane();
@@ -303,6 +335,8 @@ public class InterfaceGraphique implements Runnable{
 		panelOption.add(onglet2);
 		frame.add(panelOption,BorderLayout.EAST);
 ///JUSQUE ICI
+		*/
+		
 		JPanel panelOption2 = new JPanel();
 		PixelCouleur= new JTextArea();
 		panelOption2.add(PixelCouleur);
