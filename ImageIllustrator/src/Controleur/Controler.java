@@ -104,7 +104,8 @@ public class Controler extends MouseMotionAdapter implements MouseListener, Acti
 			break;
 			case "Appliquer fusion":
 				fusionActive = false;
-				modele.traiterFusion();
+				it.retirerComponentFusion();
+				modele.calculerHistogrammeRGB();
 			break;
 		}
 	}

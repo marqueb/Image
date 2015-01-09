@@ -152,28 +152,34 @@ public class Modele {
 		interfaceGraphique.getTabbedPane().removeTabAt(i);
 	}
 	
+	//appelé lorsqu'on appuie sur le bouton fusion du menu
 	public void traiterFusion()
 	{
 		cadre_ima_fusion = outil.charger(interfaceGraphique);
-		imaAvantFusion = Outil.deepCopy(cadre_ima_fusion.getImage());
+		imaAvantFusion = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
 		if(cadre_ima_fusion!=null){
 			interfaceGraphique.ajouterComponentFusion(cadre_ima_fusion);
 		}
 	}
 	
+	//appelé lorsqu'on change le pourcentage d'image avec le scroll
 	public void traiterVariationFusion(int pourcentImageSecondaire)
 	{
 		BufferedImage imaPrincipale = this.imaAvantFusion;
 		BufferedImage imaSecondaire = cadre_ima_fusion.getImage();
 		BufferedImage imaToChange = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
-		int coef1 = (100-pourcentImageSecondaire)/100;
-		int coef2 = pourcentImageSecondaire/100;
+		float coef1 = (float) ((100.0-pourcentImageSecondaire)/100.0);
+		float coef2 = (float) (pourcentImageSecondaire/100.0);
 		
+		System.out.println("Pourcentage : "+pourcentImageSecondaire+"; coef1 = "+coef1+"; coef2 = "+coef2);
+		System.out.println(imaPrincipale.getWidth()==imaToChange.getWidth());
 		//TODO redimensionner les images pour qu'elles aient les même dimensions ou trouver une autre solution
 		
-		int valR = 0, valG = 0, valB = 0, rgb1 = 0, rgb2 = 0, newRgb = 0;
-		int borneX = imaPrincipale.getWidth()<imaSecondaire.getWidth()?imaPrincipale.getWidth():imaPrincipale.getWidth();
-		int borneY = imaPrincipale.getHeight()<imaSecondaire.getHeight()?imaPrincipale.getHeight():imaPrincipale.getHeight();
+		float valR = 0, valG = 0, valB = 0;
+		int rgb1 = 0, rgb2 = 0, newRgb = 0;
+		int borneX = imaPrincipale.getWidth()<imaSecondaire.getWidth()?imaPrincipale.getWidth():imaSecondaire.getWidth();
+		int borneY = imaPrincipale.getHeight()<imaSecondaire.getHeight()?imaPrincipale.getHeight():imaSecondaire.getHeight();
+		
 		for(int i=0; i<borneX; i++)
 		{
 			for(int j=0; j<borneY; j++)
@@ -181,26 +187,24 @@ public class Modele {
 				rgb1 = imaPrincipale.getRGB(i, j);
 				rgb2 = imaSecondaire.getRGB(i, j);
 				
-				valR = outil.getR(rgb1)*coef1;
-				valR += outil.getR(rgb2)*coef2;
+				valR = ((float)outil.getR(rgb1))*coef1;
+				valR += ((float)outil.getR(rgb2))*coef2;
 				
-				valG = outil.getG(rgb1)*coef1;
-				valG += outil.getG(rgb2)*coef2;
+				valG = ((float)outil.getG(rgb1))*coef1;
+				valG += ((float)outil.getG(rgb2))*coef2;
 				
-				valB = outil.getB(rgb1)*coef1;
-				valB += outil.getB(rgb2)*coef2;
+				valB = ((float)outil.getB(rgb1))*coef1;
+				valB += ((float)outil.getB(rgb2))*coef2;
 				
-				newRgb = outil.setR(rgb)
+				newRgb = outil.setR((int)valR)+outil.setG((int)valG)+outil.setB((int)valB);
 				imaToChange.setRGB(i, j, newRgb);
 			}
 		}
-		
-		
+		interfaceGraphique.getFrame().repaint();
 	}
 	
-	public void modifierFusionImage(int pourcentageImageFond)
+	public void calculerHistogrammeRGB()
 	{
-		
+		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
 	}
-	
 }

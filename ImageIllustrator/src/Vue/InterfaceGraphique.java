@@ -201,7 +201,7 @@ public class InterfaceGraphique implements Runnable{
 		frame.validate();
 	}
 	
-	public void retirerComponentFusion(CadreImage cadre_ima_fusion)
+	public void retirerComponentFusion()
 	{
 		panelOption.removeAll();
 		panelOption.repaint();
