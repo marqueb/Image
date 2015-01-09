@@ -141,6 +141,7 @@ public class InterfaceGraphique implements Runnable{
 		frame.validate();
 	}
 	
+	//ajout les trois histogrammes dans la barre d'option de droite
 	public void ajouterHistoRgb(int[][] tabsHisto)
 	{
 		panelOption.removeAll();
