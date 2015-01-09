@@ -95,21 +95,24 @@ public class InterfaceGraphique implements Runnable{
 		tab.add(boutonFermer, BorderLayout.EAST);
 		//Ajout panel à l'onglet
 		tmp.addTab(null, content);
+		
+		
+		
+		/*	JScrollPane scroll = new JScrollPane(cadreImage);
+			
+			scroll.setVisible(true);
+			scroll.setSize(cadreImage.getImage().getWidth(),cadreImage.getImage().getHeight());System.out.println(scroll.getSize());
+			scroll.setOpaque(false);*/
+			
+
+			/*Jerem JScrollPane scrollPane = new JScrollPane(cadreImage, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+			tmp.setComponentAt(tabbedPane.getTabCount()-1, scrollPane);
+		*/
+			
+			
 
 		//Parametre de l'onglet
 		tmp.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);
-	
-	/*	JScrollPane scroll = new JScrollPane(cadreImage);
-		
-		scroll.setVisible(true);
-		scroll.setSize(cadreImage.getImage().getWidth(),cadreImage.getImage().getHeight());System.out.println(scroll.getSize());
-		scroll.setOpaque(false);*/
-		
-
-		/*Jerem JScrollPane scrollPane = new JScrollPane(cadreImage, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		tmp.setComponentAt(tabbedPane.getTabCount()-1, scrollPane);
-		*/
-		
 		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
 		tmp.setSelectedIndex(tabbedPane.getTabCount()-1);
 		return boutonFermer;
@@ -141,7 +144,6 @@ public class InterfaceGraphique implements Runnable{
 	public void ajouterHistoRgb(int[][] tabsHisto)
 	{
 		panelOption.removeAll();
-		
 		histoR = new Histogramme(tabsHisto[0], "Rouge");
 		histoG = new Histogramme(tabsHisto[1], "Vert");
 		histoB = new Histogramme(tabsHisto[2], "Bleu");
