@@ -1,16 +1,14 @@
 package Modele;
 
-import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
+import javax.swing.SwingUtilities;
 
 import Controleur.Controler;
 import Vue.CadreImage;
+import Vue.Histogramme;
 import Vue.InterfaceGraphique;
 
 public class Modele {
@@ -92,6 +90,8 @@ public class Modele {
 			//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image, ajoute le bouton creer a liste de bouton
 			listBoutonFermeture.add(interfaceGraphique.ajouterOnglet(cadreImage));
 			cadreImage.repaint();
+			
+			interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(cadreImage.getImage()));
 		}
 	}
 
