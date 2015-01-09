@@ -82,7 +82,7 @@ public class Outil {
 	public double getU(int b, double y){
 		return 0.492*(b-y);
 	}
-	
+
 	public double getV(int r, double y){
 		return 0.877*(r-y);
 	}
@@ -116,6 +116,62 @@ public class Outil {
 		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
 	}
 
+	//retourne un tableau 2d correspondant à la représentation des effectifs de chaques valeurs des 3 composantes R, G et B.
+	//tab[x][0] : effectif de la valeurs x pour la composante rouge (1: green; 2: blue)
+	public int[][] getTabRgbHisto(BufferedImage ima)
+	{
+		int[][] tab = new int[3][256];
+		int rgb = 0;
+
+		//initialisation du tableau à 0
+		for(int i = 0; i<3; i++)
+		{
+			for(int j = 0; j<256; j++)
+			{
+				tab[i][j] = 0;
+			}
+		}
+
+		//cacule des effectifs de chaques valeurs pour chaques composantes
+		for(int i = 0; i<ima.getTileWidth(); i++)
+		{
+			for(int j = 0; j<ima.getTileHeight(); j++)
+			{
+				rgb = ima.getRGB(i, j);
+				tab[0][getR(rgb)]++;
+				tab[1][getG(rgb)]++;
+				tab[2][getB(rgb)]++;
+			}
+		}
+
+		return tab;
+	}
+
+	//retourne un tableau 2d correspondant à la représentation des effectifs de chaque niveau de gris.
+	//tab[x] : effectif de la valeurs x pour la composante rouge (1: green; 2: blue)
+	public int[] getTabgrisHisto(BufferedImage ima)
+	{
+		int[] tab = new int[256];
+		int rgb = 0;
+
+		//initialisation du tableau à 0
+		for(int i = 0; i<256; i++)
+		{
+			tab[i] = 0;
+		}
+
+		//cacule des effectifs de chaques valeurs
+		for(int i = 0; i<ima.getTileWidth(); i++)
+		{
+			for(int j = 0; j<ima.getTileHeight(); j++)
+			{
+				rgb = ima.getRGB(i, j);
+				tab[getR(rgb)]++;	//remarque: les trois composantes on la même valeurs sur une image en noir et blanc
+			}
+		}
+
+		return tab;
+	}
 
 	//TODO
 	//Copier

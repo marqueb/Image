@@ -5,11 +5,7 @@ import java.awt.CheckboxGroup;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,6 +14,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
@@ -35,6 +32,7 @@ public class InterfaceGraphique implements Runnable{
 	private JMenuItem sauvegarde;
 	private CheckboxGroup groupe;
 	private Checkbox box1, box2;
+	private Histogramme histoR, histoG, histoB;
 	
 	
 	public JMenuItem getSauvegarde() {
@@ -83,7 +81,7 @@ public class InterfaceGraphique implements Runnable{
 	public JButton ajouterOnglet(CadreImage cadreImage){
 		final JPanel content = new JPanel();
 		JPanel tab = new JPanel();
-		tab.setOpaque(false);		
+		tab.setOpaque(false);	
 		JTabbedPane tmp = getTabbedPane();	
 		cadreImage.addMouseMotionListener(controler);
 		cadreImage.addMouseListener(controler);
@@ -102,8 +100,14 @@ public class InterfaceGraphique implements Runnable{
 
 		//Parametre de l'onglet
 		tmp.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);
+		
+
+		
+		JScrollPane scrollPane = new JScrollPane(cadreImage, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		tmp.setComponentAt(tabbedPane.getTabCount()-1, scrollPane);
+		
 		//Ajout image à l'onglet
-		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
+//		tmp.setComponentAt(tabbedPane.getTabCount()-1, cadreImage);
 		tmp.setSelectedIndex(tabbedPane.getTabCount()-1);
 		return boutonFermer;
 	}
@@ -128,6 +132,32 @@ public class InterfaceGraphique implements Runnable{
 	public void retraitChoixRGB(){
 		panelOption.remove(box1);
 		panelOption.remove(box2); 
+		frame.validate();
+	}
+	
+	public void ajouterHistoRgb(int[][] tabsHisto)
+	{
+		panelOption.removeAll();
+		
+		histoR = new Histogramme(tabsHisto[0], "Rouge");
+		histoG = new Histogramme(tabsHisto[1], "Vert");
+		histoB = new Histogramme(tabsHisto[2], "Bleu");
+		
+		panelOption.add(histoR);
+		panelOption.add(histoG);
+		panelOption.add(histoB);
+		
+		histoR.repaint();
+		panelOption.repaint();
+		frame.validate();
+	}
+	
+	public void retirerHistoRgb(int[][] tabsHisto)
+	{
+		panelOption.remove(histoR);
+		panelOption.remove(histoG);
+		panelOption.remove(histoB);
+		panelOption.repaint();
 		frame.validate();
 	}
 
@@ -278,6 +308,7 @@ public class InterfaceGraphique implements Runnable{
 		frame.add(panel,BorderLayout.NORTH);
 
 		tabbedPane = new JTabbedPane();
+		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		tabbedPane.addChangeListener(controler);
 		tabbedPane.setOpaque(true);
 		tabbedPane.setBackground(Color.WHITE);

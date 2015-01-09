@@ -24,7 +24,7 @@ public class CadreImage extends JComponent {
 	public void paintComponent(Graphics g) {
     	int width = getSize().width;
 	    int height = getSize().height;
-	    Graphics2D drawable = (Graphics2D) g;
+	    //Graphics2D drawable = (Graphics2D) g;
         if (image==null)
         {
             image = new BufferedImage(width, height,
