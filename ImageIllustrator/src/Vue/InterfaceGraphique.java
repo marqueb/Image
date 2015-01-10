@@ -7,9 +7,6 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -27,6 +24,7 @@ import javax.swing.JToolBar;
 
 import Controleur.Controler;
 import Modele.Modele;
+import Modele.Outil;
 
 public class InterfaceGraphique implements Runnable{
 	private JFrame frame;
@@ -185,8 +183,10 @@ public class InterfaceGraphique implements Runnable{
 	
 	public void ajouterComponentFusion(CadreImage cadre_ima_fusion)
 	{
-		CadreImage cadre_ima = cadre_ima_fusion;
-		//TODO redimensionner l'image pour qu'elle rentre dans le panelOption.
+		CadreImage cadre_ima = new CadreImage(Outil.resize(Outil.deepCopy(cadre_ima_fusion.getImage()), panelOption.getWidth(), 
+				(cadre_ima_fusion.getImage().getHeight()*panelOption.getWidth())/cadre_ima_fusion.getImage().getWidth()));
+		//redimensionner l'image pour qu'elle rentre dans le panelOption.
+		
 		JSlider slider = new JSlider(0,100,0);
 		JButton appliquer = new JButton("Appliquer fusion");
 			

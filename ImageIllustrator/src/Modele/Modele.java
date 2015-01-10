@@ -171,8 +171,6 @@ public class Modele {
 		float coef1 = (float) ((100.0-pourcentImageSecondaire)/100.0);
 		float coef2 = (float) (pourcentImageSecondaire/100.0);
 		
-		System.out.println("Pourcentage : "+pourcentImageSecondaire+"; coef1 = "+coef1+"; coef2 = "+coef2);
-		System.out.println(imaPrincipale.getWidth()==imaToChange.getWidth());
 		//TODO redimensionner les images pour qu'elles aient les même dimensions ou trouver une autre solution
 		
 		float valR = 0, valG = 0, valB = 0;
