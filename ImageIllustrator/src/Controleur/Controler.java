@@ -99,8 +99,16 @@ public class Controler{
 	public void addControlerCharger(JMenuItem charger){
 		charger.addActionListener(new ControlerCharger(this));
 	}
+	
+	public void addControlerCharger(JButton charger){
+		charger.addActionListener(new ControlerCharger(this));
+	}
 
 	public void addControlerSauvegarder(JMenuItem sauvegarder){
+		sauvegarder.addActionListener(new ControlerSauvegarder(this));
+	}
+	
+	public void addControlerSauvegarder(JButton sauvegarder){
 		sauvegarder.addActionListener(new ControlerSauvegarder(this));
 	}
 	
