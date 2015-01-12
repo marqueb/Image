@@ -28,6 +28,7 @@ public class Controler{
 			modele.getInterfaceGraphique().retraitChoixRGB();
 		}
 		echantillonageActif=false;
+		if(!modele.getListCadreImage().isEmpty())	it.rafraichirComponentOption();
 	}
 	
 	public Modele getModele()
