@@ -171,7 +171,7 @@ public class Modele {
 
 	public void imagris(){
 		CadreImage tmp=listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
-		outil.actualiserImage(tmp, outil.imagris(tmp.getImage()), controler, interfaceGraphique);
+		actualiserImageIcon();
 		interfaceGraphique.getFrame().validate();
 	}
 
@@ -243,6 +243,8 @@ public class Modele {
 				imaToChange.setRGB(i, j, newRgb);
 			}
 		}
+
+		actualiserImageIcon();
 		interfaceGraphique.getFrame().repaint();
 	}
 	
@@ -301,16 +303,8 @@ public class Modele {
 		BufferedImage i = cadreImage.getImage();
 		cadreImage.setImageIcon(new ImageIcon(i));
 		JLabel icon=new JLabel(cadreImage.getImageIcon());
-		//JPanel scrollPanel = new JPanel();
         controler.addControlerSouris(icon);
         cadreImage.getImageScroller().setViewportView(icon);
-        /*imageScroller.setViewportView(icon);
-        imageScroller.setAutoscrolls(true);
-        imageScroller.setWheelScrollingEnabled(true);
-
-        imageScroller.setPreferredSize(new Dimension(200,200));    */    
-        //scrollPanel.add(imageScroller);    
-        //interfaceGraphique.getTabbedPane().setComponentAt(interfaceGraphique.getTabbedPane().getSelectedIndex(), imageScroller);
 	}
 
 }
