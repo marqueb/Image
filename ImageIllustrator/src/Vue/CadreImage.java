@@ -5,16 +5,21 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 
-public class CadreImage extends JComponent {
+public class CadreImage extends JComponent{
 	private BufferedImage image;
     private Graphics2D buffer;
+    private ImageIcon imageIcon;
     private String nomFichier;
+    JScrollPane imageScroller;
     //constructeur a implementer
     public CadreImage(BufferedImage i)
     {
     	image = i;
+    	imageIcon = new ImageIcon(image);
     }
     
     public CadreImage()
@@ -60,5 +65,20 @@ public class CadreImage extends JComponent {
 	public void setBuffer(Graphics2D buffer) {
 		this.buffer = buffer;
 	}
-	
+
+	public ImageIcon getImageIcon() {
+		return imageIcon;
+	}
+
+	public void setImageIcon(ImageIcon imageIcon) {
+		this.imageIcon = imageIcon;
+	}
+
+	public JScrollPane getImageScroller() {
+		return imageScroller;
+	}
+
+	public void setImageScroller(JScrollPane imageScroller) {
+		this.imageScroller = imageScroller;
+	}
 }

@@ -3,7 +3,10 @@ package Controleur;
 import java.awt.Checkbox;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
@@ -106,6 +109,7 @@ public class Controler{
 	{
 		modele.traiterFusion();
 	}
+	
 	public void sliderFusionChange()
 	{
 		modele.traiterVariationFusion(it.getSliderFusionValue());
@@ -129,13 +133,19 @@ public class Controler{
 		it.ajouterComponentChoixTailleFiltre(TypeFiltre.MOYENNEUR);
 	}
 	
-	
-	
 	public void addControlerCharger(JMenuItem charger){
+		charger.addActionListener(new ControlerCharger(this));
+	}
+	
+	public void addControlerCharger(JButton charger){
 		charger.addActionListener(new ControlerCharger(this));
 	}
 
 	public void addControlerSauvegarder(JMenuItem sauvegarder){
+		sauvegarder.addActionListener(new ControlerSauvegarder(this));
+	}
+	
+	public void addControlerSauvegarder(JButton sauvegarder){
 		sauvegarder.addActionListener(new ControlerSauvegarder(this));
 	}
 	
@@ -163,10 +173,10 @@ public class Controler{
 		box2.addItemListener(new ControlerYUV(this));
 	}
 
-	public void addControlerSouris(CadreImage cadreImage){
+	public void addControlerSouris(JLabel image){
 		ControlerSouris cs=new ControlerSouris(this);
-		cadreImage.addMouseListener(cs);
-		cadreImage.addMouseMotionListener(cs);
+		image.addMouseListener(cs);
+		image.addMouseMotionListener(cs);
 	}
 	
 	public void addControlerFusion(JSlider slider, JButton appliquer){
