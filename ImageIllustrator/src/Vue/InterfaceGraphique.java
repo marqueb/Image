@@ -231,6 +231,7 @@ public class InterfaceGraphique implements Runnable{
 		
 		controler.addControlerChoixTailleFiltre(sliderChoixTailleFiltre, appliquer, typeFiltre);
 		panelOption.removeAll();
+		panelOption.add(new JLabel("Choisissez la taille du filtre :"));
 		panelOption.add(sliderChoixTailleFiltre);
 		panelOption.add(appliquer);
 		panelOption.repaint();
