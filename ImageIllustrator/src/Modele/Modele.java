@@ -79,7 +79,7 @@ public class Modele {
 
 	public void charger(){
 		//charge l'image et l'insert dans cadre image
-		CadreImage cadreImage=outil.charger(interfaceGraphique);
+		CadreImage cadreImage=outil.charger();
 		if(cadreImage != null)
 		{		
 			controler.addControlerSouris(cadreImage);
@@ -152,7 +152,7 @@ public class Modele {
 	//appel� lorsqu'on appuie sur le bouton fusion du menu
 	public void traiterFusion()
 	{
-		cadre_ima_fusion = outil.charger(interfaceGraphique);
+		cadre_ima_fusion = outil.charger();
 		if(cadre_ima_fusion!=null){
 			imaAvantFusion = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
 			interfaceGraphique.ajouterComponentFusion(cadre_ima_fusion);
