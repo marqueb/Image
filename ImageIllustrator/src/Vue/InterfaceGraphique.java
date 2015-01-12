@@ -147,18 +147,6 @@ public class InterfaceGraphique implements Runnable{
         //Ajout au panel de la partie nom+fermer
         tab.add(labelOnglet, BorderLayout.WEST);
         tab.add(boutonFermer, BorderLayout.EAST);
-        //Ajout panel Ã  l'onglet
-       /* JPanel scrollPanel = new JPanel();
-        JLabel l1 =  new JLabel(image.getImageIcon());
-        controler.addControlerSouris(l1);
-        JScrollPane imageScroller =new JScrollPane(scrollPanel);
-        imageScroller.setViewportView(l1);
-        imageScroller.setAutoscrolls(true);
-        imageScroller.setWheelScrollingEnabled(true);
-
-        imageScroller.setPreferredSize(new Dimension(200,200));        
-        scrollPanel.add(imageScroller);        
-		tabbedPane.add(imageScroller);*/
         tabbedPane.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);        
         tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
         //Parametre de l'onglet

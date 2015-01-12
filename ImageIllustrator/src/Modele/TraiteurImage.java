@@ -65,7 +65,7 @@ public class TraiteurImage {
 			}
 		}
 
-		//on applique la convolution à la partie "VALID" de l'image.
+		//on applique la convolution ï¿½ la partie "VALID" de l'image.
 		for(i=decalageBord; i<bufIma_in.getWidth()-decalageBord-1; i++)
 		{
 			for(j=decalageBord; j<bufIma_in.getHeight()-decalageBord-1; j++)
@@ -93,7 +93,7 @@ public class TraiteurImage {
 		return out;
 	}
 
-	//applique un pas de convolution (centrée sur x, y)
+	//applique un pas de convolution (centrï¿½e sur x, y)
 	private int convolutionOneStep(BufferedImage ima, int x, int y, float[][] ker)
 	{
 		Outil outil = new Outil();
@@ -121,7 +121,4 @@ public class TraiteurImage {
 		resPix = outil.setR(valR)+outil.setG(valG)+outil.setB(valB);
 		return resPix;
 	}
-
-
-
 }

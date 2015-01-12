@@ -36,82 +36,6 @@ public class Modele {
 		traiteurImage = new TraiteurImage();
 	}	
 
-	public Outil getOutil() {
-		return outil;
-	}
-
-	public void setOutil(Outil outil) {
-		this.outil = outil;
-	}
-
-	public TraiteurImage getTraiteurImage() {
-		return traiteurImage;
-	}
-
-	public void setTraiteurImage(TraiteurImage traiteurImage) {
-		this.traiteurImage = traiteurImage;
-	}
-
-	public Controler getControler() {
-		return controler;
-	}
-
-	public void setControler(Controler controler) {
-		this.controler = controler;
-	}
-
-	public InterfaceGraphique getInterfaceGraphique() {
-		return interfaceGraphique;
-	}
-
-	public void setInterfaceGraphique(InterfaceGraphique interfaceGraphique) {
-		this.interfaceGraphique = interfaceGraphique;
-	}
-
-	public void addImage(CadreImage image){
-		listCadreImage.add(image);
-	}
-
-	public void suppCadreImage(int index){
-		listCadreImage.remove(index);
-	}
-
-	public ArrayList<CadreImage> getListImage() {
-		return listCadreImage;
-	}
-
-	public void setListCadreImage(ArrayList<CadreImage> listCadreImage) {
-		this.listCadreImage = listCadreImage;
-	}
-
-	public ArrayList<JButton> getListBoutonFermeture() {
-		return listBoutonFermeture;
-	}
-
-	public void setListBoutonFermeture(ArrayList<JButton> listBoutonFermeture) {
-		this.listBoutonFermeture = listBoutonFermeture;
-	}
-
-	public CadreImage getCadre_ima_fusion() {
-		return cadre_ima_fusion;
-	}
-
-	public void setCadre_ima_fusion(CadreImage cadre_ima_fusion) {
-		this.cadre_ima_fusion = cadre_ima_fusion;
-	}
-
-	public BufferedImage getImaAvantFusion() {
-		return imaAvantFusion;
-	}
-
-	public void setImaAvantFusion(BufferedImage imaAvantFusion) {
-		this.imaAvantFusion = imaAvantFusion;
-	}
-
-	public ArrayList<CadreImage> getListCadreImage() {
-		return listCadreImage;
-	}
-
 	public void charger(){	
 		File monFichier=outil.lectureFichier();
 		BufferedImage image =outil.lectureImage(monFichier);
@@ -171,6 +95,7 @@ public class Modele {
 
 	public void imagris(){
 		CadreImage tmp=listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
+		outil.imagris(tmp.getImage());
 		actualiserImageIcon();
 		interfaceGraphique.getFrame().validate();
 	}
@@ -307,4 +232,79 @@ public class Modele {
         cadreImage.getImageScroller().setViewportView(icon);
 	}
 
+	public Outil getOutil() {
+		return outil;
+	}
+
+	public void setOutil(Outil outil) {
+		this.outil = outil;
+	}
+
+	public TraiteurImage getTraiteurImage() {
+		return traiteurImage;
+	}
+
+	public void setTraiteurImage(TraiteurImage traiteurImage) {
+		this.traiteurImage = traiteurImage;
+	}
+
+	public Controler getControler() {
+		return controler;
+	}
+
+	public void setControler(Controler controler) {
+		this.controler = controler;
+	}
+
+	public InterfaceGraphique getInterfaceGraphique() {
+		return interfaceGraphique;
+	}
+
+	public void setInterfaceGraphique(InterfaceGraphique interfaceGraphique) {
+		this.interfaceGraphique = interfaceGraphique;
+	}
+
+	public void addImage(CadreImage image){
+		listCadreImage.add(image);
+	}
+
+	public void suppCadreImage(int index){
+		listCadreImage.remove(index);
+	}
+
+	public ArrayList<CadreImage> getListImage() {
+		return listCadreImage;
+	}
+
+	public void setListCadreImage(ArrayList<CadreImage> listCadreImage) {
+		this.listCadreImage = listCadreImage;
+	}
+
+	public ArrayList<JButton> getListBoutonFermeture() {
+		return listBoutonFermeture;
+	}
+
+	public void setListBoutonFermeture(ArrayList<JButton> listBoutonFermeture) {
+		this.listBoutonFermeture = listBoutonFermeture;
+	}
+
+	public CadreImage getCadre_ima_fusion() {
+		return cadre_ima_fusion;
+	}
+
+	public void setCadre_ima_fusion(CadreImage cadre_ima_fusion) {
+		this.cadre_ima_fusion = cadre_ima_fusion;
+	}
+
+	public BufferedImage getImaAvantFusion() {
+		return imaAvantFusion;
+	}
+
+	public void setImaAvantFusion(BufferedImage imaAvantFusion) {
+		this.imaAvantFusion = imaAvantFusion;
+	}
+
+	public ArrayList<CadreImage> getListCadreImage() {
+		return listCadreImage;
+	}
 }

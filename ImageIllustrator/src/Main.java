@@ -12,30 +12,6 @@ public class Main {
 	private static Controler controler;
 	private static InterfaceGraphique it;
 	
-	public static Modele getModele() {
-		return modele;
-	}
-
-	public static void setModele(Modele modele) {
-		Main.modele = modele;
-	}
-
-	public static Controler getControler() {
-		return controler;
-	}
-
-	public static void setControler(Controler controler) {
-		Main.controler = controler;
-	}
-
-	public static InterfaceGraphique getIt() {
-		return it;
-	}
-
-	public static void setIt(InterfaceGraphique it) {
-		Main.it = it;
-	}
-	
 	public static void main(String [] args) {
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -62,5 +38,29 @@ public class Main {
 		
 		//lancement de l'interface graphique
 		EventQueue.invokeLater(it);
+	}
+	
+	public static Modele getModele() {
+		return modele;
+	}
+
+	public static void setModele(Modele modele) {
+		Main.modele = modele;
+	}
+
+	public static Controler getControler() {
+		return controler;
+	}
+
+	public static void setControler(Controler controler) {
+		Main.controler = controler;
+	}
+
+	public static InterfaceGraphique getIt() {
+		return it;
+	}
+
+	public static void setIt(InterfaceGraphique it) {
+		Main.it = it;
 	}
 }

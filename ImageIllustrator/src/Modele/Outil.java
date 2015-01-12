@@ -86,53 +86,8 @@ public class Outil {
 				e1.printStackTrace();
 			}
 		}
-
 	}
-	public int getAlpha(int rgb){
-		return (rgb >> 24 ) & 0XFF;
-	}
-
-	public int getR(int rgb){
-		return (rgb >> 16 ) & 0XFF;
-	}
-
-	public int getG(int rgb){
-		return (rgb >> 8 ) & 0XFF;
-	}
-
-	public int getB(int rgb){
-		return rgb  & 0XFF;
-	}
-
-	public int setR(int rgb){
-		return (rgb & 0XFF) << 16;
-	}
-
-	public int setG(int rgb){
-		return (rgb & 0XFF) << 8;
-	}
-
-	public int setB(int rgb){
-		return (rgb & 0XFF) ;
-	}
-
-	public double getY(int r, int g, int b){
-		return (0.299*r+0.587*g+0.114*b);
-	}
-
-	public double getU(int b, double y){
-		return 0.492*(b-y);
-	}
-
-	public double getV(int r, double y){
-		return 0.877*(r-y);
-	}
-
-	public int couleurPixel(BufferedImage image, int x, int y)
-	{ 
-		return image.getRGB(x,y);	
-	}
-
+	
 	public BufferedImage imagris(BufferedImage image){
 		int r,g,b,gris;
 		int couleur;
@@ -225,11 +180,48 @@ public class Outil {
 	    return dimg;
 	}  
 
+	public int getAlpha(int rgb){
+		return (rgb >> 24 ) & 0XFF;
+	}
 
-	//TODO
-	//Copier
-	//Coller
-	//précédent
-	//suivant
+	public int getR(int rgb){
+		return (rgb >> 16 ) & 0XFF;
+	}
 
+	public int getG(int rgb){
+		return (rgb >> 8 ) & 0XFF;
+	}
+
+	public int getB(int rgb){
+		return rgb  & 0XFF;
+	}
+
+	public int setR(int rgb){
+		return (rgb & 0XFF) << 16;
+	}
+
+	public int setG(int rgb){
+		return (rgb & 0XFF) << 8;
+	}
+
+	public int setB(int rgb){
+		return (rgb & 0XFF) ;
+	}
+
+	public double getY(int r, int g, int b){
+		return (0.299*r+0.587*g+0.114*b);
+	}
+
+	public double getU(int b, double y){
+		return 0.492*(b-y);
+	}
+
+	public double getV(int r, double y){
+		return 0.877*(r-y);
+	}
+
+	public int couleurPixel(BufferedImage image, int x, int y)
+	{ 
+		return image.getRGB(x,y);	
+	}
 }

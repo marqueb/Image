@@ -67,12 +67,6 @@ public class Controler{
 
 	public void changerOnglet(){
 		init();
-/*		//si on bouge le jslider de la fusion:
-		else if(fusionActive && e.getSource() instanceof JSlider)
-		{
-			System.out.println(((JSlider)e.getSource()).getValue());
-			modele.traiterVariationFusion(((JSlider)e.getSource()).getValue());
-		}*/
 	}
 
 	public void fermerOnglet(Object o){
