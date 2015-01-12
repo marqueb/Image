@@ -37,16 +37,16 @@ public class Modele {
 	}	
 
 	public void charger(){	
-		File monFichier=outil.lectureFichier();
-		BufferedImage image =outil.lectureImage(monFichier);
-		int index = monFichier.getName().indexOf('.');
-		//charge l'image et l'insert dans cadre image
-//		CadreImage cadreImage=outil.charger();
-//		if(cadreImage != null)
-		CadreImage cadreImage=outil.initCadre(image, controler);
-		cadreImage.setNomFichier(monFichier.getName().substring(0,index));
-		if(image != null)
-		{		
+		try{
+			File monFichier=outil.lectureFichier();
+			BufferedImage image =outil.lectureImage(monFichier);
+
+			int index = monFichier.getName().indexOf('.');
+			//charge l'image et l'insert dans cadre image
+			//			CadreImage cadreImage=outil.charger();
+			//			if(cadreImage != null)
+			CadreImage cadreImage=outil.initCadre(image, controler);
+			cadreImage.setNomFichier(monFichier.getName().substring(0,index));
 			interfaceGraphique.getTabbedPane().add(cadreImage.getImageScroller());
 			//this.initCadre(image);
 			interfaceGraphique.setEnableSauvegarde(true);
@@ -56,9 +56,9 @@ public class Modele {
 			listBoutonFermeture.add(interfaceGraphique.ajouterOnglet(cadreImage));
 			//controler.addControlerSouris(cadreImage);
 			//cadreImage.repaint();
-			
 			//interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(cadreImage.getImage()));
-		}
+
+		}catch(Exception e){}
 	}
 
 	public void sauvegarder(){
@@ -113,7 +113,7 @@ public class Modele {
 		//supprime l'onglet correspondant
 		interfaceGraphique.getTabbedPane().removeTabAt(i);
 	}
-	
+
 	//appel� lorsqu'on appuie sur le bouton fusion du menu
 	public void traiterFusion()
 	{
@@ -123,13 +123,13 @@ public class Modele {
 			interfaceGraphique.ajouterComponentFusion(cadre_ima_fusion);
 		}
 	}
-	
+
 	public void validerFusion()
 	{
 		interfaceGraphique.retirerComponentFusion();
 		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
 	}
-	
+
 	//appel� lorsqu'on change le pourcentage d'image avec le scroll
 	public void traiterVariationFusion(int pourcentImageSecondaire)
 	{
@@ -138,31 +138,31 @@ public class Modele {
 		BufferedImage imaToChange = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
 		float coef1 = (float) ((100.0-pourcentImageSecondaire)/100.0);
 		float coef2 = (float) (pourcentImageSecondaire/100.0);
-		
-		
+
+
 		//TODO redimensionner les images pour qu'elles aient les m�me dimensions ou trouver une autre solution
-		
+
 		float valR = 0, valG = 0, valB = 0;
 		int rgb1 = 0, rgb2 = 0, newRgb = 0;
 		int borneX = imaPrincipale.getWidth()<imaSecondaire.getWidth()?imaPrincipale.getWidth():imaSecondaire.getWidth();
 		int borneY = imaPrincipale.getHeight()<imaSecondaire.getHeight()?imaPrincipale.getHeight():imaSecondaire.getHeight();
-		
+
 		for(int i=0; i<borneX; i++)
 		{
 			for(int j=0; j<borneY; j++)
 			{
 				rgb1 = imaPrincipale.getRGB(i, j);
 				rgb2 = imaSecondaire.getRGB(i, j);
-				
+
 				valR = ((float)outil.getR(rgb1))*coef1;
 				valR += ((float)outil.getR(rgb2))*coef2;
-				
+
 				valG = ((float)outil.getG(rgb1))*coef1;
 				valG += ((float)outil.getG(rgb2))*coef2;
-				
+
 				valB = ((float)outil.getB(rgb1))*coef1;
 				valB += ((float)outil.getB(rgb2))*coef2;
-				
+
 				newRgb = outil.setR((int)valR)+outil.setG((int)valG)+outil.setB((int)valB);
 
 				imaToChange.setRGB(i, j, newRgb);
@@ -172,7 +172,7 @@ public class Modele {
 		actualiserImageIcon();
 		interfaceGraphique.getFrame().repaint();
 	}
-	
+
 	public void traiterChangementTailleFiltre(TypeFiltre typeFiltre)
 	{
 		int taille = interfaceGraphique.getSliderChoixTailleFiltreValue();
@@ -181,20 +181,20 @@ public class Modele {
 		switch (typeFiltre){
 		case MOYENNEUR:
 			filtre = FiltreConvolution.createFiltreMoyenne(taille);
-		break;
+			break;
 		}
-		
+
 		//appliquer convolution
 		if(filtre!=null) appliquerFiltre(filtre, this.imaAvantFusion);
 
 		actualiserImageIcon();
 	}
-	
+
 	public void calculerHistogrammeRGB()
 	{
 		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
 	}
-	
+
 	public void appliquerFiltre(TypeFiltre filtre)
 	{
 		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
@@ -202,7 +202,7 @@ public class Modele {
 		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
 		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
 	}
-	
+
 	public void appliquerFiltre(float[][] noyau)
 	{
 		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
@@ -210,26 +210,30 @@ public class Modele {
 		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
 		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
 	}
-	
+
 	public void appliquerFiltre(float[][] noyau, BufferedImage bufImage)
 	{
 		BufferedImage res = traiteurImage.convoluer(noyau, bufImage);
 		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
 		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
 	}
-	
+
 	public void memoriseImage()
 	{
 		this.imaAvantFusion = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
 	}
-	
+
 	public void actualiserImageIcon(){
 		CadreImage cadreImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex());
 		BufferedImage i = cadreImage.getImage();
 		cadreImage.setImageIcon(new ImageIcon(i));
 		JLabel icon=new JLabel(cadreImage.getImageIcon());
-        controler.addControlerSouris(icon);
-        cadreImage.getImageScroller().setViewportView(icon);
+		controler.addControlerSouris(icon);
+		int x=cadreImage.getImageScroller().getVerticalScrollBar().getValue();
+		int y=cadreImage.getImageScroller().getHorizontalScrollBar().getValue();
+		cadreImage.getImageScroller().setViewportView(icon);
+		cadreImage.getImageScroller().getVerticalScrollBar().setValue(x);
+		cadreImage.getImageScroller().getHorizontalScrollBar().setValue(y);
 	}
 
 	public Outil getOutil() {
