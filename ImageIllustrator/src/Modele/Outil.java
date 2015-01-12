@@ -80,16 +80,16 @@ public class Outil {
 		cadreImage.setImage(image);
 		cadreImage.setImageIcon(new ImageIcon(cadreImage.getImage()));
 		JLabel icon=new JLabel(cadreImage.getImageIcon());
-		//JPanel scrollPanel = new JPanel();
         controler.addControlerSouris(icon);
+        int x = cadreImage.getImageScroller().getHorizontalScrollBarPolicy();
+        int y = cadreImage.getImageScroller().getVerticalScrollBarPolicy();
         cadreImage.getImageScroller().setViewportView(icon);
-        /*imageScroller.setViewportView(icon);
-        imageScroller.setAutoscrolls(true);
-        imageScroller.setWheelScrollingEnabled(true);
-
-        imageScroller.setPreferredSize(new Dimension(200,200));    */    
-        //scrollPanel.add(imageScroller);    
-        //interfaceGraphique.getTabbedPane().setComponentAt(interfaceGraphique.getTabbedPane().getSelectedIndex(), imageScroller);
+        System.out.println(x + " "+y);
+        cadreImage.getImageScroller().setHorizontalScrollBarPolicy(x);
+        cadreImage.getImageScroller().setVerticalScrollBarPolicy(y);
+        x = cadreImage.getImageScroller().getHorizontalScrollBarPolicy();
+        y = cadreImage.getImageScroller().getVerticalScrollBarPolicy();
+        System.out.println(x + " "+y);
 	}
 
 	public void sauvegarder(BufferedImage image){
