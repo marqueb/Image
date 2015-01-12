@@ -1,21 +1,16 @@
 package Controleur;
 
-import java.awt.Checkbox;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import javax.swing.JButton;
+import Modele.*;
+import Vue.*;
+
 import javax.swing.JMenuItem;
-import javax.swing.JSlider;
+import java.awt.Checkbox;
 import javax.swing.JTabbedPane;
-
-import Modele.Modele;
-import Modele.TypeFiltre;
-import Vue.CadreImage;
-import Vue.InterfaceGraphique;
-
+import javax.swing.JButton;
 
 public class Controler{
 	private Modele modele;
+
 	private boolean echantillonageActif=false, isRGB;
 
 	public void init(){
@@ -29,10 +24,6 @@ public class Controler{
 	public void setModele(Modele modele){
 		this.modele=modele;
 	}
-	
-	/*public void setInterfaceGraphique(Modele modele){
-		this.modele=modele;
-	}*/
 
 	public void charger(){
 		init();
@@ -67,7 +58,7 @@ public class Controler{
 	}
 
 	public void fermerOnglet(Object o){
-		modele.fermerOnglet(o);
+		modele.fermer(o);
 	}
 
 	public void changeSelectionRGB(){

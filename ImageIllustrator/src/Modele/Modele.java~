@@ -2,11 +2,11 @@ package Modele;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
 import javax.swing.JButton;
 
 import Controleur.*;
 import Vue.*;
-
 
 public class Modele {
 
@@ -134,6 +134,14 @@ public class Modele {
 		outil.imagris(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
 		listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
 	}
+/*
+	public void appliquerFiltre(TypeFiltre filtre)
+	{
+		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
+		BufferedImage res = traiteurImage.convoluer(filtre, bufImage);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
+	}
 
 	public void fermerOnglet(Object j){
 		//cherche l'index de l'onglet Ã  l'aide de la table de bouton
@@ -149,7 +157,7 @@ public class Modele {
 		interfaceGraphique.getTabbedPane().removeTabAt(i);
 	}
 	
-	//appelï¿½ lorsqu'on appuie sur le bouton fusion du menu
+	//appelé lorsqu'on appuie sur le bouton fusion du menu
 	public void traiterFusion()
 	{
 		cadre_ima_fusion = outil.charger(interfaceGraphique);
@@ -159,7 +167,7 @@ public class Modele {
 		}
 	}
 	
-	//appelï¿½ lorsqu'on change le pourcentage d'image avec le scroll
+	//appelé lorsqu'on change le pourcentage d'image avec le scroll
 	public void traiterVariationFusion(int pourcentImageSecondaire)
 	{
 		BufferedImage imaPrincipale = this.imaAvantFusion;
@@ -168,7 +176,7 @@ public class Modele {
 		float coef1 = (float) ((100.0-pourcentImageSecondaire)/100.0);
 		float coef2 = (float) (pourcentImageSecondaire/100.0);
 		
-		//TODO redimensionner les images pour qu'elles aient les mï¿½me dimensions ou trouver une autre solution
+		//TODO redimensionner les images pour qu'elles aient les même dimensions ou trouver une autre solution
 		
 		float valR = 0, valG = 0, valB = 0;
 		int rgb1 = 0, rgb2 = 0, newRgb = 0;
@@ -201,5 +209,5 @@ public class Modele {
 	public void calculerHistogrammeRGB()
 	{
 		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
-	}
+	}*/
 }

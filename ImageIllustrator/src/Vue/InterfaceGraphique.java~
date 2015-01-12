@@ -1,10 +1,15 @@
 package Vue;
-
 import java.awt.BorderLayout;
 import java.awt.Checkbox;
 import java.awt.CheckboxGroup;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -18,10 +23,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JToolBar;
 
 import Controleur.Controler;
 import Modele.Modele;
-import Modele.Outil;
 
 public class InterfaceGraphique implements Runnable{
 	private JFrame frame;
@@ -93,7 +98,8 @@ public class InterfaceGraphique implements Runnable{
 		JLabel labelOnglet = new JLabel(cadreImage.getNomFichier()+(getTabbedPane().getTabCount()+1));
 		//partie onglet fermer
 		JButton boutonFermer = new JButton("X");
-		controler.addControlerX(boutonFermer);
+		//boutonFermer.addActionListener(controler);
+		//boutonFermer.addMouseListener(controler);
 		//Ajout au panel de la partie nom+fermer
 		tab.add(labelOnglet, BorderLayout.WEST);
 		tab.add(boutonFermer, BorderLayout.EAST);
@@ -148,7 +154,7 @@ public class InterfaceGraphique implements Runnable{
 		panelOption.remove(box2); 
 		frame.validate();
 	}
-
+/*	
 	//ajout les trois histogrammes dans la barre d'option de droite
 	public void ajouterHistoRgb(int[][] tabsHisto)
 	{
@@ -177,16 +183,13 @@ public class InterfaceGraphique implements Runnable{
 	
 	public void ajouterComponentFusion(CadreImage cadre_ima_fusion)
 	{
-		CadreImage cadre_ima = new CadreImage(Outil.resize(Outil.deepCopy(cadre_ima_fusion.getImage()), panelOption.getWidth(), 
-				(cadre_ima_fusion.getImage().getHeight()*panelOption.getWidth())/cadre_ima_fusion.getImage().getWidth()));
-		//redimensionner l'image pour qu'elle rentre dans le panelOption.
-		
+		CadreImage cadre_ima = cadre_ima_fusion;
+		//TODO redimensionner l'image pour qu'elle rentre dans le panelOption.
 		JSlider slider = new JSlider(0,100,0);
 		JButton appliquer = new JButton("Appliquer fusion");
-		
-		//controler.addControlerSlider(slider);
-		//slider.addChangeListener(controler);
-		//appliquer.addActionListener(controler);
+			
+		slider.addChangeListener(controler);
+		appliquer.addActionListener(controler);
 		
 		panelOption.removeAll();
 		panelOption.add(appliquer);
@@ -217,7 +220,7 @@ public class InterfaceGraphique implements Runnable{
 			isRGB=true;
 		}
 		return isRGB;
-	}
+	}*/
 
 	public void run(){
 		frame = new JFrame("Fenetre");
