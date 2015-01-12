@@ -259,6 +259,8 @@ public class Modele {
 		
 		//appliquer convolution
 		if(filtre!=null) appliquerFiltre(filtre, this.imaAvantFusion);
+
+		actualiserImageIcon();
 	}
 	
 	public void calculerHistogrammeRGB()
@@ -292,6 +294,23 @@ public class Modele {
 	public void memoriseImage()
 	{
 		this.imaAvantFusion = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
+	}
+	
+	public void actualiserImageIcon(){
+		CadreImage cadreImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex());
+		BufferedImage i = cadreImage.getImage();
+		cadreImage.setImageIcon(new ImageIcon(i));
+		JLabel icon=new JLabel(cadreImage.getImageIcon());
+		//JPanel scrollPanel = new JPanel();
+        controler.addControlerSouris(icon);
+        cadreImage.getImageScroller().setViewportView(icon);
+        /*imageScroller.setViewportView(icon);
+        imageScroller.setAutoscrolls(true);
+        imageScroller.setWheelScrollingEnabled(true);
+
+        imageScroller.setPreferredSize(new Dimension(200,200));    */    
+        //scrollPanel.add(imageScroller);    
+        //interfaceGraphique.getTabbedPane().setComponentAt(interfaceGraphique.getTabbedPane().getSelectedIndex(), imageScroller);
 	}
 
 }

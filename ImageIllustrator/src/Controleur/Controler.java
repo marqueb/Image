@@ -124,6 +124,7 @@ public class Controler{
 	public void boutonAppliquerFiltre()
 	{
 		this.it.rafraichirComponentOption();
+		modele.actualiserImageIcon();
 	}
 
 	public void boutonMoyenneurClic()
