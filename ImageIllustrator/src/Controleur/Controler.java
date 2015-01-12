@@ -26,6 +26,11 @@ public class Controler{
 		}
 		echantillonageActif=false;
 	}
+	
+	public Modele getModele()
+	{
+		return this.modele;
+	}
 
 	public void setModele(Modele modele){
 		this.modele=modele;
@@ -111,11 +116,20 @@ public class Controler{
 		this.it.retirerComponentFusion();
 		modele.calculerHistogrammeRGB();
 	}
+	
+	public void boutonAppliquerFiltre()
+	{
+		this.it.rafraichirComponentOption();
+	}
 
 	public void boutonMoyenneurClic()
 	{
-		modele.appliquerFiltre(TypeFiltre.MOYENNEUR);
+		//modele.appliquerFiltre(TypeFiltre.MOYENNEUR);
+		modele.memoriseImage();
+		it.ajouterComponentChoixTailleFiltre(TypeFiltre.MOYENNEUR);
 	}
+	
+	
 	
 	public void addControlerCharger(JMenuItem charger){
 		charger.addActionListener(new ControlerCharger(this));
@@ -159,6 +173,12 @@ public class Controler{
 		ControlerFusion cf = new ControlerFusion(this);
 		slider.addChangeListener(cf);
 		appliquer.addActionListener(cf);
-		
+	}
+	
+	public void addControlerChoixTailleFiltre(JSlider slider,JButton b, TypeFiltre filtre)
+	{
+		ControlerChoixTailleFiltre c =new ControlerChoixTailleFiltre(this,b,  filtre);
+		slider.addChangeListener(c);
+		b.addActionListener(c);
 	}
 }

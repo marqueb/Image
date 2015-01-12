@@ -24,6 +24,7 @@ import Controleur.ControlerBoutonFusion;
 import Controleur.ControlerMoyenneur;
 import Modele.Modele;
 import Modele.Outil;
+import Modele.TypeFiltre;
 
 public class InterfaceGraphique implements Runnable{
 	private JFrame frame;
@@ -36,7 +37,7 @@ public class InterfaceGraphique implements Runnable{
 	private CheckboxGroup groupe;
 	private Checkbox box1, box2;
 	private Histogramme histoR, histoG, histoB;
-	private JSlider sliderFusion = null;
+	private JSlider sliderFusion = null, sliderChoixTailleFiltre = null;
 	
 	
 	public int getSliderFusionValue()
@@ -45,6 +46,12 @@ public class InterfaceGraphique implements Runnable{
 		return this.sliderFusion.getValue();
 	}
 	
+	public int getSliderChoixTailleFiltreValue()
+	{
+		if(this.sliderChoixTailleFiltre == null) return -1;
+		//*2+1 pour avoir les tailles impaires entre 1 et 15
+		return this.sliderChoixTailleFiltre.getValue()*2+1;
+	}
 	
 	public JMenuItem getSauvegarde() {
 		return sauvegarde;
@@ -213,6 +220,27 @@ public class InterfaceGraphique implements Runnable{
 	public void retirerComponentFusion()
 	{
 		panelOption.removeAll();
+		panelOption.repaint();
+		frame.validate();
+	}
+	
+	public void ajouterComponentChoixTailleFiltre(TypeFiltre typeFiltre)
+	{
+		sliderChoixTailleFiltre = new JSlider(0,7,0);
+		JButton appliquer = new JButton("Appliquer filtre");
+		
+		controler.addControlerChoixTailleFiltre(sliderChoixTailleFiltre, appliquer, typeFiltre);
+		panelOption.removeAll();
+		panelOption.add(sliderChoixTailleFiltre);
+		panelOption.add(appliquer);
+		panelOption.repaint();
+		frame.validate();
+	}
+	
+	public void rafraichirComponentOption()
+	{
+		panelOption.removeAll();
+		modele.calculerHistogrammeRGB();
 		panelOption.repaint();
 		frame.validate();
 	}

@@ -206,6 +206,21 @@ public class Modele {
 		interfaceGraphique.getFrame().repaint();
 	}
 	
+	public void traiterChangementTailleFiltre(TypeFiltre typeFiltre)
+	{
+		int taille = interfaceGraphique.getSliderChoixTailleFiltreValue();
+		float[][] filtre = null;
+		//créer filtre
+		switch (typeFiltre){
+		case MOYENNEUR:
+			filtre = FiltreConvolution.createFiltreMoyenne(taille);
+		break;
+		}
+		
+		//appliquer convolution
+		if(filtre!=null) appliquerFiltre(filtre, this.imaAvantFusion);
+	}
+	
 	public void calculerHistogrammeRGB()
 	{
 		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
@@ -217,5 +232,25 @@ public class Modele {
 		BufferedImage res = traiteurImage.convoluer(filtre, bufImage);
 		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
 		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
+	}
+	
+	public void appliquerFiltre(float[][] noyau)
+	{
+		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
+		BufferedImage res = traiteurImage.convoluer(noyau, bufImage);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
+	}
+	
+	public void appliquerFiltre(float[][] noyau, BufferedImage bufImage)
+	{
+		BufferedImage res = traiteurImage.convoluer(noyau, bufImage);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
+	}
+	
+	public void memoriseImage()
+	{
+		this.imaAvantFusion = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
 	}
 }

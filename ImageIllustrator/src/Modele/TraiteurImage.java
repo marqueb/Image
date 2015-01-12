@@ -80,13 +80,13 @@ public class TraiteurImage {
 	//retourne le noyau de convolution
 	private float[][] inverserNoyau(float[][] in)
 	{
-		float[][] out = new float[in.length][in[1].length];
+		float[][] out = new float[in.length][in[0].length];
 
 		for(int i = 0; i<in.length; i++)
 		{
-			for(int j = 0; j<in[1].length; j++)
+			for(int j = 0; j<in[0].length; j++)
 			{
-				out[in.length-i-1][in[1].length-j-1] = in[i][j];
+				out[in.length-i-1][in[0].length-j-1] = in[i][j];
 			}
 		}
 
