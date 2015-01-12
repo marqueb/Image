@@ -16,6 +16,7 @@ import Vue.InterfaceGraphique;
 
 public class Controler{
 	private Modele modele;
+	private InterfaceGraphique it;
 	private boolean echantillonageActif=false, isRGB;
 
 	public void init(){
@@ -30,9 +31,9 @@ public class Controler{
 		this.modele=modele;
 	}
 	
-	/*public void setInterfaceGraphique(Modele modele){
-		this.modele=modele;
-	}*/
+	public void setInterfaceGraphique(InterfaceGraphique i){
+		this.it=i;
+	}
 
 	public void charger(){
 		init();
@@ -48,7 +49,7 @@ public class Controler{
 		init();
 		echantillonageActif = true;
 		isRGB=true;
-		modele.getInterfaceGraphique().affichageChoixRGB();
+		it.affichageChoixRGB();
 	}
 
 	public void imaGris(){
@@ -95,7 +96,27 @@ public class Controler{
 	public void sourisClique(int x, int y){
 		
 	}
+	
+	public void boutonFusionClic()
+	{
+		modele.traiterFusion();
+	}
+	public void sliderFusionChange()
+	{
+		modele.traiterVariationFusion(it.getSliderFusionValue());
+	}
+	
+	public void boutonAppliquerFusionClic()
+	{
+		this.it.retirerComponentFusion();
+		modele.calculerHistogrammeRGB();
+	}
 
+	public void boutonMoyenneurClic()
+	{
+		modele.appliquerFiltre(TypeFiltre.MOYENNEUR);
+	}
+	
 	public void addControlerCharger(JMenuItem charger){
 		charger.addActionListener(new ControlerCharger(this));
 	}
@@ -132,5 +153,12 @@ public class Controler{
 		ControlerSouris cs=new ControlerSouris(this);
 		cadreImage.addMouseListener(cs);
 		cadreImage.addMouseMotionListener(cs);
+	}
+	
+	public void addControlerFusion(JSlider slider, JButton appliquer){
+		ControlerFusion cf = new ControlerFusion(this);
+		slider.addChangeListener(cf);
+		appliquer.addActionListener(cf);
+		
 	}
 }

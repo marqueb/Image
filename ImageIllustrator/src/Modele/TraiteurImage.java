@@ -41,6 +41,7 @@ public class TraiteurImage {
 		//		convolveOp.filter(buf_ima_in,dst);
 		//		return dst;
 		//return convoluer(noyau, buf_ima_in, ModeConvolution.SAME);
+		if(noyau == null) return null;
 		return convoluer(noyau, buf_ima_in);
 	}
 

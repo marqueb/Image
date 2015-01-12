@@ -20,6 +20,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
 import Controleur.Controler;
+import Controleur.ControlerBoutonFusion;
+import Controleur.ControlerMoyenneur;
 import Modele.Modele;
 import Modele.Outil;
 
@@ -34,6 +36,14 @@ public class InterfaceGraphique implements Runnable{
 	private CheckboxGroup groupe;
 	private Checkbox box1, box2;
 	private Histogramme histoR, histoG, histoB;
+	private JSlider sliderFusion = null;
+	
+	
+	public int getSliderFusionValue()
+	{
+		if(this.sliderFusion == null) return -1;
+		return this.sliderFusion.getValue();
+	}
 	
 	
 	public JMenuItem getSauvegarde() {
@@ -177,20 +187,24 @@ public class InterfaceGraphique implements Runnable{
 	
 	public void ajouterComponentFusion(CadreImage cadre_ima_fusion)
 	{
-		CadreImage cadre_ima = new CadreImage(Outil.resize(Outil.deepCopy(cadre_ima_fusion.getImage()), panelOption.getWidth(), 
-				(cadre_ima_fusion.getImage().getHeight()*panelOption.getWidth())/cadre_ima_fusion.getImage().getWidth()));
-		//redimensionner l'image pour qu'elle rentre dans le panelOption.
+		int newWidth = panelOption.getWidth();
+		int newHeight = (cadre_ima_fusion.getImage().getHeight()*panelOption.getWidth())/cadre_ima_fusion.getImage().getWidth();
 		
-		JSlider slider = new JSlider(0,100,0);
+		CadreImage cadre_ima = new CadreImage(Outil.resize(Outil.deepCopy(cadre_ima_fusion.getImage()), newWidth, 
+				newHeight));
+		
+		cadre_ima.setPreferredSize(new Dimension(newWidth, newHeight));
+		
+		sliderFusion = new JSlider(0,100,0);
 		JButton appliquer = new JButton("Appliquer fusion");
 		
-		//controler.addControlerSlider(slider);
+		controler.addControlerFusion(sliderFusion, appliquer);
 		//slider.addChangeListener(controler);
 		//appliquer.addActionListener(controler);
 		
 		panelOption.removeAll();
 		panelOption.add(appliquer);
-		panelOption.add(slider);
+		panelOption.add(sliderFusion);
 		panelOption.add(cadre_ima);
 		panelOption.repaint();
 		frame.validate();
@@ -286,43 +300,43 @@ public class InterfaceGraphique implements Runnable{
 */		//Image => Transformation
 		JMenu  transformation = new JMenu("Transformation");      
 		//Image => transformation => fusion
-		//JMenuItem fusion = new JMenuItem("Fusion");
-		//fusion.addActionListener(controler);
-		//transformation.add(fusion);
+		JMenuItem fusion = new JMenuItem("Fusion");
+		fusion.addActionListener(new ControlerBoutonFusion(controler));
+		transformation.add(fusion);
 		//Image => transformation => Gris
 		JMenuItem imagris = new JMenuItem("Image grise");
 		controler.addControlerImagris(imagris);
 		transformation.add(imagris);       
 		image.add(transformation);
-/*
+
 		//Filtre
-		JMenu filtre = new JMenu("Filtre");
+		//JMenu filtre = new JMenu("Filtre");
 		//filtre => Amelioration
-		JMenu amelioration = new JMenu("Amelioration");
-		//filtre => Amelioration => gradiant
-		JMenuItem gradiant = new JMenuItem("Gradiant");
-		amelioration.add(gradiant);       
-		filtre.add(amelioration);
-		//filtre => Traitement
+//		JMenu amelioration = new JMenu("Amelioration");
+//		//filtre => Amelioration => gradiant
+//		JMenuItem gradiant = new JMenuItem("Gradiant");
+//		amelioration.add(gradiant);       
+//		filtre.add(amelioration);
+//		//filtre => Traitement
 		JMenu traitement = new JMenu("Traitement");
 		//filtre => Traitement => moyen
 		JMenuItem moyen = new JMenuItem("Moyenneur (flouter)");
-		moyen.addActionListener(controler);
+		moyen.addActionListener(new ControlerMoyenneur(controler));
 		traitement.add(moyen);
 		//filtre => Traitement => gaussien
-		JMenuItem gaussien = new JMenuItem("Gaussien");
-		traitement.add(gaussien);
-		//filtre => Traitement => median
-		JMenuItem median = new JMenuItem("Median");
-		traitement.add(median);
-		//filtre => Traitement => utilisateur
-		JMenuItem utilisateur = new JMenuItem("Utilisateur");
-		traitement.add(utilisateur);
-		//filtre => Traitement => flou
-		JMenuItem flou = new JMenuItem("Flou");
-		traitement.add(flou);
-		filtre.add(traitement);
-*/
+//		JMenuItem gaussien = new JMenuItem("Gaussien");
+//		traitement.add(gaussien);
+//		//filtre => Traitement => median
+//		JMenuItem median = new JMenuItem("Median");
+//		traitement.add(median);
+//		//filtre => Traitement => utilisateur
+//		JMenuItem utilisateur = new JMenuItem("Utilisateur");
+//		traitement.add(utilisateur);
+//		//filtre => Traitement => flou
+//		JMenuItem flou = new JMenuItem("Flou");
+//		traitement.add(flou);
+//		filtre.add(traitement);
+
 		// Barre de menu
 		JMenuBar barre = new JMenuBar();
 		//Ajout barre Principal à barre
@@ -333,6 +347,7 @@ public class InterfaceGraphique implements Runnable{
 		barre.add(image);
 		//Ajout barre filtre à barre
 		//barre.add(filtre);
+		barre.add(traitement);
 		frame.setJMenuBar(barre);
 
 		frame.setLayout(new BorderLayout());

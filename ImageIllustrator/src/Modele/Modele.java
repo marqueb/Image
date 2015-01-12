@@ -153,10 +153,16 @@ public class Modele {
 	public void traiterFusion()
 	{
 		cadre_ima_fusion = outil.charger(interfaceGraphique);
-		imaAvantFusion = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
 		if(cadre_ima_fusion!=null){
+			imaAvantFusion = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
 			interfaceGraphique.ajouterComponentFusion(cadre_ima_fusion);
 		}
+	}
+	
+	public void validerFusion()
+	{
+		interfaceGraphique.retirerComponentFusion();
+		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
 	}
 	
 	//appel� lorsqu'on change le pourcentage d'image avec le scroll
@@ -167,6 +173,7 @@ public class Modele {
 		BufferedImage imaToChange = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
 		float coef1 = (float) ((100.0-pourcentImageSecondaire)/100.0);
 		float coef2 = (float) (pourcentImageSecondaire/100.0);
+		
 		
 		//TODO redimensionner les images pour qu'elles aient les m�me dimensions ou trouver une autre solution
 		
@@ -192,6 +199,7 @@ public class Modele {
 				valB += ((float)outil.getB(rgb2))*coef2;
 				
 				newRgb = outil.setR((int)valR)+outil.setG((int)valG)+outil.setB((int)valB);
+
 				imaToChange.setRGB(i, j, newRgb);
 			}
 		}
@@ -201,5 +209,13 @@ public class Modele {
 	public void calculerHistogrammeRGB()
 	{
 		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
+	}
+	
+	public void appliquerFiltre(TypeFiltre filtre)
+	{
+		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
+		BufferedImage res = traiteurImage.convoluer(filtre, bufImage);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
 	}
 }
