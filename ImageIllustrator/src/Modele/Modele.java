@@ -42,23 +42,21 @@ public class Modele {
 			BufferedImage image =outil.lectureImage(monFichier);
 
 			int index = monFichier.getName().indexOf('.');
-			//charge l'image et l'insert dans cadre image
-			//			CadreImage cadreImage=outil.charger();
-			//			if(cadreImage != null)
 			CadreImage cadreImage=outil.initCadre(image, controler);
 			cadreImage.setNomFichier(monFichier.getName().substring(0,index));
 			interfaceGraphique.getTabbedPane().add(cadreImage.getImageScroller());
-			//this.initCadre(image);
 			interfaceGraphique.setEnableSauvegarde(true);
 			//ajoute le cadre image à la liste de cadre image
 			listCadreImage.add(cadreImage);
 			//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image, ajoute le bouton creer a liste de bouton
 			listBoutonFermeture.add(interfaceGraphique.ajouterOnglet(cadreImage));
-			//controler.addControlerSouris(cadreImage);
-			//cadreImage.repaint();
 			//interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(cadreImage.getImage()));
 
 		}catch(Exception e){}
+	}
+	
+	public boolean isImageVide(){
+		return listCadreImage.isEmpty();
 	}
 
 	public void sauvegarder(){

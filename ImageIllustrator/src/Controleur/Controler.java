@@ -49,20 +49,26 @@ public class Controler{
 	}
 
 	public void sauvegarder(){
+		if(!modele.isImageVide()){
 		init();
 		modele.sauvegarder();
+		}
 	}
 
 	public void couleurPixel(){
+		if(!modele.isImageVide()){
 		init();
 		echantillonageActif = true;
 		isRGB=true;
 		it.affichageChoixRGB();
+		}
 	}
 
 	public void imaGris(){
+		if(!modele.isImageVide()){
 		init();
 		modele.imagris();
+		}
 	}	
 
 	public void changerOnglet(){
