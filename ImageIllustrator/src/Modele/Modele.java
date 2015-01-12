@@ -4,12 +4,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.SwingUtilities;
 
-import Controleur.Controler;
-import Vue.CadreImage;
-import Vue.Histogramme;
-import Vue.InterfaceGraphique;
+import Controleur.*;
+import Vue.*;
 
 public class Modele {
 
@@ -20,7 +17,8 @@ public class Modele {
 
 	private ArrayList<CadreImage> listCadreImage;
 	private ArrayList<JButton> listBoutonFermeture;
-
+	private CadreImage cadre_ima_fusion = null;
+	private BufferedImage imaAvantFusion = null;
 
 
 	public Modele()
@@ -84,6 +82,7 @@ public class Modele {
 		CadreImage cadreImage=outil.charger(interfaceGraphique);
 		if(cadreImage != null)
 		{		
+			controler.addControlerSouris(cadreImage);
 			interfaceGraphique.setEnableSauvegarde(true);
 			//ajoute le cadre image Ã  la liste de cadre image
 			listCadreImage.add(cadreImage);
@@ -91,7 +90,7 @@ public class Modele {
 			listBoutonFermeture.add(interfaceGraphique.ajouterOnglet(cadreImage));
 			cadreImage.repaint();
 			
-			interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(cadreImage.getImage()));
+			//interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(cadreImage.getImage()));
 		}
 	}
 
@@ -99,10 +98,14 @@ public class Modele {
 		//sauvegarde image 
 		if(!listCadreImage.isEmpty())
 			outil.sauvegarder(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
-	}		
+	}	
 
-	public void couleurPixel(int x, int y, boolean isRGB){
-		if(x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight()){
+	public boolean estDansImage(int x, int y){
+		return (x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight());
+	}	
+
+	public void afficherCouleurPixel(int x, int y, boolean isRGB){
+		if(estDansImage(x,y)){
 			//recupere la valeur du pixel en fonction de l'image et des coordonnÃ©es
 			int couleur = outil.couleurPixel(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage(), x, y);
 			//calcul et affiche les differentes intensitÃ©s de couleur en fonction de la valeur du pixel
@@ -122,21 +125,14 @@ public class Modele {
 		}
 	}
 
-	public void imagris(){
-		outil.imagris(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
-		listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
-	}
-
 	public void enleverCouleurPixel(){
 		interfaceGraphique.enleverCouleurPixel();
 	}
 
-	public void appliquerFiltre(TypeFiltre filtre)
-	{
-		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
-		BufferedImage res = traiteurImage.convoluer(filtre, bufImage);
-		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
-		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
+
+	public void imagris(){
+		outil.imagris(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
+		listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
 	}
 
 	public void fermerOnglet(Object j){
@@ -152,4 +148,67 @@ public class Modele {
 		//supprime l'onglet correspondant
 		interfaceGraphique.getTabbedPane().removeTabAt(i);
 	}
+
+/*
+	public void appliquerFiltre(TypeFiltre filtre)
+	{
+		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
+		BufferedImage res = traiteurImage.convoluer(filtre, bufImage);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
+	}
+	
+	//appelé lorsqu'on appuie sur le bouton fusion du menu
+	public void traiterFusion()
+	{
+		cadre_ima_fusion = outil.charger(interfaceGraphique);
+		imaAvantFusion = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
+		if(cadre_ima_fusion!=null){
+			interfaceGraphique.ajouterComponentFusion(cadre_ima_fusion);
+		}
+	}
+	
+	//appelé lorsqu'on change le pourcentage d'image avec le scroll
+	public void traiterVariationFusion(int pourcentImageSecondaire)
+	{
+		BufferedImage imaPrincipale = this.imaAvantFusion;
+		BufferedImage imaSecondaire = cadre_ima_fusion.getImage();
+		BufferedImage imaToChange = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
+		float coef1 = (float) ((100.0-pourcentImageSecondaire)/100.0);
+		float coef2 = (float) (pourcentImageSecondaire/100.0);
+		
+		//TODO redimensionner les images pour qu'elles aient les même dimensions ou trouver une autre solution
+		
+		float valR = 0, valG = 0, valB = 0;
+		int rgb1 = 0, rgb2 = 0, newRgb = 0;
+		int borneX = imaPrincipale.getWidth()<imaSecondaire.getWidth()?imaPrincipale.getWidth():imaSecondaire.getWidth();
+		int borneY = imaPrincipale.getHeight()<imaSecondaire.getHeight()?imaPrincipale.getHeight():imaSecondaire.getHeight();
+		
+		for(int i=0; i<borneX; i++)
+		{
+			for(int j=0; j<borneY; j++)
+			{
+				rgb1 = imaPrincipale.getRGB(i, j);
+				rgb2 = imaSecondaire.getRGB(i, j);
+				
+				valR = ((float)outil.getR(rgb1))*coef1;
+				valR += ((float)outil.getR(rgb2))*coef2;
+				
+				valG = ((float)outil.getG(rgb1))*coef1;
+				valG += ((float)outil.getG(rgb2))*coef2;
+				
+				valB = ((float)outil.getB(rgb1))*coef1;
+				valB += ((float)outil.getB(rgb2))*coef2;
+				
+				newRgb = outil.setR((int)valR)+outil.setG((int)valG)+outil.setB((int)valB);
+				imaToChange.setRGB(i, j, newRgb);
+			}
+		}
+		interfaceGraphique.getFrame().repaint();
+	}
+	
+	public void calculerHistogrammeRGB()
+	{
+		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
+	}*/
 }

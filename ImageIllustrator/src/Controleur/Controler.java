@@ -1,151 +1,131 @@
 package Controleur;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionAdapter;
+import Modele.*;
+import Vue.*;
 
+import javax.swing.JMenuItem;
+import java.awt.Checkbox;
 import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.JButton;
 
-import Modele.Modele;
-import Modele.TypeFiltre;
-import Vue.CadreImage;
-import Vue.InterfaceGraphique;
-
-public class Controler extends MouseMotionAdapter implements MouseListener, ActionListener, ChangeListener{
-
+public class Controler{
 	private Modele modele;
-	private InterfaceGraphique it;
-	private boolean echantillonageActif=false, estDansImage=false, fermeOnglet=false, isRGB;
 
-	public Modele getModele() {
-		return modele;
-	}
+	private boolean echantillonageActif=false, isRGB;
 
-	public void setModele(Modele modele) {
-		this.modele = modele;
-	}
-
-	public InterfaceGraphique getInterfaceGraphique() {
-		return it;
-	}
-
-	public void setInterfaceGraphique(InterfaceGraphique interfaceGraphique) {
-		this.it = interfaceGraphique;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {/*
-		if(e.getActionCommand().equals("Charger")){
-			System.out.println("jambon1");
-			modele.charger();
-		}else if(e.getActionCommand().equals("Sauvegarde")){
-			modele.sauvegarder();
-		}else if(e.getActionCommand().equals("Couleur pixel")){
-			echantillonageActif = true;
-		}else if(e.getActionCommand().equals("X")){
-			modele.fermerOnglet(e.getSource());
-		}else if(e.getActionCommand().equals("Image grise")){
-			modele.imagris();
-		}*/
-		switch(e.getActionCommand()){
-			case "Charger":
-				if(echantillonageActif){
-					echantillonageActif=false;
-					modele.getInterfaceGraphique().retraitChoixRGB();
-				}
-				modele.charger();
-			break;
-			case "Moyenneur (flouter)":
-				if(echantillonageActif){
-					echantillonageActif=false;
-					modele.getInterfaceGraphique().retraitChoixRGB();
-				}
-				modele.appliquerFiltre(TypeFiltre.MOYENNEUR);
-			break;
-			case "Sauvegarde":
-				if(echantillonageActif){
-					echantillonageActif=false;
-					modele.getInterfaceGraphique().retraitChoixRGB();
-				}
-				modele.sauvegarder();
-			break;
-			case "Couleur pixel":
-				//autorise l'ecoute à la souris
-				if(!echantillonageActif){
-					echantillonageActif = true;
-					isRGB=true;
-					modele.getInterfaceGraphique().affichageChoixRGB();
-				}
-			break;
-			case "X":
-				if(echantillonageActif){
-					echantillonageActif=false;
-					modele.getInterfaceGraphique().retraitChoixRGB();
-				}
-				modele.fermerOnglet(e.getSource());
-			break;
-			case "Image grise":
-				if(echantillonageActif){
-					echantillonageActif=false;
-					modele.getInterfaceGraphique().retraitChoixRGB();
-				}
-				modele.imagris();
-			break;
-		}
-	}
-	//utiliser pour relever les coordonnées du pixel a evalué
-	public void mouseMoved(MouseEvent e){
-		if(estDansImage){
-			//releve la valeur du pixel en fonction des coordonnées
-			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			modele.couleurPixel(e.getX(), e.getY(), isRGB);
-		}
-	}
-	
-	public void mouseEntered(MouseEvent e){
+	public void init(){
 		if(echantillonageActif){
-			estDansImage=true;
-		}
-	}
-	
-	public void mouseExited(MouseEvent e){
-		if(echantillonageActif){
-			estDansImage=false;
-			modele.enleverCouleurPixel();
-		}
-	}	
-
-	@Override
-	public void stateChanged(ChangeEvent e) {
-		if(echantillonageActif){
-			echantillonageActif = false;
 			modele.enleverCouleurPixel();
 			modele.getInterfaceGraphique().retraitChoixRGB();
 		}
+		echantillonageActif=false;
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void setModele(Modele modele){
+		this.modele=modele;
+	}
+	
+	/*public void setInterfaceGraphique(Modele modele){
+		this.modele=modele;
+	}*/
+
+	public void charger(){
+		init();
+		modele.charger();
+	}
+
+	public void sauvegarder(){
+		init();
+		modele.sauvegarder();
+	}
+
+	public void couleurPixel(){
+		init();
+		echantillonageActif = true;
+		isRGB=true;
+		modele.getInterfaceGraphique().affichageChoixRGB();
+	}
+
+	public void imaGris(){
+		init();
+		modele.imagris();
+	}	
+
+	public void changerOnglet(){
+		init();
+/*		//si on bouge le jslider de la fusion:
+		else if(fusionActive && e.getSource() instanceof JSlider)
+		{
+			System.out.println(((JSlider)e.getSource()).getValue());
+			modele.traiterVariationFusion(((JSlider)e.getSource()).getValue());
+		}*/
+	}
+
+	public void fermerOnglet(Object o){
+		modele.fermerOnglet(o);
+	}
+
+	public void changeSelectionRGB(){
+		isRGB=!isRGB;
+	}
+
+	public void sourisBouge(int x, int y){
 		if(echantillonageActif){
-			if(modele.getInterfaceGraphique().isRGB(e.getSource())){
-				isRGB=true;
-			}else{
-				isRGB=false;
-			}
-			
+			modele.afficherCouleurPixel(x, y, isRGB);
 		}
 	}
 
-	@Override
-	public void mousePressed(MouseEvent e) {
+	public void sourisEntre(int x, int y){
+		if(echantillonageActif){
+			modele.afficherCouleurPixel(x, y, isRGB);
+		}
 	}
 
-	@Override
-	public void mouseReleased(MouseEvent e) {
+	public void sourisSort(int x, int y){
+		if(echantillonageActif){
+			modele.enleverCouleurPixel();
+		}
+	}
+
+	public void sourisClique(int x, int y){
+		
+	}
+
+	public void addControlerCharger(JMenuItem charger){
+		charger.addActionListener(new ControlerCharger(this));
+	}
+
+	public void addControlerSauvegarder(JMenuItem sauvegarder){
+		sauvegarder.addActionListener(new ControlerSauvegarder(this));
+	}
+	
+	public void addControlerCouleurPixel(JMenuItem couleurPixel){
+		couleurPixel.addActionListener(new ControlerCouleurPixel(this));
+	}
+
+	public void addControlerImagris(JMenuItem imaGris){
+		imaGris.addActionListener(new ControlerImagris(this));
+	}
+
+	public void addControlerOnglet(JTabbedPane tabbedPane){
+		tabbedPane.addChangeListener(new ControlerOnglet(this));
+	}
+
+	public void addControlerX(JButton fermer){
+		fermer.addActionListener(new ControlerX(this));
+	}
+
+	public void addControlerRGB(Checkbox box1){
+		box1.addItemListener(new ControlerRGB(this));
+	}
+
+	public void addControlerYUV(Checkbox box2){
+		box2.addItemListener(new ControlerYUV(this));
+	}
+
+	public void addControlerSouris(CadreImage cadreImage){
+		ControlerSouris cs=new ControlerSouris(this);
+		cadreImage.addMouseListener(cs);
+		cadreImage.addMouseMotionListener(cs);
 	}
 }

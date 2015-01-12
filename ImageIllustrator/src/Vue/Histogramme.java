@@ -8,10 +8,11 @@ import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
 
 public class Histogramme extends JComponent{	
-	String titre = null;
-	int[] tab = null;
-	BufferedImage im;
+	private BufferedImage im = null;
+	private String titre = null;
+	private int[] tab = null;
 	
+
 	public Histogramme(int[] tabHisto, String t, Dimension d)
 	{
 		tab = tabHisto;
@@ -21,7 +22,6 @@ public class Histogramme extends JComponent{
 
 	public void paintComponent (Graphics g)
 	{	
-	
 		Graphics2D buffer;
 		int max=tab[0];
 		buffer = im.createGraphics();
@@ -37,7 +37,6 @@ public class Histogramme extends JComponent{
 		}
 		
 		((Graphics2D)g).drawImage(im,0,0,null);
-		
-
 	}
+
 }

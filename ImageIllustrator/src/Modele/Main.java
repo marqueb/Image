@@ -58,7 +58,7 @@ public class Main {
 
 		it = new InterfaceGraphique(modele, controler);
 		modele.setInterfaceGraphique(it);
-		controler.setInterfaceGraphique(it);
+		//controler.setInterfaceGraphique(it);
 		
 		//lancement de l'interface graphique
 		EventQueue.invokeLater(it);
