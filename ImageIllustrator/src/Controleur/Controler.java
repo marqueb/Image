@@ -19,6 +19,7 @@ import Vue.InterfaceGraphique;
 
 public class Controler{
 	private Modele modele;
+	private InterfaceGraphique it;
 	private boolean echantillonageActif=false, isRGB;
 
 	public void init(){
@@ -28,14 +29,19 @@ public class Controler{
 		}
 		echantillonageActif=false;
 	}
+	
+	public Modele getModele()
+	{
+		return this.modele;
+	}
 
 	public void setModele(Modele modele){
 		this.modele=modele;
 	}
 	
-	/*public void setInterfaceGraphique(Modele modele){
-		this.modele=modele;
-	}*/
+	public void setInterfaceGraphique(InterfaceGraphique i){
+		this.it=i;
+	}
 
 	public void charger(){
 		init();
@@ -51,7 +57,7 @@ public class Controler{
 		init();
 		echantillonageActif = true;
 		isRGB=true;
-		modele.getInterfaceGraphique().affichageChoixRGB();
+		it.affichageChoixRGB();
 	}
 
 	public void imaGris(){
@@ -98,7 +104,35 @@ public class Controler{
 	public void sourisClique(int x, int y){
 		
 	}
+	
+	public void boutonFusionClic()
+	{
+		modele.traiterFusion();
+	}
+	
+	public void sliderFusionChange()
+	{
+		modele.traiterVariationFusion(it.getSliderFusionValue());
+	}
+	
+	public void boutonAppliquerFusionClic()
+	{
+		this.it.retirerComponentFusion();
+		modele.calculerHistogrammeRGB();
+	}
+	
+	public void boutonAppliquerFiltre()
+	{
+		this.it.rafraichirComponentOption();
+	}
 
+	public void boutonMoyenneurClic()
+	{
+		//modele.appliquerFiltre(TypeFiltre.MOYENNEUR);
+		modele.memoriseImage();
+		it.ajouterComponentChoixTailleFiltre(TypeFiltre.MOYENNEUR);
+	}
+	
 	public void addControlerCharger(JMenuItem charger){
 		charger.addActionListener(new ControlerCharger(this));
 	}
@@ -143,5 +177,18 @@ public class Controler{
 		ControlerSouris cs=new ControlerSouris(this);
 		image.addMouseListener(cs);
 		image.addMouseMotionListener(cs);
+	}
+	
+	public void addControlerFusion(JSlider slider, JButton appliquer){
+		ControlerFusion cf = new ControlerFusion(this);
+		slider.addChangeListener(cf);
+		appliquer.addActionListener(cf);
+	}
+	
+	public void addControlerChoixTailleFiltre(JSlider slider,JButton b, TypeFiltre filtre)
+	{
+		ControlerChoixTailleFiltre c =new ControlerChoixTailleFiltre(this,b,  filtre);
+		slider.addChangeListener(c);
+		b.addActionListener(c);
 	}
 }

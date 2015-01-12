@@ -22,6 +22,26 @@ import Vue.InterfaceGraphique;
 
 public class Outil {
 
+	public CadreImage charger(){
+        File monFichier;
+        int controle;
+        CadreImage cadreImage = new CadreImage();
+        JFileChooser j = new JFileChooser();
+        controle=j.showOpenDialog(cadreImage);
+        if(controle==JFileChooser.APPROVE_OPTION){
+            monFichier=j.getSelectedFile();
+            try {
+                cadreImage.setImage(ImageIO.read(monFichier));
+                int index = monFichier.getName().indexOf('.');     
+                cadreImage.setNomFichier(monFichier.getName().substring(0,index));
+                return cadreImage;
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return null;
+    }
+	
 	public File lectureFichier(){
 		JFileChooser j = new JFileChooser();
 		int controle=j.showOpenDialog(new JFrame());

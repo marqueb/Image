@@ -84,6 +84,34 @@ public class Modele {
 		this.listCadreImage = listCadreImage;
 	}
 
+	public ArrayList<JButton> getListBoutonFermeture() {
+		return listBoutonFermeture;
+	}
+
+	public void setListBoutonFermeture(ArrayList<JButton> listBoutonFermeture) {
+		this.listBoutonFermeture = listBoutonFermeture;
+	}
+
+	public CadreImage getCadre_ima_fusion() {
+		return cadre_ima_fusion;
+	}
+
+	public void setCadre_ima_fusion(CadreImage cadre_ima_fusion) {
+		this.cadre_ima_fusion = cadre_ima_fusion;
+	}
+
+	public BufferedImage getImaAvantFusion() {
+		return imaAvantFusion;
+	}
+
+	public void setImaAvantFusion(BufferedImage imaAvantFusion) {
+		this.imaAvantFusion = imaAvantFusion;
+	}
+
+	public ArrayList<CadreImage> getListCadreImage() {
+		return listCadreImage;
+	}
+
 	public void charger(){	
 		File monFichier=outil.lectureFichier();
 		BufferedImage image =outil.lectureImage(monFichier);
@@ -160,13 +188,19 @@ public class Modele {
 	}
 	
 	//appel� lorsqu'on appuie sur le bouton fusion du menu
-/*	public void traiterFusion()
+	public void traiterFusion()
 	{
-		cadre_ima_fusion = outil.charger(interfaceGraphique);
-		imaAvantFusion = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
+		cadre_ima_fusion = outil.charger();
 		if(cadre_ima_fusion!=null){
+			imaAvantFusion = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
 			interfaceGraphique.ajouterComponentFusion(cadre_ima_fusion);
 		}
+	}
+	
+	public void validerFusion()
+	{
+		interfaceGraphique.retirerComponentFusion();
+		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
 	}
 	
 	//appel� lorsqu'on change le pourcentage d'image avec le scroll
@@ -177,6 +211,7 @@ public class Modele {
 		BufferedImage imaToChange = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
 		float coef1 = (float) ((100.0-pourcentImageSecondaire)/100.0);
 		float coef2 = (float) (pourcentImageSecondaire/100.0);
+		
 		
 		//TODO redimensionner les images pour qu'elles aient les m�me dimensions ou trouver une autre solution
 		
@@ -202,14 +237,59 @@ public class Modele {
 				valB += ((float)outil.getB(rgb2))*coef2;
 				
 				newRgb = outil.setR((int)valR)+outil.setG((int)valG)+outil.setB((int)valB);
+
 				imaToChange.setRGB(i, j, newRgb);
 			}
 		}
 		interfaceGraphique.getFrame().repaint();
 	}
 	
+	public void traiterChangementTailleFiltre(TypeFiltre typeFiltre)
+	{
+		int taille = interfaceGraphique.getSliderChoixTailleFiltreValue();
+		float[][] filtre = null;
+		//cr�er filtre
+		switch (typeFiltre){
+		case MOYENNEUR:
+			filtre = FiltreConvolution.createFiltreMoyenne(taille);
+		break;
+		}
+		
+		//appliquer convolution
+		if(filtre!=null) appliquerFiltre(filtre, this.imaAvantFusion);
+	}
+	
 	public void calculerHistogrammeRGB()
 	{
 		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
-	}*/
+	}
+	
+	public void appliquerFiltre(TypeFiltre filtre)
+	{
+		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
+		BufferedImage res = traiteurImage.convoluer(filtre, bufImage);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
+	}
+	
+	public void appliquerFiltre(float[][] noyau)
+	{
+		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
+		BufferedImage res = traiteurImage.convoluer(noyau, bufImage);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
+	}
+	
+	public void appliquerFiltre(float[][] noyau, BufferedImage bufImage)
+	{
+		BufferedImage res = traiteurImage.convoluer(noyau, bufImage);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
+		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
+	}
+	
+	public void memoriseImage()
+	{
+		this.imaAvantFusion = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
+	}
+
 }
