@@ -75,22 +75,6 @@ public class Outil {
         //interfaceGraphique.getTabbedPane().setComponentAt(interfaceGraphique.getTabbedPane().getSelectedIndex(), imageScroller);
         return cadreImage;
 	}
-	
-	public void actualiserImage(CadreImage cadreImage, BufferedImage image, Controler controler, InterfaceGraphique interfaceGraphique){
-		cadreImage.setImage(image);
-		cadreImage.setImageIcon(new ImageIcon(cadreImage.getImage()));
-		JLabel icon=new JLabel(cadreImage.getImageIcon());
-        controler.addControlerSouris(icon);
-        int x = cadreImage.getImageScroller().getHorizontalScrollBarPolicy();
-        int y = cadreImage.getImageScroller().getVerticalScrollBarPolicy();
-        cadreImage.getImageScroller().setViewportView(icon);
-        System.out.println(x + " "+y);
-        cadreImage.getImageScroller().setHorizontalScrollBarPolicy(x);
-        cadreImage.getImageScroller().setVerticalScrollBarPolicy(y);
-        x = cadreImage.getImageScroller().getHorizontalScrollBarPolicy();
-        y = cadreImage.getImageScroller().getVerticalScrollBarPolicy();
-        System.out.println(x + " "+y);
-	}
 
 	public void sauvegarder(BufferedImage image){
 		JFileChooser nom_fichier =new JFileChooser();

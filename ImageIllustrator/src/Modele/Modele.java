@@ -117,6 +117,8 @@ public class Modele {
 		BufferedImage image =outil.lectureImage(monFichier);
 		int index = monFichier.getName().indexOf('.');
 		//charge l'image et l'insert dans cadre image
+//		CadreImage cadreImage=outil.charger();
+//		if(cadreImage != null)
 		CadreImage cadreImage=outil.initCadre(image, controler);
 		cadreImage.setNomFichier(monFichier.getName().substring(0,index));
 		if(image != null)
@@ -169,7 +171,7 @@ public class Modele {
 
 	public void imagris(){
 		CadreImage tmp=listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
-		outil.actualiserImage(tmp, outil.imagris(tmp.getImage()), controler, interfaceGraphique);
+		actualiserImageIcon();
 		interfaceGraphique.getFrame().validate();
 	}
 
@@ -241,6 +243,8 @@ public class Modele {
 				imaToChange.setRGB(i, j, newRgb);
 			}
 		}
+
+		actualiserImageIcon();
 		interfaceGraphique.getFrame().repaint();
 	}
 	
@@ -257,6 +261,8 @@ public class Modele {
 		
 		//appliquer convolution
 		if(filtre!=null) appliquerFiltre(filtre, this.imaAvantFusion);
+
+		actualiserImageIcon();
 	}
 	
 	public void calculerHistogrammeRGB()
@@ -290,6 +296,15 @@ public class Modele {
 	public void memoriseImage()
 	{
 		this.imaAvantFusion = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
+	}
+	
+	public void actualiserImageIcon(){
+		CadreImage cadreImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex());
+		BufferedImage i = cadreImage.getImage();
+		cadreImage.setImageIcon(new ImageIcon(i));
+		JLabel icon=new JLabel(cadreImage.getImageIcon());
+        controler.addControlerSouris(icon);
+        cadreImage.getImageScroller().setViewportView(icon);
 	}
 
 }
