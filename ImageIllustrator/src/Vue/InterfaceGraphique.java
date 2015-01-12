@@ -9,6 +9,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -115,14 +116,14 @@ public class InterfaceGraphique implements Runnable{
 	}
 
 	  //retourne un JButton pour completer la liste de bouton
-    public JButton ajouterOnglet(CadreImage cadreImage){
+    public JButton ajouterOnglet(CadreImage image){
     
         //final JPanel content = new JPanel();
         JPanel tab = new JPanel();
         tab.setOpaque(false);    
     
         //partie onglet nom
-        JLabel labelOnglet = new JLabel(cadreImage.getNomFichier()+(getTabbedPane().getTabCount()+1));
+        JLabel labelOnglet = new JLabel(image.getNomFichier()+(getTabbedPane().getTabCount()));
         //partie onglet fermer
         JButton boutonFermer = new JButton("X");
 		controler.addControlerX(boutonFermer);
@@ -130,9 +131,9 @@ public class InterfaceGraphique implements Runnable{
         tab.add(labelOnglet, BorderLayout.WEST);
         tab.add(boutonFermer, BorderLayout.EAST);
         //Ajout panel Ã  l'onglet
-        
-        JPanel scrollPanel = new JPanel();
-        JLabel l1 =  new JLabel(new ImageIcon(cadreImage.getImage()));
+       /* JPanel scrollPanel = new JPanel();
+        JLabel l1 =  new JLabel(image.getImageIcon());
+        controler.addControlerSouris(l1);
         JScrollPane imageScroller =new JScrollPane(scrollPanel);
         imageScroller.setViewportView(l1);
         imageScroller.setAutoscrolls(true);
@@ -140,14 +141,10 @@ public class InterfaceGraphique implements Runnable{
 
         imageScroller.setPreferredSize(new Dimension(200,200));        
         scrollPanel.add(imageScroller);        
-        tabbedPane.add(imageScroller);
+		tabbedPane.add(imageScroller);*/
         tabbedPane.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);        
         tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
         //Parametre de l'onglet
-        tabbedPane.add(cadreImage);
-        
-        //tabbedPane.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);        
-        tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
         return boutonFermer;
      }
 	
@@ -249,6 +246,8 @@ public class InterfaceGraphique implements Runnable{
 		}
 		return isRGB;
 	}
+	
+	
 
 	public void run(){
 		frame = new JFrame("Fenetre");
@@ -401,6 +400,7 @@ public class InterfaceGraphique implements Runnable{
         toolBar.add(btnImprimer);
         frame.add(panel,BorderLayout.NORTH);
 		tabbedPane = new JTabbedPane();
+		tabbedPane=new JTabbedPane();
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		controler.addControlerOnglet(tabbedPane);
 		tabbedPane.setOpaque(true);
@@ -424,5 +424,13 @@ public class InterfaceGraphique implements Runnable{
 		// On fixe la taille et on demarre
 		frame.setSize(1000, 700);
 		frame.setVisible(true);
+	}
+
+	public JTabbedPane getTabbedAffichage() {
+		return tabbedPane;
+	}
+
+	public void setTabbedAffichage(JTabbedPane tabbedAffichage) {
+		this.tabbedPane = tabbedAffichage;
 	}
 }

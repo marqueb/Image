@@ -1,5 +1,6 @@
 package Modele;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -9,31 +10,66 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 
+import Controleur.Controler;
 import Vue.CadreImage;
 import Vue.InterfaceGraphique;
 
 public class Outil {
 
-	public CadreImage charger(InterfaceGraphique it){
-		File monFichier;
-		int controle;
-		CadreImage cadreImage = new CadreImage();
+	public File lectureFichier(){
 		JFileChooser j = new JFileChooser();
-		controle=j.showOpenDialog(cadreImage);
+		int controle=j.showOpenDialog(new JFrame());
 		if(controle==JFileChooser.APPROVE_OPTION){
-			monFichier=j.getSelectedFile();
-			try {
-				cadreImage.setImage(ImageIO.read(monFichier));
-				int index = monFichier.getName().indexOf('.');     
-				cadreImage.setNomFichier(monFichier.getName().substring(0,index));
-				return cadreImage;
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+			return j.getSelectedFile();
 		}
 		return null;
+	}
+	
+	public BufferedImage lectureImage(File monFichier){
+		try {
+			BufferedImage image=ImageIO.read(monFichier);
+			return image;
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		return null;
+	}
+	
+	public CadreImage initCadre(BufferedImage image, Controler controler){
+		CadreImage cadreImage=new CadreImage(image);
+		JLabel icon=new JLabel(cadreImage.getImageIcon());
+        JScrollPane imageScroller =new JScrollPane(icon);
+        imageScroller.setViewportView(icon);
+        imageScroller.setAutoscrolls(true);
+        imageScroller.setWheelScrollingEnabled(true);
+        imageScroller.setPreferredSize(new Dimension(200,200));   
+        cadreImage.setImageScroller(imageScroller);
+        //scrollPanel.add(imageScroller); 
+        controler.addControlerSouris(icon);
+        //interfaceGraphique.getTabbedPane().setComponentAt(interfaceGraphique.getTabbedPane().getSelectedIndex(), imageScroller);
+        return cadreImage;
+	}
+	
+	public void actualiserImage(CadreImage cadreImage, BufferedImage image, Controler controler, InterfaceGraphique interfaceGraphique){
+		cadreImage.setImage(image);
+		cadreImage.setImageIcon(new ImageIcon(cadreImage.getImage()));
+		JLabel icon=new JLabel(cadreImage.getImageIcon());
+		//JPanel scrollPanel = new JPanel();
+        controler.addControlerSouris(icon);
+        cadreImage.getImageScroller().setViewportView(icon);
+        /*imageScroller.setViewportView(icon);
+        imageScroller.setAutoscrolls(true);
+        imageScroller.setWheelScrollingEnabled(true);
+
+        imageScroller.setPreferredSize(new Dimension(200,200));    */    
+        //scrollPanel.add(imageScroller);    
+        //interfaceGraphique.getTabbedPane().setComponentAt(interfaceGraphique.getTabbedPane().getSelectedIndex(), imageScroller);
 	}
 
 	public void sauvegarder(BufferedImage image){
@@ -93,7 +129,7 @@ public class Outil {
 		return image.getRGB(x,y);	
 	}
 
-	public void imagris(BufferedImage image){
+	public BufferedImage imagris(BufferedImage image){
 		int r,g,b,gris;
 		int couleur;
 		for (int i=0;i<image.getWidth();i++){
@@ -106,6 +142,7 @@ public class Outil {
 				image.setRGB(i, j,setR(gris)+setB(gris)+setG(gris));
 			}
 		}
+		return image;
 	}
 
 	//copier une buffered image

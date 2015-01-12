@@ -1,8 +1,15 @@
 package Modele;
 
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import Controleur.*;
 import Vue.*;
@@ -61,15 +68,15 @@ public class Modele {
 		this.interfaceGraphique = interfaceGraphique;
 	}
 
-	public void addCadreImage(CadreImage cadreImage){
-		listCadreImage.add(cadreImage);
+	public void addImage(CadreImage image){
+		listCadreImage.add(image);
 	}
 
 	public void suppCadreImage(int index){
 		listCadreImage.remove(index);
 	}
 
-	public ArrayList<CadreImage> getListCadreImage() {
+	public ArrayList<CadreImage> getListImage() {
 		return listCadreImage;
 	}
 
@@ -77,18 +84,24 @@ public class Modele {
 		this.listCadreImage = listCadreImage;
 	}
 
-	public void charger(){
+	public void charger(){	
+		File monFichier=outil.lectureFichier();
+		BufferedImage image =outil.lectureImage(monFichier);
+		int index = monFichier.getName().indexOf('.');
 		//charge l'image et l'insert dans cadre image
-		CadreImage cadreImage=outil.charger(interfaceGraphique);
-		if(cadreImage != null)
+		CadreImage cadreImage=outil.initCadre(image, controler);
+		cadreImage.setNomFichier(monFichier.getName().substring(0,index));
+		if(image != null)
 		{		
-			controler.addControlerSouris(cadreImage);
+			interfaceGraphique.getTabbedPane().add(cadreImage.getImageScroller());
+			//this.initCadre(image);
 			interfaceGraphique.setEnableSauvegarde(true);
 			//ajoute le cadre image à la liste de cadre image
 			listCadreImage.add(cadreImage);
 			//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image, ajoute le bouton creer a liste de bouton
 			listBoutonFermeture.add(interfaceGraphique.ajouterOnglet(cadreImage));
-			cadreImage.repaint();
+			//controler.addControlerSouris(cadreImage);
+			//cadreImage.repaint();
 			
 			//interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(cadreImage.getImage()));
 		}
@@ -105,34 +118,31 @@ public class Modele {
 	}	
 
 	public void afficherCouleurPixel(int x, int y, boolean isRGB){
-		if(estDansImage(x,y)){
-			//recupere la valeur du pixel en fonction de l'image et des coordonnées
-			int couleur = outil.couleurPixel(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage(), x, y);
-			//calcul et affiche les differentes intensités de couleur en fonction de la valeur du pixel
-			int r=outil.getR(couleur);
-			int g=outil.getG(couleur);
-			int b=outil.getB(couleur);
-			if(isRGB){
-				interfaceGraphique.afficherValeurCouleur(x, y, r, g, b);
-			}else{
-				double yp=outil.getY(r, g, b);
-				double u=outil.getU(b, yp);
-				double v=outil.getV(r, yp);
-				interfaceGraphique.afficherYUVCouleur(x, y, Math.round(yp), Math.round(u), Math.round(v));
-			}
+		//recupere la valeur du pixel en fonction de l'image et des coordonnées
+		//System.out.println("taille liste "+listImage.size()+" onglet selectionné "+interfaceGraphique.getTabbedPane().getSelectedIndex());
+		int couleur = outil.couleurPixel(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage(), x, y);
+		//calcul et affiche les differentes intensités de couleur en fonction de la valeur du pixel
+		int r=outil.getR(couleur);
+		int g=outil.getG(couleur);
+		int b=outil.getB(couleur);
+		if(isRGB){
+			interfaceGraphique.afficherValeurCouleur(x, y, r, g, b);
 		}else{
-			enleverCouleurPixel();
-		}
+			double yp=outil.getY(r, g, b);
+			double u=outil.getU(b, yp);
+			double v=outil.getV(r, yp);
+			interfaceGraphique.afficherYUVCouleur(x, y, Math.round(yp), Math.round(u), Math.round(v));
+		}		
 	}
 
 	public void enleverCouleurPixel(){
 		interfaceGraphique.enleverCouleurPixel();
 	}
 
-
 	public void imagris(){
-		outil.imagris(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
-		listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
+		CadreImage tmp=listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
+		outil.actualiserImage(tmp, outil.imagris(tmp.getImage()), controler, interfaceGraphique);
+		interfaceGraphique.getFrame().validate();
 	}
 
 	public void fermerOnglet(Object j){
@@ -150,7 +160,7 @@ public class Modele {
 	}
 	
 	//appel� lorsqu'on appuie sur le bouton fusion du menu
-	public void traiterFusion()
+/*	public void traiterFusion()
 	{
 		cadre_ima_fusion = outil.charger(interfaceGraphique);
 		imaAvantFusion = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
@@ -201,5 +211,5 @@ public class Modele {
 	public void calculerHistogrammeRGB()
 	{
 		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
-	}
+	}*/
 }
