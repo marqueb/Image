@@ -8,14 +8,16 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -83,7 +85,7 @@ public class InterfaceGraphique implements Runnable{
 	{
 		if(this.sliderChoixTailleFiltre == null) return -1;
 		//*2+1 pour avoir les tailles impaires entre 1 et 15
-		return this.sliderChoixTailleFiltre.getValue()*2+1;
+		return this.sliderChoixTailleFiltre.getValue();
 	}
 	
 	public JMenuItem getSauvegarde() {
@@ -149,9 +151,11 @@ public class InterfaceGraphique implements Runnable{
         tab.add(boutonFermer, BorderLayout.EAST);
         tabbedPane.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);        
         tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
+        this.rafraichirComponentOption();
         //Parametre de l'onglet
         return boutonFermer;
      }
+    
 	
 	public void afficherValeurCouleur(int x , int y, int r, int g, int b){
 		PixelCouleur.setText("pixel: ("+x+" , "+y+"), Couleur: (Rouge :"+ r+ ", Vert :"+g+", Bleu :"+b+")");
@@ -241,7 +245,15 @@ public class InterfaceGraphique implements Runnable{
 	
 	public void ajouterComponentChoixTailleFiltre(TypeFiltre typeFiltre)
 	{
-		sliderChoixTailleFiltre = new JSlider(0,7,0);
+		switch (typeFiltre)
+		{
+		case MOYENNEUR:
+			sliderChoixTailleFiltre = new JSlider(0,7,0);
+			break;
+		case MEDIAN:
+			sliderChoixTailleFiltre = new JSlider(0,3,0);
+			break;
+		}
 		JButton appliquer = new JButton("Appliquer filtre");
 		
 		controler.addControlerChoixTailleFiltre(sliderChoixTailleFiltre, appliquer, typeFiltre);
@@ -252,6 +264,60 @@ public class InterfaceGraphique implements Runnable{
 		panelOption.repaint();
 		frame.validate();
 	}
+	
+	//remplace l'image par une grille correspondant au filtre et affiche une image à droite pour prévisualiser
+	public void ajouterComponentFiltreUser()
+	{
+//		JButton previsualiser = new JButton("Prévisualiser");
+		JButton valider = new JButton("Valider");
+		JLabel labelTaille = new JLabel("Taille du filtre:");
+		String[] stringTailles = {"3x3","5x5","7x7","9x9"};
+		JComboBox<String> boxChoixTailleFiltre = new JComboBox<String>(stringTailles);
+		
+		JPanel panelUser = ajouterGrilleFiltreUser(3);
+		
+//		previsualiser.setEnabled(false);
+//		valider.setEnabled(false);
+		
+		controler.addControlerFiltreUser(valider, boxChoixTailleFiltre, panelUser);
+		
+		//modification du panelOption
+		panelOption.removeAll();
+		panelOption.add(valider);
+		//panelOption.add(previsualiser);
+		panelOption.add(labelTaille);
+		panelOption.add(boxChoixTailleFiltre);
+		
+		//affichage des modifs
+		panelOption.repaint();
+		frame.validate();
+	}
+	
+	public JPanel ajouterGrilleFiltreUser(int taille)
+	{
+		JPanel panel = createGrilleFiltreUser(taille);
+		JScrollPane scrollPane = (JScrollPane) this.tabbedPane.getSelectedComponent();
+		scrollPane.setViewportView(panel);
+		return panel;
+	}
+	
+    
+    private JPanel createGrilleFiltreUser(int taille)
+    {
+    	JPanel panel = new JPanel(new GridLayout(taille, taille));
+    	JTextArea tmp = null;
+    	for(int i = 1; i<=taille; i++)
+    	{
+    		for(int j = 0; j<taille; j++)
+        	{
+    			tmp = new JTextArea("0");
+    			tmp.setBorder(BorderFactory.createLineBorder(Color.black));
+        		panel.add(tmp);
+        	}
+    	}
+    	
+    	return panel;
+    }
 	
 	public void rafraichirComponentOption()
 	{
@@ -373,11 +439,13 @@ public class InterfaceGraphique implements Runnable{
 //		JMenuItem gaussien = new JMenuItem("Gaussien");
 //		traitement.add(gaussien);
 //		//filtre => Traitement => median
-//		JMenuItem median = new JMenuItem("Median");
-//		traitement.add(median);
+		JMenuItem median = new JMenuItem("Median");
+		controler.addControlerMedian(median);
+		traitement.add(median);
 //		//filtre => Traitement => utilisateur
-//		JMenuItem utilisateur = new JMenuItem("Utilisateur");
-//		traitement.add(utilisateur);
+		JMenuItem utilisateur = new JMenuItem("Définir un filtre");
+		controler.addControlerBoutonFiltreUser(utilisateur);
+		traitement.add(utilisateur);
 //		//filtre => Traitement => flou
 //		JMenuItem flou = new JMenuItem("Flou");
 //		traitement.add(flou);

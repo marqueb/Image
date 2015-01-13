@@ -180,12 +180,25 @@ public class Modele {
 		//cr�er filtre
 		switch (typeFiltre){
 		case MOYENNEUR:
+			taille = taille*2+1;
 			filtre = FiltreConvolution.createFiltreMoyenne(taille);
+			break;
+		case MEDIAN:
+			System.out.println(taille);
+			filtre = null;
 			break;
 		}
 
 		//appliquer convolution
-		if(filtre!=null) appliquerFiltre(filtre, this.imaAvantFusion);
+		if(filtre!=null)
+		{
+			appliquerFiltre(filtre, this.imaAvantFusion);
+		}
+		else if(typeFiltre == TypeFiltre.MEDIAN && taille>0)
+		{
+			BufferedImage res = traiteurImage.convoluerFiltreMedian(imaAvantFusion, taille);
+			listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
+		}
 
 		actualiserImageIcon();
 	}
@@ -195,13 +208,13 @@ public class Modele {
 		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
 	}
 
-	public void appliquerFiltre(TypeFiltre filtre)
-	{
-		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
-		BufferedImage res = traiteurImage.convoluer(filtre, bufImage);
-		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
-		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
-	}
+//	public void appliquerFiltre(TypeFiltre filtre)
+//	{
+//		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
+//		BufferedImage res = traiteurImage.convoluer(filtre, bufImage);
+//		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
+//		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
+//	}
 
 	public void appliquerFiltre(float[][] noyau)
 	{

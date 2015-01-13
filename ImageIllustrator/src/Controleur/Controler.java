@@ -1,19 +1,17 @@
 package Controleur;
 
 import java.awt.Checkbox;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 
 import Modele.Modele;
 import Modele.TypeFiltre;
-import Vue.CadreImage;
 import Vue.InterfaceGraphique;
 
 
@@ -186,5 +184,23 @@ public class Controler{
 		ControlerChoixTailleFiltre c =new ControlerChoixTailleFiltre(this,b,  filtre);
 		slider.addChangeListener(c);
 		b.addActionListener(c);
+	}
+	
+	public void addControlerMedian(JMenuItem m)
+	{
+		m.addActionListener(new ControlerMedian(this.modele, this.it));
+	}
+	
+	public void addControlerBoutonFiltreUser(JMenuItem u)
+	{
+		u.addActionListener(new ControlerBoutonFiltreUser(this.modele, this.it));
+	}
+	
+	public void addControlerFiltreUser(JButton valider, JComboBox<String> boxChoixTailleFiltre, JPanel panelUser)
+	{
+		ControlerFiltreUser c = new ControlerFiltreUser(this.it, this.modele, boxChoixTailleFiltre, panelUser);
+		
+		valider.addActionListener(c);
+		boxChoixTailleFiltre.addActionListener(c);
 	}
 }
