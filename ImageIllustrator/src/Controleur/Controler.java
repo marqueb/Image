@@ -225,4 +225,14 @@ public class Controler{
 		valider.addActionListener(c);
 		boxChoixTailleFiltre.addActionListener(c);
 	}
+	
+	public void addControlerContraste(JMenuItem contraste)
+	{
+		contraste.addActionListener(new ControlerContraste(this));
+	}
+	
+	public void addControlerContours(JMenuItem contraste)
+	{
+		contraste.addActionListener(new ControlerContours(this));
+	}
 }

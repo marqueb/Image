@@ -235,6 +235,24 @@ public class Modele {
 
 		actualiserImageIcon();
 	}
+	
+	public void rehausserContrastes()
+	{
+		BufferedImage im = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
+		im = traiteurImage.convoluer(FiltreConvolution.getNoyauContraste3x3(), im);
+		listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(im);
+		actualiserImageIcon();
+		interfaceGraphique.rafraichirComponentOption();
+	}
+	
+	public void rehausserContours()
+	{
+		BufferedImage im = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
+		im = traiteurImage.rehausserContours(im);
+		listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(im);
+		actualiserImageIcon();
+		interfaceGraphique.rafraichirComponentOption();
+	}
 
 	public void calculerHistogrammeRGB()
 	{

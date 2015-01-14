@@ -6,6 +6,21 @@ import java.util.Collections;
 
 public class FiltreConvolution {
 
+	
+	private static float[][] noyauLaplacien3x3 = {{1,2,1},{2,-12,2},{1,2,1}};
+	private static float[][] noyauContraste3x3 = {{0,-1,0},{-1,5,-1},{0,-1,0}};
+	
+	public static float[][] getNoyauLaplacien3x3()
+	{
+		return noyauLaplacien3x3;
+	}
+	
+	public static float[][] getNoyauContraste3x3()
+	{
+		return noyauContraste3x3;
+	}
+	
+	
 	public static float[][] createFiltreMoyenne(int taille)
 	{
 		float[][] filtre = new float[taille][taille];

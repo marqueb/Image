@@ -436,11 +436,16 @@ public class InterfaceGraphique implements Runnable{
 		JMenuItem imagris = new JMenuItem("Image grise");
 		controler.addControlerImagris(imagris);
 		transformation.add(imagris);       
-		//Image => transformation => Gris
-//		JMenuItem contraste = new JMenuItem("Réhausser les contrastes");
-//		controler.addControlerContraste(contraste);
-//		transformation.add(contraste);       
-//		image.add(transformation);
+		//Image => transformation => contraste
+		JMenuItem contraste = new JMenuItem("Réhausser les contrastes");
+		controler.addControlerContraste(contraste);
+		transformation.add(contraste);       
+		image.add(transformation);
+		//Image => transformation => contours
+		JMenuItem contours = new JMenuItem("Accentuer les contours");
+		controler.addControlerContours(contours);
+		transformation.add(contours);       
+		image.add(transformation);
 
 		//Filtre
 		//JMenu filtre = new JMenu("Filtre");

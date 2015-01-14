@@ -157,4 +157,32 @@ public class TraiteurImage {
 		resPix = outil.setR(valR)+outil.setG(valG)+outil.setB(valB);
 		return resPix;
 	}
+	
+	public BufferedImage rehausserContours(BufferedImage im)
+	{
+		float alpha = 1.0f/8.0f;
+		int rgb_im, rgb_laplacien, valR, valG, valB;
+		BufferedImage im_out = Outil.deepCopy(im);
+		int width = im.getWidth(), height = im.getHeight();
+		Outil outil = new Outil();
+		
+		BufferedImage im_laplacien = convoluer(FiltreConvolution.getNoyauLaplacien3x3(), im);
+		
+		for(int i = 0; i<width; i++)
+		{
+			for(int j = 0; j<height; j++)
+			{
+				rgb_im = im.getRGB(i, j);
+				rgb_laplacien = im_laplacien.getRGB(i, j);
+				
+				valR = Outil.getValidValuePixel((int)(outil.getR(rgb_im) - alpha * outil.getR(rgb_laplacien)));
+				valG = Outil.getValidValuePixel((int)(outil.getG(rgb_im) - alpha * outil.getG(rgb_laplacien)));
+				valB = Outil.getValidValuePixel((int)(outil.getB(rgb_im) - alpha * outil.getB(rgb_laplacien)));
+				
+				im_out.setRGB(i,  j,  outil.setR(valR)+outil.setG(valG)+outil.setB(valB));
+			}
+		}
+		
+		return im_out;
+	}
 }
