@@ -2,5 +2,6 @@ package Modele;
 
 public enum TypeFiltre {
 	MOYENNEUR,
-	MEDIAN
+	MEDIAN,
+	GAUSSIEN
 }

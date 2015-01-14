@@ -147,6 +147,13 @@ public class TraiteurImage {
 			valG = Outil.getValidValuePixel(valG/sommeCoef);
 			valB = Outil.getValidValuePixel(valB/sommeCoef);
 		}
+		else
+		{
+			valR = Outil.getValidValuePixel(valR);
+			valG = Outil.getValidValuePixel(valG);
+			valB = Outil.getValidValuePixel(valB);
+		}
+		
 		resPix = outil.setR(valR)+outil.setG(valG)+outil.setB(valB);
 		return resPix;
 	}

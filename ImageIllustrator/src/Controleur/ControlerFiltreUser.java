@@ -1,9 +1,12 @@
 package Controleur;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -12,11 +15,13 @@ import Vue.InterfaceGraphique;
 
 public class ControlerFiltreUser implements ActionListener{
 
-	InterfaceGraphique it = null;
-	Modele modele = null;
-	JComboBox<String> comboBox = null;
-	JPanel panelUser = null;
-	float[][] filtre = null;
+	private InterfaceGraphique it = null;
+	private Modele modele = null;
+	private JComboBox<String> comboBox = null;
+	private JPanel panelUser = null;
+	private float[][] filtre = null;
+	private JLabel labelInfo = new JLabel("");
+
 
 	public ControlerFiltreUser(InterfaceGraphique i, Modele m, JComboBox<String> c, JPanel p)
 	{
@@ -33,16 +38,20 @@ public class ControlerFiltreUser implements ActionListener{
 			//si le filtre est valide
 			if(isFiltreValid())
 			{
+				JPanel info = it.getPanelInfo();
+				info.removeAll();
+				info.validate();
 				//alors appliquer le filtre à l'image 
 				modele.appliquerFiltre(filtre);
 				//et rafraichir l'imageIcon
 				modele.actualiserImageIcon();
 				it.rafraichirComponentOption();
 			}
-			else//TODO prévenir l'utilisateur que le filtre n'est pas valide
-			{
-
-			}
+		}
+		else if(e.getActionCommand().equals("Annuler"))
+		{
+			modele.actualiserImageIcon();
+			it.rafraichirComponentOption();
 		}
 		else//changer la grille du filtre
 		{
@@ -72,22 +81,42 @@ public class ControlerFiltreUser implements ActionListener{
 	{
 		int taille = (int) Math.sqrt(panelUser.getComponents().length);
 		this.filtre = new float[taille][taille];
-		int i = 0, j=0;
-		try{
-			for(i = 1; i<taille; i++)
+		JTextArea textArea = null;
+		int i = 0, j=0, cptErr = 0;
+		boolean isValid = true;
+		JPanel pInfo = null;
+
+
+		for(i = 0; i<taille; i++)
+		{
+			for(j = 0; j<taille; j++)
 			{
-				for(j = 0; j<taille; j++)
-				{
-//					System.out.println(Integer.getInteger(((JTextArea)panelUser.getComponent(i+taille*j)).getText()));
-					this.filtre[i][j] = new Float(Integer.parseInt(((JTextArea)panelUser.getComponent(i+taille*j)).getText()));
+				//					System.out.println(Integer.getInteger(((JTextArea)panelUser.getComponent(i+taille*j)).getText()));
+				textArea = (JTextArea)panelUser.getComponent(i+taille*j);
+				textArea.setForeground(Color.BLACK);
+				try{
+					this.filtre[i][j] = Float.parseFloat(textArea.getText());
+				}catch(Exception e){
+					pInfo = it.getPanelInfo();
+					this.panelUser.getComponent(i+taille*j).setForeground(Color.RED);
+					isValid = false;
+					cptErr++;
 				}
 			}
-		}catch(Exception e){
-			System.out.println("Filtre invalide, erreur en (i, j) = ("+i+", "+j+").");
-			e.printStackTrace();
-			return false;
 		}
-		return true;
+
+		if(!isValid)
+		{
+			pInfo.removeAll();
+			pInfo.validate();
+			if(cptErr==1) labelInfo.setText("Filtre invalide. La valeur en rouge n'est pas un réel.");
+			else labelInfo.setText("Filtre invalide. Les valeurs en rouge ne sont pas des réels.");
+			labelInfo.setForeground(Color.RED);
+			pInfo.add(labelInfo);
+			pInfo.validate();
+		}
+		
+		return isValid;
 	}
 
 }

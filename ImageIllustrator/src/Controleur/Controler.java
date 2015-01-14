@@ -29,6 +29,19 @@ public class Controler{
 		if(!modele.getListCadreImage().isEmpty())	it.rafraichirComponentOption();
 	}
 	
+	public void annuler()
+	{
+		modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
+		modele.actualiserImageIcon();
+		it.rafraichirComponentOption();
+	}
+	
+	public void valider()
+	{
+		modele.actualiserImageIcon();
+		it.rafraichirComponentOption();
+	}
+	
 	public Modele getModele()
 	{
 		return this.modele;
@@ -126,11 +139,11 @@ public class Controler{
 		modele.actualiserImageIcon();
 	}
 
-	public void boutonMoyenneurClic()
+	public void boutonFlouterClic()
 	{
 		//modele.appliquerFiltre(TypeFiltre.MOYENNEUR);
 		modele.memoriseImage();
-		it.ajouterComponentChoixTailleFiltre(TypeFiltre.MOYENNEUR);
+		it.ajouterComponentChoixTailleFiltre(TypeFiltre.GAUSSIEN);
 	}
 	
 	public void addControlerCharger(JMenuItem charger){
@@ -185,10 +198,12 @@ public class Controler{
 		appliquer.addActionListener(cf);
 	}
 	
-	public void addControlerChoixTailleFiltre(JSlider slider,JButton b, TypeFiltre filtre)
+	public void addControlerChoixTailleFiltre(JComboBox<String> boxTaille, JButton annuler, JButton b, TypeFiltre filtre, JComboBox<String> typeFlou)
 	{
-		ControlerChoixTailleFiltre c =new ControlerChoixTailleFiltre(this,b,  filtre);
-		slider.addChangeListener(c);
+		ControlerChoixTailleFiltre c =new ControlerChoixTailleFiltre(this, filtre, typeFlou, boxTaille);
+		if(typeFlou!=null) typeFlou.addActionListener(c);
+		annuler.addActionListener(c);
+		boxTaille.addActionListener(c);
 		b.addActionListener(c);
 	}
 	
@@ -202,10 +217,11 @@ public class Controler{
 		u.addActionListener(new ControlerBoutonFiltreUser(this.modele, this.it));
 	}
 	
-	public void addControlerFiltreUser(JButton valider, JComboBox<String> boxChoixTailleFiltre, JPanel panelUser)
+	public void addControlerFiltreUser(JButton valider, JButton annuler, JComboBox<String> boxChoixTailleFiltre, JPanel panelUser)
 	{
 		ControlerFiltreUser c = new ControlerFiltreUser(this.it, this.modele, boxChoixTailleFiltre, panelUser);
 		
+		annuler.addActionListener(c);
 		valider.addActionListener(c);
 		boxChoixTailleFiltre.addActionListener(c);
 	}

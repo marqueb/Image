@@ -25,7 +25,7 @@ public class Modele {
 	private ArrayList<CadreImage> listCadreImage;
 	private ArrayList<JButton> listBoutonFermeture;
 	private CadreImage cadre_ima_fusion = null;
-	private BufferedImage imaAvantFusion = null;
+	private BufferedImage imaAvantTraitement = null;
 
 
 	public Modele()
@@ -117,7 +117,7 @@ public class Modele {
 	{
 		cadre_ima_fusion = outil.charger();
 		if(cadre_ima_fusion!=null){
-			imaAvantFusion = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
+			imaAvantTraitement = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
 			interfaceGraphique.ajouterComponentFusion(cadre_ima_fusion);
 		}
 	}
@@ -131,7 +131,7 @@ public class Modele {
 	//appel� lorsqu'on change le pourcentage d'image avec le scroll
 	public void traiterVariationFusion(int pourcentImageSecondaire)
 	{
-		BufferedImage imaPrincipale = this.imaAvantFusion;
+		BufferedImage imaPrincipale = this.imaAvantTraitement;
 		BufferedImage imaSecondaire = cadre_ima_fusion.getImage();
 		BufferedImage imaToChange = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
 		float coef1 = (float) ((100.0-pourcentImageSecondaire)/100.0);
@@ -181,8 +181,11 @@ public class Modele {
 			taille = taille*2+1;
 			filtre = FiltreConvolution.createFiltreMoyenne(taille);
 			break;
+		case GAUSSIEN:
+			taille = taille*2+1;
+			filtre = FiltreConvolution.createFiltreGaussien(taille, 5);
+			break;
 		case MEDIAN:
-			System.out.println(taille);
 			filtre = null;
 			break;
 		}
@@ -190,11 +193,43 @@ public class Modele {
 		//appliquer convolution
 		if(filtre!=null)
 		{
-			appliquerFiltre(filtre, this.imaAvantFusion);
+			appliquerFiltre(filtre, this.imaAvantTraitement);
 		}
 		else if(typeFiltre == TypeFiltre.MEDIAN && taille>0)
 		{
-			BufferedImage res = traiteurImage.convoluerFiltreMedian(imaAvantFusion, taille);
+			BufferedImage res = traiteurImage.convoluerFiltreMedian(imaAvantTraitement, taille);
+			listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
+		}
+
+		actualiserImageIcon();
+	}
+	
+	public void traiterChangementTailleFiltre(TypeFiltre typeFiltre, int taille)
+	{
+		float[][] filtre = null;
+		//cr�er filtre
+		switch (typeFiltre){
+		case MOYENNEUR:
+			taille = taille*2+1;
+			filtre = FiltreConvolution.createFiltreMoyenne(taille);
+			break;
+		case GAUSSIEN:
+			taille = taille*2+1;
+			filtre = FiltreConvolution.createFiltreGaussien(taille, 5);
+			break;
+		case MEDIAN:
+			filtre = null;
+			break;
+		}
+
+		//appliquer convolution
+		if(filtre!=null)
+		{
+			appliquerFiltre(filtre, this.imaAvantTraitement);
+		}
+		else if(typeFiltre == TypeFiltre.MEDIAN && taille>0)
+		{
+			BufferedImage res = traiteurImage.convoluerFiltreMedian(imaAvantTraitement, taille);
 			listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
 		}
 
@@ -231,7 +266,7 @@ public class Modele {
 
 	public void memoriseImage()
 	{
-		this.imaAvantFusion = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
+		this.imaAvantTraitement = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
 	}
 
 	public void actualiserImageIcon(){
@@ -311,12 +346,12 @@ public class Modele {
 		this.cadre_ima_fusion = cadre_ima_fusion;
 	}
 
-	public BufferedImage getImaAvantFusion() {
-		return imaAvantFusion;
+	public BufferedImage getImaAvantTraitement() {
+		return imaAvantTraitement;
 	}
 
-	public void setImaAvantFusion(BufferedImage imaAvantFusion) {
-		this.imaAvantFusion = imaAvantFusion;
+	public void setImaAvantTraitement(BufferedImage imaAvantTraitement) {
+		this.imaAvantTraitement = imaAvantTraitement;
 	}
 
 	public ArrayList<CadreImage> getListCadreImage() {
