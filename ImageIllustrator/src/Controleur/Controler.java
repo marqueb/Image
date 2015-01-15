@@ -3,6 +3,7 @@ package Controleur;
 import java.awt.Checkbox;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -60,7 +61,18 @@ public class Controler{
 	public void setInterfaceGraphique(InterfaceGraphique i){
 		this.it=i;
 	}
-
+	public void addControlerCheckCouleur(JCheckBox rouge,JCheckBox vert, JCheckBox bleu,JCheckBox luminence, JCheckBox chrominenceU,JCheckBox chrominenceV){
+		rouge.addActionListener(new ControlerCheckCouleur(it,it.getHisto()));
+		vert.addActionListener(new ControlerCheckCouleur(it,it.getHisto()));
+		bleu.addActionListener(new ControlerCheckCouleur(it,it.getHisto()));
+		luminence.addActionListener(new ControlerCheckCouleur(it,it.getHisto()));
+		chrominenceU.addActionListener(new ControlerCheckCouleur(it,it.getHisto()));
+		chrominenceV.addActionListener(new ControlerCheckCouleur(it,it.getHisto()));
+	}
+	
+	public void addControlerHistoChoixRgbYuv(JComboBox choixRgbYuv){
+		choixRgbYuv.addActionListener(new ControlerHistoChoixRgbYuv(it,it.getHisto()));
+	}
 	public void charger(){
 		init();
 		modele.charger();
