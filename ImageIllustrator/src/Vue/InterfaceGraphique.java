@@ -17,6 +17,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -38,7 +39,7 @@ import Modele.Outil;
 import Modele.TypeFiltre;
 
 public class InterfaceGraphique implements Runnable{
-	private JFrame frame;
+	private JFrame frame,frameHisto;
 	private JPanel panelOption;
 	private JPanel panelInfo;
 	private JTextArea PixelCouleur;
@@ -48,9 +49,10 @@ public class InterfaceGraphique implements Runnable{
 	private JMenuItem sauvegarde;
 	private CheckboxGroup groupe;
 	private Checkbox box1, box2;
-	private Histogramme histoR, histoG, histoB;
+	private JCheckBox rouge,vert,bleu, luminance, chrominanceU , chrominanceV;
+	private Histogramme histo;
 	private JSlider sliderFusion = null, sliderChoixTailleFiltre = null;
-
+	private JComboBox choixRgbYuv;
 	public Image chargerImage(String bouton){
 		Image img=null;
 		switch (bouton) {
@@ -195,28 +197,74 @@ public class InterfaceGraphique implements Runnable{
 	//ajout les trois histogrammes dans la barre d'option de droite
 	public void ajouterHistoRgb(int[][] tabsHisto)
 	{
-		panelOption.removeAll();
+
+		frameHisto = new JFrame();
 		panelOption.setLayout(new BoxLayout(panelOption, BoxLayout.Y_AXIS));
-		histoR = new Histogramme(tabsHisto[0], "Rouge",new Dimension(panelOption.getWidth(),panelOption.getHeight()/3));
-		histoG = new Histogramme(tabsHisto[1], "Vert",new Dimension(panelOption.getWidth(),panelOption.getHeight()/3));
-		histoB = new Histogramme(tabsHisto[2], "Bleu",new Dimension(panelOption.getWidth(),panelOption.getHeight()/3));
+		histo = new Histogramme(tabsHisto,"histogramme", new Dimension(1000,600));
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+		
+		JPanel option = new JPanel();
+		option.setLayout(new BoxLayout(option, BoxLayout.Y_AXIS));
+		rouge= new JCheckBox("Rouge  ");
+		vert= new JCheckBox("Vert   ");
+		bleu= new JCheckBox("Bleu   ");
+		luminance= new JCheckBox("Lum Y");
+		chrominanceU= new JCheckBox("Chrom U");
+		chrominanceV= new JCheckBox("Chrom V");
+	
+		//initalisation
+		rouge.setSelected(true);
+		vert.setSelected(true);
+		bleu.setSelected(true);
+		
+		luminance.setVisible(false);
+		chrominanceU.setVisible(false);
+		chrominanceV.setVisible(false);
+		
+		luminance.setSelected(false);
+		chrominanceU.setSelected(false);
+		chrominanceV.setSelected(false);
+		
+		String[] choix = { "RGB","YUV" };
+		choixRgbYuv = new JComboBox(choix);
+		choixRgbYuv.setSelectedIndex(0);
+		controler.addControlerHistoChoixRgbYuv(choixRgbYuv);
+		
+		JPanel panelBox = new JPanel();
+		panelBox.add(choixRgbYuv);
+		option.add(panelBox);
+		
+		controler.addControlerCheckCouleur(rouge,vert,bleu,luminance, chrominanceU,chrominanceV);
+		option.add(rouge);
+		option.add(vert);
+		option.add(bleu);
+		option.add(luminance);
+		option.add(chrominanceU);
+		option.add(chrominanceV);
+		
+		panel.add(histo,BorderLayout.CENTER);
+		panel.add(option,BorderLayout.EAST);
+		
+		
+	
+		frameHisto.add(panel);
+		frameHisto.dispose();
+		frameHisto.setSize(1200, 600);
+		frameHisto.setVisible(true);
 
-		panelOption.add(histoR);
-		panelOption.add(histoG);
-		panelOption.add(histoB);
-
-		panelOption.repaint();
 		frame.validate();
 	}
 
-	public void retirerHistoRgb(int[][] tabsHisto)
+	/*public void retirerHistoRgb(int[][] tabsHisto)
 	{
 		panelOption.remove(histoR);
 		panelOption.remove(histoG);
 		panelOption.remove(histoB);
 		panelOption.repaint();
 		frame.validate();
-	}
+	}*/
 
 	public void ajouterComponentFusion(CadreImage cadre_ima_fusion)
 	{
@@ -240,6 +288,14 @@ public class InterfaceGraphique implements Runnable{
 		panelOption.add(cadre_ima);
 		panelOption.repaint();
 		frame.validate();
+	}
+
+	public JCheckBox getRouge() {
+		return rouge;
+	}
+
+	public void setRouge(JCheckBox rouge) {
+		this.rouge = rouge;
 	}
 
 	public void retirerComponentFusion()
@@ -279,10 +335,10 @@ public class InterfaceGraphique implements Runnable{
 		frame.validate();
 	}
 
-	//remplace l'image par une grille correspondant au filtre et affiche une image à droite pour prévisualiser
+	//remplace l'image par une grille correspondant au filtre et affiche une image ï¿½ droite pour prï¿½visualiser
 	public void ajouterComponentFiltreUser()
 	{
-		//		JButton previsualiser = new JButton("Prévisualiser");
+		//		JButton previsualiser = new JButton("Prï¿½visualiser");
 		JButton valider = new JButton("Valider");
 		JButton annuler = new JButton("Annuler");
 		JLabel labelTaille = new JLabel("Taille du filtre:");
@@ -307,6 +363,22 @@ public class InterfaceGraphique implements Runnable{
 		//affichage des modifs
 		panelOption.repaint();
 		frame.validate();
+	}
+
+	public Histogramme getHisto() {
+		return histo;
+	}
+
+	public void setHisto(Histogramme histo) {
+		this.histo = histo;
+	}
+
+	public JComboBox getChoixRgbYuv() {
+		return choixRgbYuv;
+	}
+
+	public void setChoixRgbYuv(JComboBox choixRgbYuv) {
+		this.choixRgbYuv = choixRgbYuv;
 	}
 
 	public JPanel ajouterGrilleFiltreUser(int taille)
@@ -437,7 +509,7 @@ public class InterfaceGraphique implements Runnable{
 		controler.addControlerImagris(imagris);
 		transformation.add(imagris);       
 		//Image => transformation => contraste
-		JMenuItem contraste = new JMenuItem("Réhausser les contrastes");
+		JMenuItem contraste = new JMenuItem("Rï¿½hausser les contrastes");
 		controler.addControlerContraste(contraste);
 		transformation.add(contraste);       
 		image.add(transformation);
@@ -469,7 +541,7 @@ public class InterfaceGraphique implements Runnable{
 		controler.addControlerMedian(median);
 		traitement.add(median);
 		//		//filtre => Traitement => utilisateur
-		JMenuItem utilisateur = new JMenuItem("Définir un filtre");
+		JMenuItem utilisateur = new JMenuItem("Dï¿½finir un filtre");
 		controler.addControlerBoutonFiltreUser(utilisateur);
 		traitement.add(utilisateur);
 		//		//filtre => Traitement => flou
@@ -548,6 +620,53 @@ public class InterfaceGraphique implements Runnable{
 		// On fixe la taille et on demarre
 		frame.setSize(1000, 700);
 		frame.setVisible(true);
+	}
+	public JCheckBox getLuminance() {
+		return luminance;
+	}
+
+	public void setLuminance(JCheckBox luminance) {
+		this.luminance = luminance;
+	}
+
+	public JCheckBox getChrominanceU() {
+		return chrominanceU;
+	}
+
+	public void setChrominanceU(JCheckBox chrominanceU) {
+		this.chrominanceU = chrominanceU;
+	}
+
+	public JCheckBox getChrominanceV() {
+		return chrominanceV;
+	}
+
+	public void setChrominanceV(JCheckBox chrominanceV) {
+		this.chrominanceV = chrominanceV;
+	}
+
+	public JCheckBox getVert() {
+		return vert;
+	}
+
+	public void setVert(JCheckBox vert) {
+		this.vert = vert;
+	}
+
+	public JCheckBox getBleu() {
+		return bleu;
+	}
+
+	public void setBleu(JCheckBox bleu) {
+		this.bleu = bleu;
+	}
+
+	public JFrame getFrameHisto() {
+		return frameHisto;
+	}
+
+	public void setFrameHisto(JFrame frameHisto) {
+		this.frameHisto = frameHisto;
 	}
 
 	public JTabbedPane getTabbedAffichage() {
