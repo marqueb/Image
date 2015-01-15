@@ -134,7 +134,7 @@ public class Controler{
 	}
 
 	public void sourisPresse(int x, int y){
-		//modele.afficherpos();
+		modele.afficherpos(x,y);
 		//modele.setScroll();
 		if(selectionActive && modele.estDansSelection(x, y)){
 			init();

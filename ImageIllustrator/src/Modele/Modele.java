@@ -67,8 +67,8 @@ public class Modele {
 		return listCadreImage.isEmpty();
 	}
 	
-	public void afficherpos(){
-		System.out.println(interfaceGraphique.getTabbedPane().getComponent(interfaceGraphique.getTabbedPane().getSelectedIndex()));
+	public void afficherpos(int x, int y){
+		//System.out.println(interfaceGraphique.getTabbedPane().getComponent(interfaceGraphique.getTabbedPane().getSelectedIndex()).getWidth());
 	}
 
 	public void sauvegarder(){

@@ -64,6 +64,7 @@ public class Outil {
 	public CadreImage initCadre(BufferedImage image, Controler controler){
 		CadreImage cadreImage=new CadreImage(image);
 		JLabel icon=new JLabel(cadreImage.getImageIcon());
+		//System.out.println(icon.getIcon().);
 		JScrollPane imageScroller =new JScrollPane(icon);
 		imageScroller.setViewportView(icon);
 		imageScroller.setAutoscrolls(true);
