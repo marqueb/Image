@@ -16,7 +16,7 @@ public class TraiteurImage {
 		{1.0f, 1.0f, 1.0f},
 		{1.0f, 1.0f, 1.0f},
 		{1.0f, 1.0f, 1.0f}};
-	private static float unNeuvieme = Float.valueOf((float)1/(float)9);
+	//private static float unNeuvieme = Float.valueOf((float)1/(float)9);
 	//	private static final float[][] MOYENNE = {
 	//		{unNeuvieme, unNeuvieme, unNeuvieme},
 	//		{unNeuvieme, unNeuvieme, unNeuvieme},
@@ -76,6 +76,35 @@ public class TraiteurImage {
 
 		return bufIma_out;
 	}
+	
+	public BufferedImage convoluerFiltreMedian(BufferedImage bufIma_in, int nbVoisin)
+	{
+		BufferedImage bufIma_out = Outil.deepCopy(bufIma_in);
+		int decalageBord = nbVoisin;
+		int i=0, j=0;
+		
+		//on recopie les parties ou on n'applique pas la convolution (on applique la convolution sur la partie "VALID" de l'image).
+		for(i=0; i<decalageBord; i++)
+		{
+			for(j=0; j<decalageBord; j++)
+			{
+				bufIma_out.setRGB(i, j, bufIma_in.getRGB(i,  j));
+				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
+				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, j, bufIma_in.getRGB(i,  j));
+				bufIma_out.setRGB(i, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
+			}
+		}
+
+		//on applique la convolution � la partie "VALID" de l'image.
+		for(i=decalageBord; i<bufIma_in.getWidth()-decalageBord-1; i++)
+		{
+			for(j=decalageBord; j<bufIma_in.getHeight()-decalageBord-1; j++)
+			{
+				bufIma_out.setRGB(i, j, FiltreConvolution.GetValueFiltreMedian(i, j, nbVoisin, bufIma_in));
+			}
+		}
+		return bufIma_out;
+	}
 
 	//retourne le noyau de convolution
 	private float[][] inverserNoyau(float[][] in)
@@ -114,11 +143,46 @@ public class TraiteurImage {
 		
 		if(sommeCoef>1)
 		{
-			valR = valR/sommeCoef;
-			valG = valG/sommeCoef;
-			valB = valB/sommeCoef;
+			valR = Outil.getValidValuePixel(valR/sommeCoef);
+			valG = Outil.getValidValuePixel(valG/sommeCoef);
+			valB = Outil.getValidValuePixel(valB/sommeCoef);
 		}
+		else
+		{
+			valR = Outil.getValidValuePixel(valR);
+			valG = Outil.getValidValuePixel(valG);
+			valB = Outil.getValidValuePixel(valB);
+		}
+		
 		resPix = outil.setR(valR)+outil.setG(valG)+outil.setB(valB);
 		return resPix;
+	}
+	
+	public BufferedImage rehausserContours(BufferedImage im)
+	{
+		float alpha = 1.0f/8.0f;
+		int rgb_im, rgb_laplacien, valR, valG, valB;
+		BufferedImage im_out = Outil.deepCopy(im);
+		int width = im.getWidth(), height = im.getHeight();
+		Outil outil = new Outil();
+		
+		BufferedImage im_laplacien = convoluer(FiltreConvolution.getNoyauLaplacien3x3(), im);
+		
+		for(int i = 0; i<width; i++)
+		{
+			for(int j = 0; j<height; j++)
+			{
+				rgb_im = im.getRGB(i, j);
+				rgb_laplacien = im_laplacien.getRGB(i, j);
+				
+				valR = Outil.getValidValuePixel((int)(outil.getR(rgb_im) - alpha * outil.getR(rgb_laplacien)));
+				valG = Outil.getValidValuePixel((int)(outil.getG(rgb_im) - alpha * outil.getG(rgb_laplacien)));
+				valB = Outil.getValidValuePixel((int)(outil.getB(rgb_im) - alpha * outil.getB(rgb_laplacien)));
+				
+				im_out.setRGB(i,  j,  outil.setR(valR)+outil.setG(valG)+outil.setB(valB));
+			}
+		}
+		
+		return im_out;
 	}
 }

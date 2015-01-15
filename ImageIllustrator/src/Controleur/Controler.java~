@@ -1,24 +1,26 @@
 package Controleur;
 
 import java.awt.Checkbox;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 
 import Modele.Modele;
 import Modele.TypeFiltre;
+import Vue.CadreImage;
 import Vue.InterfaceGraphique;
 
 
 public class Controler{
 	private Modele modele;
 	private InterfaceGraphique it;
-	private boolean echantillonageActif=false, selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
+	private boolean echantillonageActif=false, selectionActive=false, ajustementSelection=false, isRGB;
 
 	public void init(){
 		if(echantillonageActif){
@@ -31,23 +33,8 @@ public class Controler{
 		echantillonageActif=false;
 		selectionActive=false;
 		ajustementSelection=false;
-		deplacementScroll=false;
-		if(!modele.getListCadreImage().isEmpty())	it.rafraichirComponentOption();
 	}
 	
-	public void annuler()
-	{
-		modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
-		modele.actualiserImageIcon();
-		it.rafraichirComponentOption();
-	}
-	
-	public void valider()
-	{
-		modele.actualiserImageIcon();
-		it.rafraichirComponentOption();
-	}
-
 	public Modele getModele()
 	{
 		return this.modele;
@@ -56,7 +43,7 @@ public class Controler{
 	public void setModele(Modele modele){
 		this.modele=modele;
 	}
-
+	
 	public void setInterfaceGraphique(InterfaceGraphique i){
 		this.it=i;
 	}
@@ -68,21 +55,22 @@ public class Controler{
 
 	public void sauvegarder(){
 		if(!modele.isImageVide()){
-			init();
-			modele.sauvegarder();
+		init();
+		modele.sauvegarder();
 		}
 	}
 
 	public void couleurPixel(){
 		if(!modele.isImageVide()){
-			init();
-			echantillonageActif = true;
-			isRGB=true;
-			it.affichageChoixRGB();
+		init();
+		echantillonageActif = true;
+		isRGB=true;
+		it.affichageChoixRGB();
 		}
 	}
 
 	public void imaGris(){
+		System.out.println("jambon");
 		init();
 		modele.imagris();
 	}	
@@ -110,7 +98,7 @@ public class Controler{
 			modele.afficherCouleurPixel(x, y, isRGB);
 		}
 		if(selectionActive){
-			deplacementScroll=false;
+			//selectionActive=false;
 		}
 	}
 
@@ -118,29 +106,20 @@ public class Controler{
 		if(echantillonageActif){
 			modele.enleverCouleurPixel();
 		}
-		if(selectionActive){
-			modele.setDeltaScroll(x, y);
-			deplacementScroll=true;
-			//modele.setDelta(x, y);
-			//modele.deplacerScroll(x,y,deplacementScroll);
+		while(selectionActive){
+			//modele.deplacerScroll(x,y);
 		}
-		/*if(ajustementSelection){
-			deplacementScroll=true;
-			modele.setDeltaScroll(x, y);
-		}*/
 	}
 
 	public void sourisClique(int x, int y){
+		
 	}
 
 	public void sourisPresse(int x, int y){
-		//modele.afficherpos();
-		//modele.setScroll();
 		if(selectionActive && modele.estDansSelection(x, y)){
-			init();
-			ajustementSelection=true;
-			modele.setDelta(x, y);
-			modele.setDist(x, y);
+				init();
+				ajustementSelection=true;
+				modele.setDelta(x, y);
 		}else{
 			init();
 			selectionActive=true;
@@ -150,19 +129,9 @@ public class Controler{
 
 	public void sourisRelache(int x, int y){
 		if(selectionActive){
-			x=modele.ajustementX(x);
-			y=modele.ajustementY(y);
-			if(deplacementScroll){
-				modele.deplacerScroll(x, y);
-			}
 			modele.selectionne(x, y);
 		}
 		if(ajustementSelection){
-			//System.out.println("jambon1 "+x+" "+y);
-			x=modele.ajustementSelectionX(x);
-			y=modele.ajustementSelectionY(y);
-			//System.out.println("jambon2 "+x+" "+y);
-			modele.deplacerScrollAjustement(x, y);
 			modele.ajustementSelection(x, y);
 			selectionActive=true;
 		}
@@ -173,43 +142,43 @@ public class Controler{
 			modele.ajustementSelection(x, y);
 		}
 		if(selectionActive){
-			modele.selectionne(x, y);
+			modele.selection(x, y);
 		}*/
 	}
-
+	
 	public void boutonFusionClic()
 	{
 		modele.traiterFusion();
 	}
-
+	
 	public void sliderFusionChange()
 	{
 		modele.traiterVariationFusion(it.getSliderFusionValue());
 	}
-
+	
 	public void boutonAppliquerFusionClic()
 	{
 		this.it.retirerComponentFusion();
 		modele.calculerHistogrammeRGB();
 	}
-
+	
 	public void boutonAppliquerFiltre()
 	{
 		this.it.rafraichirComponentOption();
 		modele.actualiserImageIcon();
 	}
 
-	public void boutonFlouterClic()
+	public void boutonMoyenneurClic()
 	{
 		//modele.appliquerFiltre(TypeFiltre.MOYENNEUR);
 		modele.memoriseImage();
-		it.ajouterComponentChoixTailleFiltre(TypeFiltre.GAUSSIEN);
+		it.ajouterComponentChoixTailleFiltre(TypeFiltre.MOYENNEUR);
 	}
-
+	
 	public void addControlerCharger(JMenuItem charger){
 		charger.addActionListener(new ControlerCharger(this));
 	}
-
+	
 	public void addControlerCharger(JButton charger){
 		charger.addActionListener(new ControlerCharger(this));
 	}
@@ -217,11 +186,11 @@ public class Controler{
 	public void addControlerSauvegarder(JMenuItem sauvegarder){
 		sauvegarder.addActionListener(new ControlerSauvegarder(this));
 	}
-
+	
 	public void addControlerSauvegarder(JButton sauvegarder){
 		sauvegarder.addActionListener(new ControlerSauvegarder(this));
 	}
-
+	
 	public void addControlerCouleurPixel(JMenuItem couleurPixel){
 		couleurPixel.addActionListener(new ControlerCouleurPixel(this));
 	}
@@ -251,48 +220,17 @@ public class Controler{
 		image.addMouseListener(cs);
 		image.addMouseMotionListener(cs);
 	}
-
+	
 	public void addControlerFusion(JSlider slider, JButton appliquer){
 		ControlerFusion cf = new ControlerFusion(this);
 		slider.addChangeListener(cf);
 		appliquer.addActionListener(cf);
 	}
 	
-	public void addControlerChoixTailleFiltre(JComboBox<String> boxTaille, JButton annuler, JButton b, TypeFiltre filtre, JComboBox<String> typeFlou)
+	public void addControlerChoixTailleFiltre(JSlider slider,JButton b, TypeFiltre filtre)
 	{
-		ControlerChoixTailleFiltre c =new ControlerChoixTailleFiltre(this, filtre, typeFlou, boxTaille);
-		if(typeFlou!=null) typeFlou.addActionListener(c);
-		annuler.addActionListener(c);
-		boxTaille.addActionListener(c);
+		ControlerChoixTailleFiltre c =new ControlerChoixTailleFiltre(this,b,  filtre);
+		slider.addChangeListener(c);
 		b.addActionListener(c);
-	}
-	
-	public void addControlerMedian(JMenuItem m)
-	{
-		m.addActionListener(new ControlerMedian(this.modele, this.it));
-	}
-	
-	public void addControlerBoutonFiltreUser(JMenuItem u)
-	{
-		u.addActionListener(new ControlerBoutonFiltreUser(this.modele, this.it));
-	}
-	
-	public void addControlerFiltreUser(JButton valider, JButton annuler, JComboBox<String> boxChoixTailleFiltre, JPanel panelUser)
-	{
-		ControlerFiltreUser c = new ControlerFiltreUser(this.it, this.modele, boxChoixTailleFiltre, panelUser);
-		
-		annuler.addActionListener(c);
-		valider.addActionListener(c);
-		boxChoixTailleFiltre.addActionListener(c);
-	}
-	
-	public void addControlerContraste(JMenuItem contraste)
-	{
-		contraste.addActionListener(new ControlerContraste(this));
-	}
-	
-	public void addControlerContours(JMenuItem contraste)
-	{
-		contraste.addActionListener(new ControlerContours(this));
 	}
 }
