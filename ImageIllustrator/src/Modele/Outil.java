@@ -23,25 +23,25 @@ import Vue.InterfaceGraphique;
 public class Outil {
 
 	public CadreImage charger(){
-        File monFichier;
-        int controle;
-        CadreImage cadreImage = new CadreImage();
-        JFileChooser j = new JFileChooser();
-        controle=j.showOpenDialog(cadreImage);
-        if(controle==JFileChooser.APPROVE_OPTION){
-            monFichier=j.getSelectedFile();
-            try {
-                cadreImage.setImage(ImageIO.read(monFichier));
-                int index = monFichier.getName().indexOf('.');     
-                cadreImage.setNomFichier(monFichier.getName().substring(0,index));
-                return cadreImage;
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }
-        return null;
-    }
-	
+		File monFichier;
+		int controle;
+		CadreImage cadreImage = new CadreImage();
+		JFileChooser j = new JFileChooser();
+		controle=j.showOpenDialog(cadreImage);
+		if(controle==JFileChooser.APPROVE_OPTION){
+			monFichier=j.getSelectedFile();
+			try {
+				cadreImage.setImage(ImageIO.read(monFichier));
+				int index = monFichier.getName().indexOf('.');     
+				cadreImage.setNomFichier(monFichier.getName().substring(0,index));
+				return cadreImage;
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return null;
+	}
+
 	public File lectureFichier(){
 		JFileChooser j = new JFileChooser();
 		int controle=j.showOpenDialog(new JFrame());
@@ -50,7 +50,7 @@ public class Outil {
 		}
 		return null;
 	}
-	
+
 	public BufferedImage lectureImage(File monFichier){
 		try {
 			BufferedImage image=ImageIO.read(monFichier);
@@ -60,20 +60,26 @@ public class Outil {
 		}
 		return null;
 	}
-	
+
 	public CadreImage initCadre(BufferedImage image, Controler controler){
 		CadreImage cadreImage=new CadreImage(image);
 		JLabel icon=new JLabel(cadreImage.getImageIcon());
-        JScrollPane imageScroller =new JScrollPane(icon);
-        imageScroller.setViewportView(icon);
-        imageScroller.setAutoscrolls(true);
-        imageScroller.setWheelScrollingEnabled(true);
-        imageScroller.setPreferredSize(new Dimension(200,200));   
-        cadreImage.setImageScroller(imageScroller);
-        //scrollPanel.add(imageScroller); 
-        controler.addControlerSouris(icon);
-        //interfaceGraphique.getTabbedPane().setComponentAt(interfaceGraphique.getTabbedPane().getSelectedIndex(), imageScroller);
-        return cadreImage;
+		JScrollPane imageScroller =new JScrollPane(icon);
+		imageScroller.setViewportView(icon);
+		imageScroller.setAutoscrolls(true);
+		imageScroller.setWheelScrollingEnabled(true);
+		imageScroller.setPreferredSize(new Dimension(200,200)); 
+		cadreImage.setImageScroller(imageScroller);
+		imageScroller.getHorizontalScrollBar().setValue(imageScroller.getHorizontalScrollBar().getMaximum());
+		imageScroller.getVerticalScrollBar().setValue(imageScroller.getVerticalScrollBar().getMaximum());
+		/*cadreImage.setMaxScrollX(imageScroller.getHorizontalScrollBar().getValue());
+        cadreImage.setMaxScrollY(imageScroller.getVerticalScrollBar().getValue());
+        imageScroller.getHorizontalScrollBar().setValue(0);
+        imageScroller.getVerticalScrollBar().setValue(0);*/
+		//scrollPanel.add(imageScroller); 
+		controler.addControlerSouris(icon);
+		//interfaceGraphique.getTabbedPane().setComponentAt(interfaceGraphique.getTabbedPane().getSelectedIndex(), imageScroller);
+		return cadreImage;
 	}
 
 	public void sauvegarder(BufferedImage image){
@@ -87,12 +93,25 @@ public class Outil {
 			}
 		}
 	}
-	
-	public BufferedImage imagris(BufferedImage image){
+
+	public BufferedImage imagris(BufferedImage image, boolean existeSelection, int[] selection){
 		int r,g,b,gris;
+		int i_deb, i_fin, j_deb, j_fin;
 		int couleur;
-		for (int i=0;i<image.getWidth();i++){
-			for (int j=0;j<image.getHeight();j++){
+		if(existeSelection){
+			i_deb=selection[0];
+			i_fin=selection[2];
+			j_deb=selection[1];
+			j_fin=selection[3];
+		}else{
+			i_deb=0;
+			i_fin=image.getWidth();
+			j_deb=0;
+			j_fin=image.getHeight();
+		}
+
+		for (int i=i_deb;i<i_fin;i++){
+			for (int j=j_deb;j<j_fin;j++){
 				couleur=couleurPixel(image,i,j);
 				r=getR(couleur);
 				g=getG(couleur);
@@ -168,17 +187,29 @@ public class Outil {
 
 		return tab;
 	}
-	
+
 	public static BufferedImage resize(BufferedImage img, int newW, int newH) { 
-	    Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
-	    BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+		Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+		BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
 
-	    Graphics2D g2d = dimg.createGraphics();
-	    g2d.drawImage(tmp, 0, 0, null);
-	    g2d.dispose();
+		Graphics2D g2d = dimg.createGraphics();
+		g2d.drawImage(tmp, 0, 0, null);
+		g2d.dispose();
 
-	    return dimg;
-	}  
+		return dimg;
+	} 
+
+	public void tracer (BufferedImage image, int xPrec, int yPrec, int xCour, int yCour){
+		//System.out.println(xPrec+" "+yPrec+" "+xCour+" "+yCour);
+		for (int i=xPrec; i<= xCour; i++){
+			image.setRGB(i, yPrec,0);
+			image.setRGB(i, yCour,0);
+		}
+		for (int j=yPrec; j<= yCour; j++){
+			image.setRGB(xPrec, j,0);
+			image.setRGB(xCour, j,0);
+		}
+	} 
 
 	public int getAlpha(int rgb){
 		return (rgb >> 24 ) & 0XFF;

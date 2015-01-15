@@ -42,13 +42,13 @@ public class InterfaceGraphique implements Runnable{
 	private JTabbedPane tabbedPane;
 	private Modele modele;
 	private Controler controler;
-	private JMenuItem sauvegarde;
+	private JMenuItem sauvegarde, couleurPixel, fusion, imagris, moyen;
 	private CheckboxGroup groupe;
 	private Checkbox box1, box2;
 	private Histogramme histoR, histoG, histoB;
 	private JSlider sliderFusion = null, sliderChoixTailleFiltre = null;
 
-	public Image chargerImage(String bouton){
+	/*public Image chargerImage(String bouton){
 		Image img=null;
 		switch (bouton) {
 		case "Charger" :
@@ -71,7 +71,7 @@ public class InterfaceGraphique implements Runnable{
 			break;
 		}
 		return img;
-	}	
+	}	*/
 	
 	public int getSliderFusionValue()
 	{
@@ -92,10 +92,6 @@ public class InterfaceGraphique implements Runnable{
 
 	public void setSauvegarde(JMenuItem sauvegarde) {
 		this.sauvegarde = sauvegarde;
-	}
-
-	public void setEnableSauvegarde(boolean enable) {
-		this.sauvegarde.setEnabled(enable);
 	}
 
 	public JTabbedPane getTabbedPane() {
@@ -277,7 +273,13 @@ public class InterfaceGraphique implements Runnable{
 		return isRGB;
 	}
 	
-	
+	public void setEnable(boolean enable){
+		sauvegarde.setEnabled(enable);
+		couleurPixel.setEnabled(enable);
+		fusion.setEnabled(enable);
+		imagris.setEnabled(enable);
+		moyen.setEnabled(enable);
+	}
 
 	public void run(){
 		frame = new JFrame("Fenetre");
@@ -297,7 +299,6 @@ public class InterfaceGraphique implements Runnable{
 		//principal.add(nouveau);
 		//Menu principal => Sauvegarde
 		sauvegarde = new JMenuItem("Sauvegarde");
-		sauvegarde.setEnabled(false);
 		controler.addControlerSauvegarder(sauvegarde);
 		principal.add(sauvegarde);
 		//Menu principal => Imprimer00,panelOption.getParent().getHeight())
@@ -334,7 +335,7 @@ public class InterfaceGraphique implements Runnable{
 		//Image
 		JMenu image = new JMenu("Image");
 		//Image => Couleur du pixel
-		JMenuItem couleurPixel = new JMenuItem("Couleur pixel");
+		couleurPixel = new JMenuItem("Couleur pixel");
 		controler.addControlerCouleurPixel(couleurPixel);
 		image.add(couleurPixel);
 		//Image => Redimenssioner
@@ -346,11 +347,11 @@ public class InterfaceGraphique implements Runnable{
 		 */		//Image => Transformation
 		JMenu  transformation = new JMenu("Transformation");      
 		//Image => transformation => fusion
-		JMenuItem fusion = new JMenuItem("Fusion");
+		fusion = new JMenuItem("Fusion");
 		fusion.addActionListener(new ControlerBoutonFusion(controler));
 		transformation.add(fusion);
 		//Image => transformation => Gris
-		JMenuItem imagris = new JMenuItem("Image grise");
+		imagris = new JMenuItem("Image grise");
 		controler.addControlerImagris(imagris);
 		transformation.add(imagris);       
 		image.add(transformation);
@@ -366,7 +367,7 @@ public class InterfaceGraphique implements Runnable{
 //		//filtre => Traitement
 		JMenu traitement = new JMenu("Traitement");
 		//filtre => Traitement => moyen
-		JMenuItem moyen = new JMenuItem("Moyenneur (flouter)");
+		moyen = new JMenuItem("Moyenneur (flouter)");
 		moyen.addActionListener(new ControlerMoyenneur(controler));
 		traitement.add(moyen);
 		//filtre => Traitement => gaussien
@@ -396,7 +397,7 @@ public class InterfaceGraphique implements Runnable{
 		frame.setJMenuBar(barre);
 
 		frame.setLayout(new BorderLayout());
-		//implementation de la toolbar
+	/*	//implementation de la toolbar
         JPanel panel = new JPanel();
         JToolBar toolBar = new JToolBar();
         panel.add(toolBar);
@@ -407,7 +408,7 @@ public class InterfaceGraphique implements Runnable{
         toolBar.setForeground(Color.BLACK);
         /*ImageIcon imagecharger = new ImageIcon("Charger");
         JLabel label = new JLabel(imagecharger);
-        toolBar.add(charger);*/
+        toolBar.add(charger);*//*
         JButton btnCharger = new JButton();
         btnCharger.setToolTipText("Charger");
         btnCharger.setMnemonic('c');
@@ -428,7 +429,7 @@ public class InterfaceGraphique implements Runnable{
         btnImprimer.setToolTipText("Imprimer");
         btnImprimer.setFocusable(false);
         toolBar.add(btnImprimer);
-        frame.add(panel,BorderLayout.NORTH);
+        frame.add(panel,BorderLayout.NORTH);*/
 		tabbedPane = new JTabbedPane();
 		tabbedPane=new JTabbedPane();
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -449,6 +450,7 @@ public class InterfaceGraphique implements Runnable{
 		panelOption2.add(PixelCouleur);
 		frame.add(panelOption2,BorderLayout.SOUTH);
 
+		setEnable(false);
 		// Un clic sur le bouton de fermeture clos l'application
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// On fixe la taille et on demarre

@@ -27,6 +27,8 @@ public class Modele {
 	private CadreImage cadre_ima_fusion = null;
 	private BufferedImage imaAvantFusion = null;
 
+	private int xPrec=0, yPrec=0, xCour=0, yCour=0, dX, dY, dXscroll, dYscroll, distx1, disty1, distx2, disty2;
+
 
 	public Modele()
 	{
@@ -35,28 +37,38 @@ public class Modele {
 		outil = new Outil();
 		traiteurImage = new TraiteurImage();
 	}	
+	
+	public CadreImage cadreImageCourant(){
+		return listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
+	}
 
 	public void charger(){	
 		try{
 			File monFichier=outil.lectureFichier();
 			BufferedImage image =outil.lectureImage(monFichier);
-
 			int index = monFichier.getName().indexOf('.');
 			CadreImage cadreImage=outil.initCadre(image, controler);
 			cadreImage.setNomFichier(monFichier.getName().substring(0,index));
 			interfaceGraphique.getTabbedPane().add(cadreImage.getImageScroller());
-			interfaceGraphique.setEnableSauvegarde(true);
+			interfaceGraphique.setEnable(true);
 			//ajoute le cadre image à la liste de cadre image
 			listCadreImage.add(cadreImage);
 			//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image, ajoute le bouton creer a liste de bouton
 			listBoutonFermeture.add(interfaceGraphique.ajouterOnglet(cadreImage));
+			interfaceGraphique.getFrame().validate();
+			setScroll(cadreImage);
+			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(0);
+			cadreImage.getImageScroller().getVerticalScrollBar().setValue(0);
 			//interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(cadreImage.getImage()));
-
 		}catch(Exception e){}
 	}
 	
 	public boolean isImageVide(){
 		return listCadreImage.isEmpty();
+	}
+	
+	public void afficherpos(){
+		System.out.println(interfaceGraphique.getTabbedPane().getComponent(interfaceGraphique.getTabbedPane().getSelectedIndex()));
 	}
 
 	public void sauvegarder(){
@@ -93,9 +105,8 @@ public class Modele {
 
 	public void imagris(){
 		CadreImage tmp=listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
-		outil.imagris(tmp.getImage());
+		outil.imagris(tmp.getImage(), existeSelection(), selection());
 		actualiserImageIcon();
-		interfaceGraphique.getFrame().validate();
 	}
 
 	public void fermerOnglet(Object j){
@@ -104,7 +115,8 @@ public class Modele {
 		//supprime le cadre de la liste de cadre
 		suppCadreImage(i);
 		if(listCadreImage.isEmpty()){
-			interfaceGraphique.setEnableSauvegarde(false);
+			interfaceGraphique.setEnable(false);
+			interfaceGraphique.getFrame().validate();
 		}
 		//supprime le bouton de la liste de bouton
 		listBoutonFermeture.remove(i);
@@ -234,6 +246,143 @@ public class Modele {
 		cadreImage.getImageScroller().getHorizontalScrollBar().setValue(y);
 	}
 
+	public boolean existeSelection(){
+		return xCour!=xPrec || yCour!=yPrec;
+	}
+
+	public int[] selection(){
+		int[] points=new int[4];
+		points[0]=xPrec;
+		points[1]=yPrec;
+		points[2]=xCour;
+		points[3]=yCour;
+		return points;
+	}
+	
+	public int ajustementX(int x){
+		BufferedImage image =cadreImageCourant().getImage();
+		if(x>image.getWidth()){
+			x=image.getWidth()-1;
+		}else{
+			if(x<0){
+				x=0;
+			}
+		}
+		return x;
+	}
+	
+	public int ajustementY(int y){
+		BufferedImage image =cadreImageCourant().getImage();
+		if(y>image.getHeight()){
+			y=image.getHeight()-1;
+		}else{
+			if(y<0){
+				y=0;
+			}
+		}
+		return y;
+	}
+	
+	public int ajustementSelectionX(int x){
+		BufferedImage image =cadreImageCourant().getImage();
+		int distx1=dX-xPrec;
+		int distx2=xCour-dX;
+		if(x+distx2>image.getWidth()){
+			x=image.getWidth()-1-distx2;
+		}else{
+			if(x-distx1<0){
+				x=distx1;
+			}
+		}
+		return x;
+	}
+	
+	public int ajustementSelectionY(int y){
+		BufferedImage image =cadreImageCourant().getImage();
+		int disty1=dY-yPrec;
+		int disty2=yCour-dY;
+		if(y+disty2>image.getHeight()){
+			y=image.getHeight()-1-disty2;
+		}else{
+			if(y-disty1<0){
+				y=disty1;
+			}
+		}
+		return y;
+	}
+
+	public void selectionne(int x, int y){
+		CadreImage cadreImage=cadreImageCourant();
+		xCour=x;
+		yCour=y;
+		if(existeSelection()){
+			BufferedImage image=Outil.deepCopy(cadreImage.getImage());
+			if(xPrec>xCour){
+				int tmp=xPrec;
+				xPrec=xCour;
+				xCour=tmp;
+			}
+			if(yPrec>yCour){
+				int tmp=yPrec;
+				yPrec=yCour;
+				yCour=tmp;
+			}
+			outil.tracer(image,xPrec, yPrec, xCour, yCour);
+			cadreImage.setImageIcon(new ImageIcon(image));
+			JLabel icon=new JLabel(cadreImage.getImageIcon());
+			controler.addControlerSouris(icon);
+			x=cadreImage.getImageScroller().getVerticalScrollBar().getValue();
+			y=cadreImage.getImageScroller().getHorizontalScrollBar().getValue();
+			cadreImage.getImageScroller().setViewportView(icon);
+			cadreImage.getImageScroller().getVerticalScrollBar().setValue(x);
+			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(y);
+		}else{
+			actualiserImageIcon();
+		}
+	}
+	
+	public void ajustementSelection(int x, int y){
+		dX=dX-x;
+		dY=dY-y;
+		xPrec=xPrec-dX;
+		yPrec=yPrec-dY;
+		selectionne(xCour-dX, yCour-dY);
+	}
+
+	public void deplacerScroll(int x, int y){
+		CadreImage cadreImage=cadreImageCourant();
+		dXscroll=dXscroll-x;
+		dYscroll=dYscroll-y;
+		if(x<cadreImage.getImageScroller().getHorizontalScrollBar().getValue()){
+			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(cadreImage.getImageScroller().getHorizontalScrollBar().getValue()-dXscroll);
+		}else if(y<cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
+			cadreImage.getImageScroller().getVerticalScrollBar().setValue(cadreImage.getImageScroller().getVerticalScrollBar().getValue()-dYscroll);
+		}else if(x>cadreImage.getImage().getWidth()-cadreImage.getMaxScrollX()+cadreImage.getImageScroller().getHorizontalScrollBar().getValue()){
+			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(cadreImage.getImageScroller().getHorizontalScrollBar().getValue()-dXscroll);
+		}else if(y>cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
+			cadreImage.getImageScroller().getVerticalScrollBar().setValue(cadreImage.getImageScroller().getVerticalScrollBar().getValue()-dYscroll);
+		}
+	}
+	
+	public void deplacerScrollAjustement(int x, int y){		
+		CadreImage cadreImage=cadreImageCourant();
+		dXscroll=dXscroll-x;
+		dYscroll=dYscroll-y;
+		if(x-distx1<cadreImage.getImageScroller().getHorizontalScrollBar().getValue()){
+			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(x-distx1);
+		}else if(y-disty1<cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
+			cadreImage.getImageScroller().getVerticalScrollBar().setValue(y-disty1);
+		}else if(x+distx2>cadreImage.getImage().getWidth()-cadreImage.getMaxScrollX()+cadreImage.getImageScroller().getHorizontalScrollBar().getValue()){
+			cadreImage.getImageScroller().getHorizontalScrollBar().setValue((cadreImage.getImageScroller().getHorizontalScrollBar().getValue())+(x+distx2)-(cadreImage.getImage().getWidth()-cadreImage.getMaxScrollX()+cadreImage.getImageScroller().getHorizontalScrollBar().getValue()));
+		}else if(y+disty2>cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
+			cadreImage.getImageScroller().getVerticalScrollBar().setValue((cadreImage.getImageScroller().getHorizontalScrollBar().getValue())+(y+disty2)-(cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()));
+		}
+	}
+
+	public boolean estDansSelection(int x, int y){
+		return x>xPrec && x<xCour && y>yPrec && y<yCour;
+	}
+
 	public Outil getOutil() {
 		return outil;
 	}
@@ -308,5 +457,40 @@ public class Modele {
 
 	public ArrayList<CadreImage> getListCadreImage() {
 		return listCadreImage;
+	}
+
+	public void setPrec(int x, int y){
+		xPrec=x;
+		yPrec=y;
+	}
+
+	public void setDelta(int x, int y){
+		dX=x;
+		dY=y;
+	}
+	
+	public void setDeltaScroll(int x, int y){
+		dXscroll=x;
+		dYscroll=y;
+	}
+
+	public int getDeltaX(){
+		return dX;
+	}
+
+	public int getDeltaY(){
+		return dY;
+	}
+	
+	public void setScroll(CadreImage cadreImage){
+		cadreImage.setMaxScrollX(cadreImage.getImageScroller().getHorizontalScrollBar().getValue());
+		cadreImage.setMaxScrollY(cadreImage.getImageScroller().getVerticalScrollBar().getValue());
+	}
+	
+	public void setDist(int x, int y){
+		distx1=x-xPrec;
+		disty1=y-yPrec;
+		distx2=xCour-x;
+		disty2=yCour-y;
 	}
 }
