@@ -1,6 +1,5 @@
 package Modele;
 
-import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -8,11 +7,10 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
-import Controleur.*;
-import Vue.*;
+import Controleur.Controler;
+import Vue.CadreImage;
+import Vue.InterfaceGraphique;
 
 
 public class Modele {
@@ -448,7 +446,12 @@ public class Modele {
 	public boolean estDansSelection(int x, int y){
 		return x>xPrec && x<xCour && y>yPrec && y<yCour;
 	}
-
+	
+	public BufferedImage calculerConvolution(float[][] filtre, BufferedImage im)
+	{
+		return traiteurImage.convoluer(filtre, im);
+	}
+	
 	public Outil getOutil() {
 		return outil;
 	}

@@ -289,10 +289,11 @@ public class Controler{
 		u.addActionListener(new ControlerBoutonFiltreUser(this.modele, this.it));
 	}
 	
-	public void addControlerFiltreUser(JButton valider, JButton annuler, JComboBox<String> boxChoixTailleFiltre, JPanel panelUser)
+	public void addControlerFiltreUser(JButton valider, JButton annuler, JButton previsualiser, JComboBox<String> boxChoixTailleFiltre, JPanel panelUser)
 	{
 		ControlerFiltreUser c = new ControlerFiltreUser(this.it, this.modele, boxChoixTailleFiltre, panelUser);
 		
+		previsualiser.addActionListener(c);
 		annuler.addActionListener(c);
 		valider.addActionListener(c);
 		boxChoixTailleFiltre.addActionListener(c);

@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -334,7 +335,7 @@ public class InterfaceGraphique implements Runnable{
 	//remplace l'image par une grille correspondant au filtre et affiche une image ï¿½ droite pour prï¿½visualiser
 	public void ajouterComponentFiltreUser()
 	{
-		//		JButton previsualiser = new JButton("Prï¿½visualiser");
+		JButton previsualiser = new JButton("Previsualiser");
 		JButton valider = new JButton("Valider");
 		JButton annuler = new JButton("Annuler");
 		JLabel labelTaille = new JLabel("Taille du filtre:");
@@ -346,19 +347,62 @@ public class InterfaceGraphique implements Runnable{
 		//		previsualiser.setEnabled(false);
 		//		valider.setEnabled(false);
 
-		controler.addControlerFiltreUser(valider, annuler, boxChoixTailleFiltre, panelUser);
+		controler.addControlerFiltreUser(valider, annuler, previsualiser, boxChoixTailleFiltre, panelUser);
 
 		//modification du panelOption
 		panelOption.removeAll();
+		panelOption.add(previsualiser);
 		panelOption.add(valider);
 		panelOption.add(annuler);
-		//panelOption.add(previsualiser);
 		panelOption.add(labelTaille);
 		panelOption.add(boxChoixTailleFiltre);
 
 		//affichage des modifs
 		panelOption.repaint();
 		frame.validate();
+	}
+	
+	public void previsualiserApplicationFiltreUser(BufferedImage im_no_modif, BufferedImage im_modif)
+	{
+		Outil outil = new Outil();
+		JFrame framePreview = new JFrame("Previsualisation du filtre");
+		JLabel labelNoModif = new JLabel("Avant");
+		JLabel labelModif = new JLabel("Après");
+		Font font = new Font("Arial",Font.BOLD,18);
+		
+		JPanel panel = new JPanel(new GridLayout());
+		JPanel panelImNoModif = new JPanel(new BorderLayout());
+		JPanel panelImModif = new JPanel(new BorderLayout());
+		JPanel panelScrollNoModif = new JPanel(new BorderLayout());
+		JPanel panelScrollModif = new JPanel(new BorderLayout());
+		JScrollPane scrollPaneNoModif = new JScrollPane();
+		JScrollPane scrollPaneModif = new JScrollPane();
+		
+		CadreImage cadreImageNoModif=outil.initCadre(im_no_modif, controler);
+		CadreImage cadreImageModif=outil.initCadre(im_modif, controler);
+		
+		labelNoModif.setFont(font);
+		labelModif.setFont(font);
+		
+		panelScrollNoModif.add(cadreImageNoModif);
+		scrollPaneNoModif.setViewportView(panelScrollNoModif);
+		//JScrollPane scrollPaneNoModif = new JScrollPane(panelScrollNoModif);
+		panelImNoModif.add(labelNoModif, BorderLayout.NORTH);
+		panelImNoModif.add(scrollPaneNoModif, BorderLayout.CENTER);
+
+		panelScrollModif.add(cadreImageModif);
+		scrollPaneModif.setViewportView(panelScrollModif);
+		panelImModif.add(labelModif, BorderLayout.NORTH);
+		panelImModif.add(scrollPaneModif, BorderLayout.CENTER);
+
+		panel.add(panelImNoModif);
+		panel.add(panelImModif);
+		framePreview.add(panel);
+		
+		framePreview.dispose();
+		framePreview.setSize(1200, 600);
+		framePreview.setVisible(true);
+		framePreview.validate();
 	}
 
 	public Histogramme getHisto() {
@@ -407,7 +451,7 @@ public class InterfaceGraphique implements Runnable{
 	public void rafraichirComponentOption()
 	{
 		panelOption.removeAll();
-		modele.calculerHistogrammeRGB();
+//		modele.calculerHistogrammeRGB();
 		panelOption.repaint();
 		frame.validate();
 	}
