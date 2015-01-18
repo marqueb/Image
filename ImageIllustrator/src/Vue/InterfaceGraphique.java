@@ -575,6 +575,9 @@ public class InterfaceGraphique implements Runnable{
 		//		//filtre => Traitement
 		JMenu traitement = new JMenu("Traitement");
 		//filtre => Traitement => moyen
+		JMenuItem egalisation = new JMenuItem("Egalisation");
+		controler.addControlerEgalisation(egalisation);
+		traitement.add(egalisation);
 		JMenuItem moyen = new JMenuItem("Flouter");
 		moyen.addActionListener(new ControlerFlouter(controler));
 		traitement.add(moyen);

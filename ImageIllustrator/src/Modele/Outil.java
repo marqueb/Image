@@ -58,7 +58,17 @@ public class Outil {
 		}
 		return null;
 	}
-
+	public void histogrammeCumule(BufferedImage image, int[] histoCumule){
+		int rgb = 0;
+		int[] histo = new int[255];
+		histo=getTabgrisHisto(image);
+		histoCumule[0]=histo[0];
+		//Calcul de l'histogramme cumulé
+		for(int i = 1; i<255; i++)
+		{
+			histoCumule[i]=histoCumule[i-1]+histo[i];
+		}
+	}
 	public CadreImage initCadre(BufferedImage image, Controler controler){
 		CadreImage cadreImage=new CadreImage(image);
 		JLabel icon=new JLabel(cadreImage.getImageIcon());

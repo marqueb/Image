@@ -217,7 +217,11 @@ public class Controler{
 		modele.memoriseImage();
 		it.ajouterComponentChoixTailleFiltre(TypeFiltre.GAUSSIEN);
 	}
-
+	
+	public void addControlerEgalisation(JMenuItem egalisation){
+		egalisation.addActionListener(new ControlerEgalisation(modele));
+	}
+	
 	public void addControlerCharger(JMenuItem charger){
 		charger.addActionListener(new ControlerCharger(this));
 	}

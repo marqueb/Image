@@ -78,7 +78,31 @@ public class Modele {
 	public boolean estDansImage(int x, int y){
 		return (x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight());
 	}	
-
+	
+	//ICIIIIIIIIIIIIIIIIIIIIII
+	public void egalisation (){
+		  double ratio;
+		  int pixel,r,g,b;
+		  int imageCumule[]=new int[256];
+		  BufferedImage image= cadreImageCourant().getImage();
+		  ratio = 255.0 / (image.getWidth()*image.getHeight());
+		  outil.histogrammeCumule(image,imageCumule);
+		  for(int i=0;i<image.getWidth();i++){
+			  for(int j=0;j<image.getHeight();j++){
+				  pixel = image.getRGB(i, j);
+				  r=outil.getR(pixel);
+				  g=outil.getG(pixel);
+				  b=outil.getB(pixel);
+				  image.setRGB(i, j,outil.setR((int) (imageCumule[r]*ratio))+outil.setG((int) (imageCumule[g]*ratio))+outil.setB((int) (imageCumule[b]*ratio)));
+			  }
+		  }
+		  cadreImageCourant().setImage(image);
+		  interfaceGraphique.getFrame().repaint();
+		  
+	
+	}
+	//ET LAAAAAAAAAAAAA
+	
 	public void afficherCouleurPixel(int x, int y, boolean isRGB){
 		//recupere la valeur du pixel en fonction de l'image et des coordonnées
 		//System.out.println("taille liste "+listImage.size()+" onglet selectionné "+interfaceGraphique.getTabbedPane().getSelectedIndex());
@@ -346,7 +370,7 @@ public class Modele {
 		}
 		return y;
 	}
-	
+
 	public int ajustementSelectionX(int x){
 		BufferedImage image =cadreImageCourant().getImage();
 		int distx1=dX-xPrec;
