@@ -264,6 +264,7 @@ public class Outil {
 		return image.getRGB(x,y);	
 	}
 	
+	
 	public static int getValidValuePixel(int val)
 	{
 		return Math.max(0, Math.min(255, val));

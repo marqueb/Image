@@ -54,6 +54,7 @@ public class InterfaceGraphique implements Runnable{
 	private Histogramme histo;
 	private JSlider sliderFusion = null, sliderChoixTailleFiltre = null;
 	private JComboBox choixRgbYuv;
+	private JButton afficherHisto;
 	public Image chargerImage(String bouton){
 		Image img=null;
 		switch (bouton) {
@@ -148,7 +149,8 @@ public class InterfaceGraphique implements Runnable{
 
 		//partie onglet nom
 		JLabel labelOnglet = new JLabel(image.getNomFichier()+(getTabbedPane().getTabCount()));
-		//partie onglet fermer
+		//partie onglet fermerOnglet
+	
 		JButton boutonFermer = new JButton("X");
 		controler.addControlerX(boutonFermer);
 		//Ajout au panel de la partie nom+fermer
@@ -156,7 +158,15 @@ public class InterfaceGraphique implements Runnable{
 		tab.add(boutonFermer, BorderLayout.EAST);
 		tabbedPane.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);        
 		tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
-		this.rafraichirComponentOption();
+		this.rafraichirComponentOption();	
+		if(modele.getNbAffichageHisto()==0){
+			afficherHisto.setVisible(true);
+		}
+		else{
+			frameHisto.dispose();
+			modele.setNbAffichageHisto(modele.getNbAffichageHisto()-1);
+		}
+		frame.validate();
 		//Parametre de l'onglet
 		return boutonFermer;
 	}
@@ -247,21 +257,12 @@ public class InterfaceGraphique implements Runnable{
 		
 	
 		frameHisto.add(panel);
-		frameHisto.dispose();
+		controler.addNbhisto(frameHisto);
 		frameHisto.setSize(1200, 600);
 		frameHisto.setVisible(true);
 
 		frame.validate();
 	}
-
-	/*public void retirerHistoRgb(int[][] tabsHisto)
-	{
-		panelOption.remove(histoR);
-		panelOption.remove(histoG);
-		panelOption.remove(histoB);
-		panelOption.repaint();
-		frame.validate();
-	}*/
 
 	public void ajouterComponentFusion(CadreImage cadre_ima_fusion)
 	{
@@ -450,8 +451,8 @@ public class InterfaceGraphique implements Runnable{
 
 	public void rafraichirComponentOption()
 	{
-		panelOption.removeAll();
-//		modele.calculerHistogrammeRGB();
+		//panelOption.removeAll();
+		//modele.calculerHistogrammeRGB();
 		panelOption.repaint();
 		frame.validate();
 	}
@@ -694,7 +695,10 @@ public class InterfaceGraphique implements Runnable{
 
 		frame.add(panelOption,BorderLayout.EAST);
 		panelOption.setPreferredSize(new Dimension(200,panelOption.getParent().getHeight()));
-
+		afficherHisto=new JButton("Histogramme");
+		controler.addControlerAfficherHisto(afficherHisto);
+		afficherHisto.setVisible(false);
+		panelOption.add(afficherHisto);
 		panelInfo = new JPanel();
 		PixelCouleur= new JTextArea();
 		panelInfo.add(PixelCouleur);
@@ -749,6 +753,14 @@ public class InterfaceGraphique implements Runnable{
 
 	public JFrame getFrameHisto() {
 		return frameHisto;
+	}
+
+	public JButton getAfficherHisto() {
+		return afficherHisto;
+	}
+
+	public void setAfficherHisto(JButton afficherHisto) {
+		this.afficherHisto = afficherHisto;
 	}
 
 	public void setFrameHisto(JFrame frameHisto) {

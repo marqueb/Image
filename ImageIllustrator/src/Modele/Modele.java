@@ -24,8 +24,9 @@ public class Modele {
 	private ArrayList<JButton> listBoutonFermeture;
 	private CadreImage cadre_ima_fusion = null;
 	private BufferedImage imaAvantTraitement = null;
+	
 
-	private int xPrec=0, yPrec=0, xCour=0, yCour=0, dX, dY, dXscroll, dYscroll, distx1, disty1, distx2, disty2;
+	private int xPrec=0, yPrec=0, xCour=0, yCour=0, dX, dY, dXscroll, dYscroll, distx1, disty1, distx2, disty2,nbAffichageHisto;
 
 
 	public Modele()
@@ -34,8 +35,9 @@ public class Modele {
 		listBoutonFermeture = new ArrayList<JButton>();
 		outil = new Outil();
 		traiteurImage = new TraiteurImage();
+		nbAffichageHisto=0;
 	}	
-	
+
 	public CadreImage cadreImageCourant(){
 		return listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
 	}
@@ -57,7 +59,7 @@ public class Modele {
 			setScroll(cadreImage);
 			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(0);
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue(0);
-			//interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(cadreImage.getImage()));
+
 		}catch(Exception e){}
 	}
 	
@@ -78,8 +80,7 @@ public class Modele {
 	public boolean estDansImage(int x, int y){
 		return (x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight());
 	}	
-	
-	//ICIIIIIIIIIIIIIIIIIIIIII
+
 	public void egalisation (){
 		  double ratio;
 		  int pixel,r,g,b;
@@ -101,11 +102,9 @@ public class Modele {
 		  
 	
 	}
-	//ET LAAAAAAAAAAAAA
 	
 	public void afficherCouleurPixel(int x, int y, boolean isRGB){
 		//recupere la valeur du pixel en fonction de l'image et des coordonnées
-		//System.out.println("taille liste "+listImage.size()+" onglet selectionné "+interfaceGraphique.getTabbedPane().getSelectedIndex());
 		int couleur = outil.couleurPixel(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage(), x, y);
 		//calcul et affiche les differentes intensités de couleur en fonction de la valeur du pixel
 		int r=outil.getR(couleur);
@@ -138,7 +137,12 @@ public class Modele {
 		suppCadreImage(i);
 		if(listCadreImage.isEmpty()){
 			interfaceGraphique.setEnable(false);
+			interfaceGraphique.getAfficherHisto().setVisible(false);
 			interfaceGraphique.getFrame().validate();
+		}
+		if(nbAffichageHisto>0){
+			interfaceGraphique.getFrameHisto().dispose();
+			setNbAffichageHisto(getNbAffichageHisto()-1);
 		}
 		//supprime le bouton de la liste de bouton
 		listBoutonFermeture.remove(i);
@@ -292,14 +296,6 @@ public class Modele {
 	{
 		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
 	}
-
-//	public void appliquerFiltre(TypeFiltre filtre)
-//	{
-//		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
-//		BufferedImage res = traiteurImage.convoluer(filtre, bufImage);
-//		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
-//		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
-//	}
 
 	public void appliquerFiltre(float[][] noyau)
 	{
@@ -575,6 +571,16 @@ public class Modele {
 		return dY;
 	}
 	
+	public int getNbAffichageHisto() {
+		return nbAffichageHisto;
+	}
+	public void fermetureHisto(){
+		setNbAffichageHisto(getNbAffichageHisto()-1);
+	}
+	public void setNbAffichageHisto(int nbAffichageHisto) {
+		this.nbAffichageHisto = nbAffichageHisto;
+	}
+
 	public void setScroll(CadreImage cadreImage){
 		cadreImage.setMaxScrollX(cadreImage.getImageScroller().getHorizontalScrollBar().getValue());
 		cadreImage.setMaxScrollY(cadreImage.getImageScroller().getVerticalScrollBar().getValue());

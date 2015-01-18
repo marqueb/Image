@@ -1,10 +1,13 @@
 package Controleur;
 
 import java.awt.Checkbox;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -12,6 +15,7 @@ import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 
 import Modele.Modele;
+import Modele.Outil;
 import Modele.TypeFiltre;
 import Vue.InterfaceGraphique;
 
@@ -116,7 +120,51 @@ public class Controler{
 			modele.afficherCouleurPixel(x, y, isRGB);
 		}
 	}
-
+	//public void fermetureHisto(){
+	//	modele.fermetureHisto();
+	//}
+	
+	public void addNbhisto(JFrame histo){
+		histo.addWindowListener(new WindowListener() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				// TODO Auto-generated method stub
+				modele.fermetureHisto();
+				System.out.println(modele.getNbAffichageHisto());
+			}
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void windowClosed(WindowEvent e) {
+				// TODO Auto-generated method stub
+			}
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void windowOpened(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		//(new ControlerEgalisation(modele));
+	}
 	public void sourisEntre(int x, int y){
 		if(echantillonageActif){
 			modele.afficherCouleurPixel(x, y, isRGB);
@@ -311,5 +359,9 @@ public class Controler{
 	public void addControlerContours(JMenuItem contraste)
 	{
 		contraste.addActionListener(new ControlerContours(this));
+	}
+
+	public void addControlerAfficherHisto(JButton afficherHisto) {
+		afficherHisto.addActionListener(new ControlerAfficherHisto(this.modele));
 	}
 }
