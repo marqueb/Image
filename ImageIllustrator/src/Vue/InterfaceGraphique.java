@@ -47,7 +47,7 @@ public class InterfaceGraphique implements Runnable{
 	private JTabbedPane tabbedPane;
 	private Modele modele;
 	private Controler controler;
-	private JMenuItem sauvegarde, couleurPixel, fusion, imagris, moyen;
+	private JMenuItem sauvegarde, couleurPixel, fusion, imagris, moyen,egalisation,redimensionner ;
 	private CheckboxGroup groupe;
 	private Checkbox box1, box2;
 	private JCheckBox rouge,vert,bleu, luminance, chrominanceU , chrominanceV;
@@ -159,12 +159,13 @@ public class InterfaceGraphique implements Runnable{
 		tabbedPane.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);        
 		tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
 		this.rafraichirComponentOption();	
+		egalisation.setEnabled(true);
+		redimensionner.setEnabled(true);
 		if(modele.getNbAffichageHisto()==0){
 			afficherHisto.setVisible(true);
 		}
 		else{
 			frameHisto.dispose();
-			modele.setNbAffichageHisto(modele.getNbAffichageHisto()-1);
 		}
 		frame.validate();
 		//Parametre de l'onglet
@@ -539,12 +540,14 @@ public class InterfaceGraphique implements Runnable{
 		controler.addControlerCouleurPixel(couleurPixel);
 		image.add(couleurPixel);
 		//Image => Redimenssioner
-		/*		JMenuItem redimensionner = new JMenuItem("Redimensionner");
+		redimensionner = new JMenuItem("Redimensionner");
+		redimensionner.setEnabled(false);
 		image.add(redimensionner);
+		controler.addControlerRedimenssioner(redimensionner);
 		//Image => Segmenter
 		JMenuItem  segmenter = new JMenuItem("Segmenter");
 		image.add(segmenter);
-		 */		//Image => Transformation
+		 //Image => Transformation
 		JMenu  transformation = new JMenu("Transformation");      
 		//Image => transformation => fusion
 		fusion = new JMenuItem("Fusion");
@@ -576,7 +579,8 @@ public class InterfaceGraphique implements Runnable{
 		//		//filtre => Traitement
 		JMenu traitement = new JMenu("Traitement");
 		//filtre => Traitement => moyen
-		JMenuItem egalisation = new JMenuItem("Egalisation");
+		egalisation = new JMenuItem("Egalisation");
+		egalisation.setEnabled(false);
 		controler.addControlerEgalisation(egalisation);
 		traitement.add(egalisation);
 		JMenuItem moyen = new JMenuItem("Flouter");
@@ -633,33 +637,8 @@ public class InterfaceGraphique implements Runnable{
 		toolBar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		toolBar.setBackground(Color.WHITE);
 		toolBar.setForeground(Color.BLACK);
-		/*ImageIcon imagecharger = new ImageIcon("Charger");
-        JLabel label = new JLabel(imagecharger);
 
-        toolBar.add(charger);*//*
-        JButton btnCharger = new JButton();
-        btnCharger.setToolTipText("Charger");
-        btnCharger.setMnemonic('c');
-        btnCharger.setIcon(new ImageIcon(chargerImage("Charger")));
-        btnCharger.setFocusable(false);
-        controler.addControlerCharger(btnCharger);
-        toolBar.add(btnCharger);
-        JButton btnSauver = new JButton();
-        btnSauver.setIcon(new ImageIcon(chargerImage("Sauver")));
-        btnSauver.setMnemonic('s');
-        btnSauver.setEnabled(false);
-        btnSauver.setToolTipText("Sauver");
-        btnSauver.setFocusable(false);
-        controler.addControlerSauvegarder(btnSauver);
-        toolBar.add(btnSauver);
-        JButton btnImprimer = new JButton();
-        btnImprimer.setIcon(new ImageIcon(chargerImage("Imprimer")));
-        btnImprimer.setToolTipText("Imprimer");
-        btnImprimer.setFocusable(false);
-        toolBar.add(btnImprimer);
-        frame.add(panel,BorderLayout.NORTH);*/
-/*
-        toolBar.add(charger);*/
+  
 		JButton btnCharger = new JButton();
 		btnCharger.setToolTipText("Charger");
 		btnCharger.setMnemonic('c');
@@ -687,7 +666,7 @@ public class InterfaceGraphique implements Runnable{
 		controler.addControlerOnglet(tabbedPane);
 		tabbedPane.setOpaque(true);
 		tabbedPane.setBackground(Color.WHITE);
-
+		
 		frame.add(tabbedPane,BorderLayout.CENTER);
 		panelOption = new JPanel();
 		//JTextArea texte= new JTextArea("Zone d'option/bouton rapide");
@@ -774,4 +753,21 @@ public class InterfaceGraphique implements Runnable{
 	public void setTabbedAffichage(JTabbedPane tabbedAffichage) {
 		this.tabbedPane = tabbedAffichage;
 	}
+	
+	public JMenuItem getEgalisation() {
+		return egalisation;
+	}
+
+	public void setEgalisation(JMenuItem egalisation) {
+		this.egalisation = egalisation;
+	}
+
+	public JMenuItem getRedimensionner() {
+		return redimensionner;
+	}
+
+	public void setRedimensionner(JMenuItem redimensionner) {
+		this.redimensionner = redimensionner;
+	}
+
 }

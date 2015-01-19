@@ -14,7 +14,11 @@ public class ControlerEgalisation implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		modele.egalisation();
-
+		modele.setEstEgalisation(true);
+		if(modele.isEstHistoCliquer()){
+			modele.getInterfaceGraphique().getFrameHisto().dispose();
+			modele.calculerHistogrammeRGB();
+		}
 	}
 
 }

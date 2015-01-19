@@ -120,17 +120,20 @@ public class Controler{
 			modele.afficherCouleurPixel(x, y, isRGB);
 		}
 	}
-	//public void fermetureHisto(){
-	//	modele.fermetureHisto();
-	//}
 	
 	public void addNbhisto(JFrame histo){
 		histo.addWindowListener(new WindowListener() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				// TODO Auto-generated method stub
-				modele.fermetureHisto();
-				System.out.println(modele.getNbAffichageHisto());
+				if(!modele.isEstEgalisation()){
+					if(modele.isEstHistoCliquer()){
+						modele.fermetureHisto();
+						modele.setEstHistoCliquer(!modele.isEstHistoCliquer());
+					}
+				}
+				else
+					modele.setEstEgalisation(false);
 			}
 			@Override
 			public void windowActivated(WindowEvent e) {
@@ -140,6 +143,13 @@ public class Controler{
 			@Override
 			public void windowClosed(WindowEvent e) {
 				// TODO Auto-generated method stub
+				//if(!modele.isEstEgalisation()){
+					if(modele.isEstHistoCliquer()){
+						modele.fermetureHisto();
+						modele.setEstHistoCliquer(!modele.isEstHistoCliquer());
+						
+					}
+					modele.setEstEgalisation(false);
 			}
 			@Override
 			public void windowDeactivated(WindowEvent e) {
@@ -286,6 +296,10 @@ public class Controler{
 		sauvegarder.addActionListener(new ControlerSauvegarder(this));
 	}
 
+	public void addControlerRedimenssioner(JMenuItem redimensionner){
+		redimensionner.addActionListener(new ControlerRedimessionner(modele));
+	}
+	
 	public void addControlerCouleurPixel(JMenuItem couleurPixel){
 		couleurPixel.addActionListener(new ControlerCouleurPixel(this));
 	}

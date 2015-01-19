@@ -27,6 +27,7 @@ public class Modele {
 	
 
 	private int xPrec=0, yPrec=0, xCour=0, yCour=0, dX, dY, dXscroll, dYscroll, distx1, disty1, distx2, disty2,nbAffichageHisto;
+	private boolean estHistoCliquer,estEgalisation;
 
 
 	public Modele()
@@ -36,11 +37,9 @@ public class Modele {
 		outil = new Outil();
 		traiteurImage = new TraiteurImage();
 		nbAffichageHisto=0;
+		estHistoCliquer=false;
+		estEgalisation=false;
 	}	
-
-	public CadreImage cadreImageCourant(){
-		return listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
-	}
 
 	public void charger(){	
 		try{
@@ -61,6 +60,11 @@ public class Modele {
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue(0);
 
 		}catch(Exception e){}
+	}
+	
+	public void redimensionner() {
+		System.out.println("test");
+		
 	}
 	
 	public boolean isImageVide(){
@@ -139,10 +143,12 @@ public class Modele {
 			interfaceGraphique.setEnable(false);
 			interfaceGraphique.getAfficherHisto().setVisible(false);
 			interfaceGraphique.getFrame().validate();
+			interfaceGraphique.getRedimensionner().setEnabled(false);
+			interfaceGraphique.getEgalisation().setEnabled(false);
 		}
 		if(nbAffichageHisto>0){
 			interfaceGraphique.getFrameHisto().dispose();
-			setNbAffichageHisto(getNbAffichageHisto()-1);
+			//setNbAffichageHisto(getNbAffichageHisto()-1);
 		}
 		//supprime le bouton de la liste de bouton
 		listBoutonFermeture.remove(i);
@@ -462,7 +468,15 @@ public class Modele {
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue((cadreImage.getImageScroller().getHorizontalScrollBar().getValue())+(y+disty2)-(cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()));
 		}
 	}
+	
+	public boolean isEstEgalisation() {
+		return estEgalisation;
+	}
 
+	public void setEstEgalisation(boolean estEgalisation) {
+		this.estEgalisation = estEgalisation;
+	}
+	
 	public boolean estDansSelection(int x, int y){
 		return x>xPrec && x<xCour && y>yPrec && y<yCour;
 	}
@@ -487,7 +501,17 @@ public class Modele {
 	public void setTraiteurImage(TraiteurImage traiteurImage) {
 		this.traiteurImage = traiteurImage;
 	}
+	public boolean isEstHistoCliquer() {
+		return estHistoCliquer;
+	}
 
+	public void setEstHistoCliquer(boolean estHistoCliquer) {
+		this.estHistoCliquer = estHistoCliquer;
+	}
+
+	public CadreImage cadreImageCourant(){
+		return listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
+	}
 	public Controler getControler() {
 		return controler;
 	}
@@ -592,4 +616,7 @@ public class Modele {
 		distx2=xCour-x;
 		disty2=yCour-y;
 	}
+
+
+
 }
