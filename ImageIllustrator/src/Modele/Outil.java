@@ -170,6 +170,41 @@ public class Outil {
 		return tab;
 	}
 
+	public int[][] getTabyuvHisto(BufferedImage ima)
+	{
+		int[][] yuv = new int[3][256];
+		int rgb = 0,r,g,b,y,u,v;
+
+		//initialisation du tableau � 0
+		for(int i = 0; i<3; i++)
+		{
+			for(int j = 0; j<256; j++)
+			{
+				yuv[i][j] = 0;
+			}
+		}
+
+		//cacule des effectifs de chaques valeurs pour chaques composantes
+		for(int i = 0; i<ima.getTileWidth(); i++)
+		{
+			for(int j = 0; j<ima.getTileHeight(); j++)
+			{
+
+				rgb = ima.getRGB(i, j);
+				r=getR(rgb);
+				g=getG(rgb);
+				b=getB(rgb);
+				y=(int) ((r*0.299)+ (0.587*g)+ (0.114*b));
+				yuv[0][y]++;
+				u=(int)(-(r*0.147)- (0.289*g)+ (0.436*b))+ 128-16;
+				yuv[1][u]++;
+				v=(int)((r*0.615)- (0.515*g)- (0.1000*b))+128-16;
+				yuv[2][v]++;
+			}
+		}	
+		return yuv;
+	}
+	
 	//retourne un tableau 2d correspondant � la repr�sentation des effectifs de chaque niveau de gris.
 	//tab[x] : effectif de la valeurs x pour la composante rouge (1: green; 2: blue)
 	public int[] getTabgrisHisto(BufferedImage ima)

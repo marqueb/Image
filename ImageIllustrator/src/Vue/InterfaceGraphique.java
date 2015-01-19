@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.TextArea;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -40,10 +41,11 @@ import Modele.Outil;
 import Modele.TypeFiltre;
 
 public class InterfaceGraphique implements Runnable{
-	private JFrame frame,frameHisto;
+	private JFrame frame,frameHisto,frameRedim ;
 	private JPanel panelOption;
 	private JPanel panelInfo;
-	private JTextArea PixelCouleur;
+	private JTextArea PixelCouleur ;
+	private TextArea largeur, hauteur;
 	private JTabbedPane tabbedPane;
 	private Modele modele;
 	private Controler controler;
@@ -55,6 +57,7 @@ public class InterfaceGraphique implements Runnable{
 	private JSlider sliderFusion = null, sliderChoixTailleFiltre = null;
 	private JComboBox choixRgbYuv;
 	private JButton afficherHisto;
+	
 	public Image chargerImage(String bouton){
 		Image img=null;
 		switch (bouton) {
@@ -78,6 +81,25 @@ public class InterfaceGraphique implements Runnable{
 			break;
 		}
 		return img;
+	}
+	
+	public void redimensionner() {
+		CadreImage image = new CadreImage();
+		image=modele.cadreImageCourant();
+		frameRedim = new JFrame();
+		frameRedim.setSize(new Dimension(800,200));
+		//frameRedim.setLocation(image.getWidth(),image.getHeight());
+		largeur= new TextArea(""+image.getImage().getWidth());
+		hauteur= new TextArea(""+image.getImage().getHeight());
+		JPanel text = new JPanel();
+		text.setLayout(new BorderLayout());
+		text.add(largeur,BorderLayout.EAST);
+		text.add(hauteur,BorderLayout.WEST);
+		JButton valider = new JButton("Valider");
+		controler.addRedimensionnerValider(valider);
+		text.add(valider,BorderLayout.SOUTH);
+		frameRedim.add(text);
+		frameRedim.setVisible(true);
 	}
 	
 	public int getSliderFusionValue()
@@ -203,12 +225,12 @@ public class InterfaceGraphique implements Runnable{
 	}
 
 	//ajout les trois histogrammes dans la barre d'option de droite
-	public void ajouterHistoRgb(int[][] tabsHisto)
+	public void ajouterHistoRgb(int[][] tabsHisto, int[][] yuv)
 	{
 
 		frameHisto = new JFrame();
 		panelOption.setLayout(new BoxLayout(panelOption, BoxLayout.Y_AXIS));
-		histo = new Histogramme(tabsHisto,"histogramme", new Dimension(1000,600));
+		histo = new Histogramme(tabsHisto,yuv,"histogramme", new Dimension(1000,600));
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
@@ -768,6 +790,30 @@ public class InterfaceGraphique implements Runnable{
 
 	public void setRedimensionner(JMenuItem redimensionner) {
 		this.redimensionner = redimensionner;
+	}
+	
+	public TextArea getLargeur() {
+		return largeur;
+	}
+
+	public void setLargeur(TextArea largeur) {
+		this.largeur = largeur;
+	}
+
+	public TextArea getHauteur() {
+		return hauteur;
+	}
+
+	public void setHauteur(TextArea hauteur) {
+		this.hauteur = hauteur;
+	}
+
+	public JFrame getFrameRedim() {
+		return frameRedim;
+	}
+
+	public void setFrameRedim(JFrame frameRedim) {
+		this.frameRedim = frameRedim;
 	}
 
 }

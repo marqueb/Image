@@ -297,7 +297,7 @@ public class Controler{
 	}
 
 	public void addControlerRedimenssioner(JMenuItem redimensionner){
-		redimensionner.addActionListener(new ControlerRedimessionner(modele));
+		redimensionner.addActionListener(new ControlerRedimessionner(it));
 	}
 	
 	public void addControlerCouleurPixel(JMenuItem couleurPixel){
@@ -377,5 +377,9 @@ public class Controler{
 
 	public void addControlerAfficherHisto(JButton afficherHisto) {
 		afficherHisto.addActionListener(new ControlerAfficherHisto(this.modele));
+	}
+
+	public void addRedimensionnerValider(JButton valider) {
+		valider.addActionListener(new ControlerRedimensionnerValider(modele));	
 	}
 }

@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import Controleur.Controler;
 import Vue.CadreImage;
@@ -29,7 +30,7 @@ public class Modele {
 	private ArrayList<JButton> listBoutonFermeture;
 	private CadreImage cadre_ima_fusion = null;
 	private BufferedImage imaAvantTraitement = null;
-	
+
 
 	private int xPrec=0, yPrec=0, xCour=0, yCour=0, dX, dY, dXscroll, dYscroll, distx1, disty1, distx2, disty2,nbAffichageHisto;
 	private boolean estHistoCliquer,estEgalisation;
@@ -67,22 +68,6 @@ public class Modele {
 		}catch(Exception e){}
 	}
 	
-	public void redimensionner() {
-		CadreImage image = new CadreImage();
-		image=cadreImageCourant();
-		JFrame frameRedim = new JFrame();
-		frameRedim.setSize(new Dimension(100,100));
-		frameRedim.setLocation(image.getWidth(),image.getHeight());
-		TextArea largeur= new TextArea(""+image.getImage().getWidth());
-		TextArea hauteur= new TextArea(""+image.getImage().getHeight());
-		JPanel text = new JPanel();
-		text.setLayout(new BorderLayout());
-		text.add(largeur,BorderLayout.EAST);
-		text.add(hauteur,BorderLayout.WEST);
-		frameRedim.add(text);
-		frameRedim.setVisible(true);
-		traiteurImage.redimenssioner(image);		
-	}
 	
 	public boolean isImageVide(){
 		return listCadreImage.isEmpty();
@@ -102,6 +87,22 @@ public class Modele {
 		return (x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight());
 	}	
 
+	public void redimensionner(CadreImage cadre, int newlargeur,	int newhauteur) {
+			int largeur=cadre.getImage().getWidth();
+			int hauteur=cadre.getImage().getHeight();
+			System.out.println(largeur+" "+hauteur+" "+newlargeur+" "+newhauteur);
+			traiteurImage.redimenssioner(cadre,largeur,hauteur,newlargeur,newhauteur);
+/*	CadreImage cadre1 = new CadreImage();
+			cadre1.setImage(cadre.getImage());
+			cadre1.setImageScroller(new JScrollPane());
+			listCadreImage.remove(getInterfaceGraphique().getTabbedPane().getSelectedIndex());
+			interfaceGraphique.getTabbedPane().getComponentAt(getInterfaceGraphique().getTabbedPane().getSelectedIndex()).set;
+			listCadreImage.add(getInterfaceGraphique().getTabbedPane().getSelectedIndex(),cadre1);
+			actualiserImageIcon();*/
+			interfaceGraphique.getFrame().repaint();
+			interfaceGraphique.getFrame().validate();
+	}
+	
 	public void egalisation (){
 		  double ratio;
 		  int pixel,r,g,b;
@@ -189,7 +190,7 @@ public class Modele {
 	public void validerFusion()
 	{
 		interfaceGraphique.retirerComponentFusion();
-		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
+		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()),outil.getTabyuvHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
 	}
 
 	//appel� lorsqu'on change le pourcentage d'image avec le scroll
@@ -320,7 +321,7 @@ public class Modele {
 
 	public void calculerHistogrammeRGB()
 	{
-		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
+		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()),outil.getTabyuvHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
 	}
 
 	public void appliquerFiltre(float[][] noyau)
@@ -636,6 +637,11 @@ public class Modele {
 		distx2=xCour-x;
 		disty2=yCour-y;
 	}
+
+
+
+
+
 
 
 
