@@ -2,6 +2,8 @@ package Modele;
 
 import java.awt.image.BufferedImage;
 
+import Vue.CadreImage;
+
 //classe outils
 public class TraiteurImage {
 
@@ -184,5 +186,10 @@ public class TraiteurImage {
 		}
 		
 		return im_out;
+	}
+
+
+	public void redimenssioner(CadreImage image) {
+				
 	}
 }

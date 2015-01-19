@@ -1,12 +1,17 @@
 package Modele;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.TextArea;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import Controleur.Controler;
 import Vue.CadreImage;
@@ -63,8 +68,20 @@ public class Modele {
 	}
 	
 	public void redimensionner() {
-		System.out.println("test");
-		
+		CadreImage image = new CadreImage();
+		image=cadreImageCourant();
+		JFrame frameRedim = new JFrame();
+		frameRedim.setSize(new Dimension(100,100));
+		frameRedim.setLocation(image.getWidth(),image.getHeight());
+		TextArea largeur= new TextArea(""+image.getImage().getWidth());
+		TextArea hauteur= new TextArea(""+image.getImage().getHeight());
+		JPanel text = new JPanel();
+		text.setLayout(new BorderLayout());
+		text.add(largeur,BorderLayout.EAST);
+		text.add(hauteur,BorderLayout.WEST);
+		frameRedim.add(text);
+		frameRedim.setVisible(true);
+		traiteurImage.redimenssioner(image);		
 	}
 	
 	public boolean isImageVide(){
@@ -98,7 +115,10 @@ public class Modele {
 				  r=outil.getR(pixel);
 				  g=outil.getG(pixel);
 				  b=outil.getB(pixel);
-				  image.setRGB(i, j,outil.setR((int) (imageCumule[r]*ratio))+outil.setG((int) (imageCumule[g]*ratio))+outil.setB((int) (imageCumule[b]*ratio)));
+				  if(r==255 && b == 255 && g==255)
+					  image.setRGB(i, j,outil.setR(255)+outil.setG(255)+outil.setB(255));
+				  else
+					  image.setRGB(i, j,outil.setR((int) (imageCumule[r]*ratio))+outil.setG((int) (imageCumule[g]*ratio))+outil.setB((int) (imageCumule[b]*ratio)));
 			  }
 		  }
 		  cadreImageCourant().setImage(image);
