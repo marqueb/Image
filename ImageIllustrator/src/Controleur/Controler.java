@@ -271,7 +271,6 @@ public class Controler{
 
 	public void boutonFlouterClic()
 	{
-		//modele.appliquerFiltre(TypeFiltre.MOYENNEUR);
 		modele.memoriseImage();
 		it.ajouterComponentChoixTailleFiltre(TypeFiltre.GAUSSIEN);
 	}

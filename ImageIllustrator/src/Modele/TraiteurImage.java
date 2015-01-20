@@ -204,11 +204,13 @@ public class TraiteurImage {
 				image.setRGB(i, j, outil.setR(10)+outil.setB(50)+outil.setG(150));
 			}
 		}
-/*		cadre= new CadreImage(image);
-		cadre.update(image.getGraphics());
+		//Graphics2D buffer=image.createGraphics();
+		
+		//cadre= new CadreImage(image);
+		//cadre.update(buffer);
 		cadre.setImage(image);
-		cadre.setBuffer((Graphics2D) image.getGraphics());
-		cadre.setImageIcon(new ImageIcon(image));*/ 
-
+		//cadre.setBuffer((Graphics2D) image.getGraphics());
+		//cadre.setImageIcon(new ImageIcon(image));
+		cadre.repaint();
 	}
 }

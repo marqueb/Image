@@ -92,13 +92,13 @@ public class Modele {
 			int hauteur=cadre.getImage().getHeight();
 			System.out.println(largeur+" "+hauteur+" "+newlargeur+" "+newhauteur);
 			traiteurImage.redimenssioner(cadre,largeur,hauteur,newlargeur,newhauteur);
-/*	CadreImage cadre1 = new CadreImage();
-			cadre1.setImage(cadre.getImage());
-			cadre1.setImageScroller(new JScrollPane());
-			listCadreImage.remove(getInterfaceGraphique().getTabbedPane().getSelectedIndex());
-			interfaceGraphique.getTabbedPane().getComponentAt(getInterfaceGraphique().getTabbedPane().getSelectedIndex()).set;
-			listCadreImage.add(getInterfaceGraphique().getTabbedPane().getSelectedIndex(),cadre1);
-			actualiserImageIcon();*/
+			//CadreImage cadre1 = new CadreImage();
+			//cadre1.setImage(cadre.getImage());
+			//cadre1.setImageScroller(new JScrollPane());
+			//listCadreImage.remove(getInterfaceGraphique().getTabbedPane().getSelectedIndex());
+			//interfaceGraphique.getTabbedPane().getComponentAt(getInterfaceGraphique().getTabbedPane().getSelectedIndex()).set;
+			//listCadreImage.add(getInterfaceGraphique().getTabbedPane().getSelectedIndex(),cadre1);
+			actualiserImageIcon();
 			interfaceGraphique.getFrame().repaint();
 			interfaceGraphique.getFrame().validate();
 	}
