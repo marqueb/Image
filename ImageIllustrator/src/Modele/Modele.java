@@ -2,6 +2,7 @@ package Modele;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.TextArea;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -87,11 +88,16 @@ public class Modele {
 		return (x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight());
 	}	
 
-	public void redimensionner(CadreImage cadre, int newlargeur,	int newhauteur) {
+	public void redimensionner( int newlargeur,int newhauteur) {
+		CadreImage  cadre = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
 			int largeur=cadre.getImage().getWidth();
 			int hauteur=cadre.getImage().getHeight();
 			System.out.println(largeur+" "+hauteur+" "+newlargeur+" "+newhauteur);
-			traiteurImage.redimenssioner(cadre,largeur,hauteur,newlargeur,newhauteur);
+
+//			cadre.setSize(new Dimension(newlargeur,newhauteur));
+			listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(traiteurImage.redimenssioner(largeur,hauteur,newlargeur,newhauteur));
+			Graphics2D buffer=listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().createGraphics();
+			listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
 			//CadreImage cadre1 = new CadreImage();
 			//cadre1.setImage(cadre.getImage());
 			//cadre1.setImageScroller(new JScrollPane());
@@ -103,6 +109,47 @@ public class Modele {
 			interfaceGraphique.getFrame().validate();
 	}
 	
+	public void etalement() {
+		double ratior=0,ratiob=0,ratiog=0;
+		int minr=255,ming=255,minb=255,maxr=0,maxg=0,maxb=0;
+		int pixel,r,g,b;
+		BufferedImage image= cadreImageCourant().getImage();
+		for(int i=0;i<image.getWidth();i++){
+			for(int j=0;j<image.getHeight();j++){	
+				pixel = image.getRGB(i, j);
+				r=outil.getR(pixel);
+				g=outil.getG(pixel);
+				b=outil.getB(pixel);
+				if(r>maxr)
+					maxr=r;
+				if(g>maxg)
+					maxg=g;
+				if(b>maxb)
+					maxb=b;
+				if(r<minr)
+					minr=r;
+				if(g<ming)
+					ming=g;
+				if(b<minb)
+					minb=b;
+			}
+		}
+		ratior=255/(maxr-minr);
+		ratiog=255/(maxg-ming);
+		ratiob=255/(maxb-minb);
+		for(int i=0;i<image.getWidth();i++){
+			for(int j=0;j<image.getHeight();j++){	
+				pixel = image.getRGB(i, j);
+				r=outil.getR(pixel);
+				g=outil.getG(pixel);
+				b=outil.getB(pixel);
+				image.setRGB(i, j,outil.setR((int) ((r-minr)*ratior))+outil.setG((int) ((g-ming)*ratiog))+outil.setB((int) ((b-minb)*ratiob)));
+			}
+		}
+		cadreImageCourant().setImage(image);
+		interfaceGraphique.getFrame().repaint();
+		  
+	}
 	public void egalisation (){
 		  double ratio;
 		  int pixel,r,g,b;
@@ -166,6 +213,7 @@ public class Modele {
 			interfaceGraphique.getFrame().validate();
 			interfaceGraphique.getRedimensionner().setEnabled(false);
 			interfaceGraphique.getEgalisation().setEnabled(false);
+			interfaceGraphique.getEtalement().setEnabled(false);
 		}
 		if(nbAffichageHisto>0){
 			interfaceGraphique.getFrameHisto().dispose();
@@ -637,6 +685,8 @@ public class Modele {
 		distx2=xCour-x;
 		disty2=yCour-y;
 	}
+
+	
 
 
 

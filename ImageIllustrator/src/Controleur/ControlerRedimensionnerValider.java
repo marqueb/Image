@@ -16,7 +16,7 @@ public class ControlerRedimensionnerValider implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		modele.redimensionner(modele.cadreImageCourant(),Integer.parseInt(modele.getInterfaceGraphique().getLargeur().getText()),Integer.parseInt(modele.getInterfaceGraphique().getHauteur().getText()));
+		modele.redimensionner(Integer.parseInt(modele.getInterfaceGraphique().getLargeur().getText()),Integer.parseInt(modele.getInterfaceGraphique().getHauteur().getText()));
 		modele.getInterfaceGraphique().getFrameRedim().dispose();
 	}
 

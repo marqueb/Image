@@ -381,4 +381,9 @@ public class Controler{
 	public void addRedimensionnerValider(JButton valider) {
 		valider.addActionListener(new ControlerRedimensionnerValider(modele));	
 	}
+
+	public void addControlerEtalement(JMenuItem etalement) {
+		etalement.addActionListener(new ControlerEtalement(modele));	
+		
+	}
 }
