@@ -44,9 +44,6 @@ public class Controler{
 		deplacementScroll=false;
 		if(!modele.getListCadreImage().isEmpty()){	
 			it.rafraichirComponentOption();
-			if(modele.existeSelection()){
-				modele.annulerSelection();
-			}
 		}
 	}
 
@@ -116,7 +113,9 @@ public class Controler{
 
 	public void changerOnglet(){
 		init();
-		//modele.annulerSelection();
+		if(modele.existeSelection()){
+			modele.annulerSelection();
+		}
 	}
 
 	public void fermerOnglet(Object o){
@@ -419,11 +418,13 @@ public class Controler{
 
 	public void addControlerEtalement(JMenuItem etalement) {
 		etalement.addActionListener(new ControlerEtalement(modele));	
-		
 	}
 
 	public void addControlerInverser(JMenuItem inverser) {
 		inverser.addActionListener(new ControlerInverser(modele));	
-		
+	}
+	
+	public void addControlerDecouper(JMenuItem decouper){
+		//decouper.addActionListener(new ControlerDecouper());
 	}
 }
