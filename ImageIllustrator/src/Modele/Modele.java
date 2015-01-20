@@ -67,7 +67,7 @@ public class Modele {
 			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(0);
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue(0);
 			//interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(cadreImage.getImage()));
-			}catch(Exception e){}
+		}catch(Exception e){}
 	}
 	
 	

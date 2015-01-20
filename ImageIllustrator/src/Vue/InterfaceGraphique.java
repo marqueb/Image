@@ -171,7 +171,7 @@ public class InterfaceGraphique implements Runnable{
 		//partie onglet nom
 		JLabel labelOnglet = new JLabel(image.getNomFichier()+(getTabbedPane().getTabCount()));
 		//partie onglet fermerOnglet
-	
+		
 		JButton boutonFermer = new JButton("X");
 		controler.addControlerX(boutonFermer);
 		//Ajout au panel de la partie nom+fermer
@@ -180,9 +180,6 @@ public class InterfaceGraphique implements Runnable{
 		tabbedPane.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);  
 		tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
 		this.rafraichirComponentOption();	
-		egalisation.setEnabled(true);
-		etalement.setEnabled(true);
-		inverser.setEnabled(true);
 		redimensionner.setEnabled(true);
 		if(modele.getNbAffichageHisto()==0){
 			afficherHisto.setVisible(true);
@@ -503,6 +500,9 @@ public class InterfaceGraphique implements Runnable{
 		couleurPixel.setEnabled(enable);
 		fusion.setEnabled(enable);
 		imagris.setEnabled(enable);
+		egalisation.setEnabled(enable);
+		etalement.setEnabled(enable);
+		inverser.setEnabled(enable);
 		//moyen.setEnabled(enable);
 	}
 
@@ -721,6 +721,7 @@ public class InterfaceGraphique implements Runnable{
 		// On fixe la taille et on demarre
 		frame.setSize(1000, 700);
 		frame.setVisible(true);
+		setEnable(false);
 	}
 	public JCheckBox getLuminance() {
 		return luminance;

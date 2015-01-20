@@ -86,7 +86,6 @@ public class Controler{
 	public void charger(){
 		init();
 		modele.charger();
-		modele.calculerHistogrammeRGB();
 	}
 
 	public void sauvegarder(){
