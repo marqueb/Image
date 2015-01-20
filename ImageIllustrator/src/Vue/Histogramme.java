@@ -42,11 +42,33 @@ public class Histogramme extends JComponent{
 		buffer.setColor(Color.BLACK);
 		
 		int max=tab[0][0];
-		for (int i=0;i<3;i++){
-			for (int j=0;j<tab[i].length;j++){
-				if (max<tab[i][j])
-					max=tab[i][j];
-			}
+	//	for (int i=0;i<3;i++){
+			for (int j=0;j<tab[0].length;j++){
+				if(afficheRouge){
+					if (max<tab[0][j])
+						max=tab[0][j];
+				}
+				if(afficheBleu){
+					if (max<tab[1][j])
+						max=tab[1][j];
+				}
+				if(afficheVert){
+					if (max<tab[2][j])
+						max=tab[2][j];
+				}
+				if(afficheLuminence){		
+					if (max<yuv[0][j])
+						max=yuv[0][j];
+				}
+				if(afficheChrominanceU){		
+					if (max<yuv[1][j])
+						max=yuv[1][j];
+				}
+				if(afficheChrominanceV){		
+					if (max<yuv[2][j])
+						max=yuv[2][j];
+				}
+		//	}
 		}
 
 		int largeur=getWidth()/255;
