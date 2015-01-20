@@ -296,7 +296,7 @@ public class Controler{
 	public void boutonAppliquerFusionClic()
 	{
 		this.it.retirerComponentFusion();
-		modele.calculerHistogrammeRGB();
+		//modele.calculerHistogrammeRGB();
 	}
 
 	public void boutonAppliquerFiltre()

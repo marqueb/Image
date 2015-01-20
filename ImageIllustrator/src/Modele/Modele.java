@@ -273,17 +273,17 @@ public class Modele {
 		float rapportLargeur, rapportHauteur;
 		int[] selection = selection();
 		
+		// redimensionner les images 
 		if(existeSelection())
 		{
-			rapportLargeur = ((float)selection[1])/(float)imaSecondaire.getWidth();
-			rapportHauteur = ((float)selection[2])/(float)imaSecondaire.getHeight();
+			rapportLargeur = ((float)selection[2]-selection[0])/(float)imaSecondaire.getWidth();
+			rapportHauteur = ((float)selection[3]-selection[1])/(float)imaSecondaire.getHeight();
 		}
 		else
 		{
 			rapportLargeur = ((float)imaPrincipale.getWidth())/(float)imaSecondaire.getWidth();
 			rapportHauteur = ((float)imaPrincipale.getHeight())/(float)imaSecondaire.getHeight();
 		}
-		
 		if(rapportLargeur<rapportHauteur)
 		{
 			imaSecondaire = Outil.resize(imaSecondaire, (int)(((float)imaSecondaire.getWidth())*rapportLargeur), (int)(((float)imaSecondaire.getHeight())*rapportLargeur));
@@ -293,24 +293,21 @@ public class Modele {
 			imaSecondaire = Outil.resize(imaSecondaire, (int)(((float)imaSecondaire.getWidth())*rapportHauteur), (int)(((float)imaSecondaire.getHeight())*rapportHauteur));
 		}
 
-		//TODO redimensionner les images pour qu'elles aient les m�me dimensions ou trouver une autre solution
-		
 
 		float valR = 0, valG = 0, valB = 0;
 		int rgb1 = 0, rgb2 = 0, newRgb = 0;
 		int borneX = imaPrincipale.getWidth()<imaSecondaire.getWidth()?imaPrincipale.getWidth():imaSecondaire.getWidth();
 		int borneY = imaPrincipale.getHeight()<imaSecondaire.getHeight()?imaPrincipale.getHeight():imaSecondaire.getHeight();
-//		int borneX = imaPrincipale.getWidth();
-//		int borneY = imaPrincipale.getHeight();
 		int i_deb, i_fin, j_deb, j_fin;
 		
+		//borne de la fusion
 		if(existeSelection()){
 			i_deb=selection[0];
 			i_fin=selection[2];
 			j_deb=selection[1];
 			j_fin=selection[3];
-			if(i_fin>borneX) i_fin = borneX;
-			if(j_fin>borneY) j_fin = borneY;
+			if(i_fin>i_deb + borneX) i_fin = i_deb + borneX;
+			if(j_fin>j_deb + borneY) j_fin = j_deb + borneY;
 		}else{
 			i_deb=0;
 			i_fin=borneX;
@@ -323,7 +320,7 @@ public class Modele {
 			for(int j=j_deb; j<j_fin; j++)
 			{
 				rgb1 = imaPrincipale.getRGB(i, j);
-				rgb2 = imaSecondaire.getRGB(i, j);
+				rgb2 = imaSecondaire.getRGB(i-i_deb, j-j_deb);
 
 				valR = ((float)outil.getR(rgb1))*coef1;
 				valR += ((float)outil.getR(rgb2))*coef2;
