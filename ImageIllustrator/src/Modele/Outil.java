@@ -175,6 +175,7 @@ public class Outil {
 		int[][] yuv = new int[3][256];
 		int rgb = 0,r,g,b,y,u,v;
 
+
 		//initialisation du tableau ï¿œ 0
 		for(int i = 0; i<3; i++)
 		{
@@ -205,7 +206,7 @@ public class Outil {
 		return yuv;
 	}
 	
-	//retourne un tableau 2d correspondant ï¿œ la reprï¿œsentation des effectifs de chaque niveau de gris.
+
 	//tab[x] : effectif de la valeurs x pour la composante rouge (1: green; 2: blue)
 	public int[] getTabgrisHisto(BufferedImage ima)
 	{

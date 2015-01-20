@@ -386,4 +386,9 @@ public class Controler{
 		etalement.addActionListener(new ControlerEtalement(modele));	
 		
 	}
+
+	public void addControlerInverser(JMenuItem inverser) {
+		inverser.addActionListener(new ControlerInverser(modele));	
+		
+	}
 }

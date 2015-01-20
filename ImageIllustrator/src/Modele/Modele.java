@@ -2,6 +2,7 @@ package Modele;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+
 import java.awt.Graphics2D;
 import java.awt.TextArea;
 import java.awt.image.BufferedImage;
@@ -88,6 +89,7 @@ public class Modele {
 		return (x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight());
 	}	
 
+
 	public void redimensionner( int newlargeur,int newhauteur) {
 		CadreImage  cadre = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
 			int largeur=cadre.getImage().getWidth();
@@ -107,6 +109,22 @@ public class Modele {
 			actualiserImageIcon();
 			interfaceGraphique.getFrame().repaint();
 			interfaceGraphique.getFrame().validate();
+	}
+	
+	public void inverser(){
+		int pixel,r,g,b;
+		BufferedImage image= cadreImageCourant().getImage();
+		for(int i=0;i<image.getWidth();i++){
+			for(int j=0;j<image.getHeight();j++){				
+				pixel = image.getRGB(i, j);
+				r=outil.getR(pixel);
+				g=outil.getG(pixel);
+				b=outil.getB(pixel);
+				image.setRGB(i, j,outil.setR(255-r)+outil.setG(255-g)+outil.setB(255-b));
+			}
+		}
+		cadreImageCourant().setImage(image);
+		interfaceGraphique.getFrame().repaint();
 	}
 	
 	public void etalement() {
@@ -150,6 +168,7 @@ public class Modele {
 		interfaceGraphique.getFrame().repaint();
 		  
 	}
+
 	public void egalisation (){
 		  double ratio;
 		  int pixel,r,g,b;
@@ -214,6 +233,8 @@ public class Modele {
 			interfaceGraphique.getRedimensionner().setEnabled(false);
 			interfaceGraphique.getEgalisation().setEnabled(false);
 			interfaceGraphique.getEtalement().setEnabled(false);
+			interfaceGraphique.getInverser().setEnabled(false);
+
 		}
 		if(nbAffichageHisto>0){
 			interfaceGraphique.getFrameHisto().dispose();
@@ -685,14 +706,6 @@ public class Modele {
 		distx2=xCour-x;
 		disty2=yCour-y;
 	}
-
-	
-
-
-
-
-
-
-
-
 }
+
+

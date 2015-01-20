@@ -3,7 +3,7 @@ package Controleur;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -52,6 +52,17 @@ public class ControlerFiltreUser implements ActionListener{
 		{
 			modele.actualiserImageIcon();
 			it.rafraichirComponentOption();
+		}
+		else if(e.getActionCommand().equals("Previsualiser"))
+		{//ouvrir une nouvelle fenetre avec l'ancienne image et la nouvelle
+			BufferedImage im_no_modif = null, im_modif = null;
+
+			if(isFiltreValid())
+			{
+				im_no_modif = modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).getImage();
+				im_modif = modele.calculerConvolution(filtre, im_no_modif);
+				it.previsualiserApplicationFiltreUser(im_no_modif, im_modif);
+			}
 		}
 		else//changer la grille du filtre
 		{
@@ -115,7 +126,7 @@ public class ControlerFiltreUser implements ActionListener{
 			pInfo.add(labelInfo);
 			pInfo.validate();
 		}
-		
+
 		return isValid;
 	}
 

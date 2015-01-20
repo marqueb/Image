@@ -1,3 +1,4 @@
+
 package Controleur;
 
 import java.awt.event.ActionEvent;
@@ -22,3 +23,4 @@ public class ControlerEgalisation implements ActionListener {
 	}
 
 }
+
