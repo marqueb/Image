@@ -42,7 +42,12 @@ public class Controler{
 		selectionActive=false;
 		ajustementSelection=false;
 		deplacementScroll=false;
-		if(!modele.getListCadreImage().isEmpty()){	it.rafraichirComponentOption();}
+		if(!modele.getListCadreImage().isEmpty()){	
+			it.rafraichirComponentOption();
+			if(modele.existeSelection()){
+				modele.annulerSelection();
+			}
+		}
 	}
 
 	public void annuler()
@@ -111,7 +116,7 @@ public class Controler{
 
 	public void changerOnglet(){
 		init();
-		modele.actualiserImageIcon();
+		//modele.annulerSelection();
 	}
 
 	public void fermerOnglet(Object o){
@@ -122,9 +127,15 @@ public class Controler{
 		isRGB=!isRGB;
 	}
 
-	public void sourisBouge(int x, int y){
+	public void sourisBouge(int x, int y, int u, int v){
+		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
+		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
 		if(echantillonageActif){
-			modele.afficherCouleurPixel(x, y, isRGB);
+			if(modele.estDansImage(x, y)){
+				modele.afficherCouleurPixel(x, y, isRGB);
+			}else{
+				modele.enleverCouleurPixel();
+			}
 		}
 	}
 	
@@ -182,8 +193,10 @@ public class Controler{
 		});
 		//(new ControlerEgalisation(modele));
 	}
-	public void sourisEntre(int x, int y){
-		if(echantillonageActif){
+	public void sourisEntre(int x, int y, int u, int v){
+		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
+		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
+		if(echantillonageActif && modele.estDansImage(x, y)){
 			modele.afficherCouleurPixel(x, y, isRGB);
 		}
 		if(selectionActive){
@@ -191,7 +204,9 @@ public class Controler{
 		}
 	}
 
-	public void sourisSort(int x, int y){
+	public void sourisSort(int x, int y, int u, int v){
+		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
+		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
 		if(echantillonageActif){
 			modele.enleverCouleurPixel();
 		}

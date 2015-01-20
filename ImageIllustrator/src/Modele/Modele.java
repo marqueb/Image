@@ -755,6 +755,14 @@ public class Modele {
 		distx2=xCour-x;
 		disty2=yCour-y;
 	}
+	
+	public void annulerSelection(){
+		xPrec=-1;
+		yPrec=-1;
+		xCour=-1;
+		yCour=-1;
+		this.actualiserImageIcon();
+	}
 }
 
 
