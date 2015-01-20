@@ -30,7 +30,7 @@ public class TraiteurImage {
 	//		{unNeuvieme, unNeuvieme, unNeuvieme},
 	//		{unNeuvieme, unNeuvieme, unNeuvieme}};
 
-	public BufferedImage convoluer(TypeFiltre type, BufferedImage buf_ima_in)
+	public BufferedImage convoluer(TypeFiltre type, BufferedImage buf_ima_in, boolean existeSelection, int[] selection)
 	{
 		//float[] noyau = null;
 		float[][] noyau = null;
@@ -50,33 +50,42 @@ public class TraiteurImage {
 		//		return dst;
 		//return convoluer(noyau, buf_ima_in, ModeConvolution.SAME);
 		if(noyau == null) return null;
-		return convoluer(noyau, buf_ima_in);
+		return convoluer(noyau, buf_ima_in, existeSelection, selection);
 	}
 
 
-	public BufferedImage convoluer(float[][] ker_in, BufferedImage bufIma_in)
+	public BufferedImage convoluer(float[][] ker_in, BufferedImage bufIma_in, boolean existeSelection, int[] selection)
 	{
 		float[][] ker = inverserNoyau(ker_in);
 		BufferedImage bufIma_out = Outil.deepCopy(bufIma_in);
 		int decalageBord = (ker.length-1)/2;
 		int i=0, j=0;
-		
+
 		//on recopie les parties ou on n'applique pas la convolution (on applique la convolution sur la partie "VALID" de l'image).
-		for(i=0; i<decalageBord; i++)
-		{
-			for(j=0; j<decalageBord; j++)
-			{
-				bufIma_out.setRGB(i, j, bufIma_in.getRGB(i,  j));
-				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
-				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, j, bufIma_in.getRGB(i,  j));
-				bufIma_out.setRGB(i, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
-			}
-		}
+		//		for(i=0; i<decalageBord; i++)
+		//		{
+		//			for(j=0; j<decalageBord; j++)
+		//			{
+		//				bufIma_out.setRGB(i, j, bufIma_in.getRGB(i,  j));
+		//				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
+		//				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, j, bufIma_in.getRGB(i,  j));
+		//				bufIma_out.setRGB(i, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
+		//			}
+		//		}
+		int i_deb, i_fin, j_deb, j_fin;
+		if(existeSelection && selection[0]>=decalageBord) i_deb=selection[0];
+		else i_deb = decalageBord;
+		if(existeSelection && selection[2]<=bufIma_in.getWidth()-decalageBord-1) i_fin=selection[2];
+		else i_fin = bufIma_in.getWidth()-decalageBord-1;
+		if(existeSelection && selection[1]>=decalageBord) j_deb=selection[1];
+		else j_deb = decalageBord;
+		if(existeSelection && selection[3]<=bufIma_in.getHeight()-decalageBord-1) j_fin=selection[3];
+		else j_fin = bufIma_in.getHeight()-decalageBord-1;
 
 		//on applique la convolution � la partie "VALID" de l'image.
-		for(i=decalageBord; i<bufIma_in.getWidth()-decalageBord-1; i++)
+		for(i=i_deb; i<i_fin; i++)
 		{
-			for(j=decalageBord; j<bufIma_in.getHeight()-decalageBord-1; j++)
+			for(j=j_deb; j<j_fin; j++)
 			{
 				bufIma_out.setRGB(i, j, convolutionOneStep(bufIma_in, i, j, ker));
 			}
@@ -84,29 +93,38 @@ public class TraiteurImage {
 
 		return bufIma_out;
 	}
-	
-	public BufferedImage convoluerFiltreMedian(BufferedImage bufIma_in, int nbVoisin)
+
+	public BufferedImage convoluerFiltreMedian(BufferedImage bufIma_in, int nbVoisin, boolean existeSelection, int[] selection)
 	{
 		BufferedImage bufIma_out = Outil.deepCopy(bufIma_in);
 		int decalageBord = nbVoisin;
 		int i=0, j=0;
-		
+
 		//on recopie les parties ou on n'applique pas la convolution (on applique la convolution sur la partie "VALID" de l'image).
-		for(i=0; i<decalageBord; i++)
-		{
-			for(j=0; j<decalageBord; j++)
-			{
-				bufIma_out.setRGB(i, j, bufIma_in.getRGB(i,  j));
-				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
-				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, j, bufIma_in.getRGB(i,  j));
-				bufIma_out.setRGB(i, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
-			}
-		}
+		//		for(i=0; i<decalageBord; i++)
+		//		{
+		//			for(j=0; j<decalageBord; j++)
+		//			{
+		//				bufIma_out.setRGB(i, j, bufIma_in.getRGB(i,  j));
+		//				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
+		//				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, j, bufIma_in.getRGB(i,  j));
+		//				bufIma_out.setRGB(i, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
+		//			}
+		//		}
+		int i_deb, i_fin, j_deb, j_fin;
+		if(existeSelection && selection[0]>=decalageBord) i_deb=selection[0];
+		else i_deb = decalageBord;
+		if(existeSelection && selection[2]<=bufIma_in.getWidth()-decalageBord-1) i_fin=selection[2];
+		else i_fin = bufIma_in.getWidth()-decalageBord-1;
+		if(existeSelection && selection[1]>=decalageBord) j_deb=selection[1];
+		else j_deb = decalageBord;
+		if(existeSelection && selection[3]<=bufIma_in.getHeight()-decalageBord-1) j_fin=selection[3];
+		else j_fin = bufIma_in.getHeight()-decalageBord-1;
 
 		//on applique la convolution � la partie "VALID" de l'image.
-		for(i=decalageBord; i<bufIma_in.getWidth()-decalageBord-1; i++)
+		for(i=i_deb; i<i_fin; i++)
 		{
-			for(j=decalageBord; j<bufIma_in.getHeight()-decalageBord-1; j++)
+			for(j=j_deb; j<j_fin; j++)
 			{
 				bufIma_out.setRGB(i, j, FiltreConvolution.GetValueFiltreMedian(i, j, nbVoisin, bufIma_in));
 			}
@@ -148,7 +166,7 @@ public class TraiteurImage {
 				sommeCoef += ker[i+decalageBord][j+decalageBord];
 			}
 		}
-		
+
 		if(sommeCoef>1)
 		{
 			valR = Outil.getValidValuePixel(valR/sommeCoef);
@@ -161,36 +179,48 @@ public class TraiteurImage {
 			valG = Outil.getValidValuePixel(valG);
 			valB = Outil.getValidValuePixel(valB);
 		}
-		
+
 		resPix = outil.setR(valR)+outil.setG(valG)+outil.setB(valB);
 		return resPix;
 	}
-	
-	public BufferedImage rehausserContours(BufferedImage im)
+
+	public BufferedImage rehausserContours(BufferedImage im, boolean existeSelection, int[] selection)
 	{
 		float alpha = 1.0f/8.0f;
 		int rgb_im, rgb_laplacien, valR, valG, valB;
 		BufferedImage im_out = Outil.deepCopy(im);
-		int width = im.getWidth(), height = im.getHeight();
 		Outil outil = new Outil();
-		
-		BufferedImage im_laplacien = convoluer(FiltreConvolution.getNoyauLaplacien3x3(), im);
-		
-		for(int i = 0; i<width; i++)
+
+		BufferedImage im_laplacien = convoluer(FiltreConvolution.getNoyauLaplacien3x3(), im, existeSelection, selection);
+
+		int i_deb, i_fin, j_deb, j_fin;
+		if(existeSelection){
+			i_deb=selection[0];
+			i_fin=selection[2];
+			j_deb=selection[1];
+			j_fin=selection[3];
+		}else{
+			i_deb=0;
+			i_fin=im.getWidth();
+			j_deb=0;
+			j_fin=im.getHeight();
+		}
+
+		for(int i = i_deb; i<i_fin; i++)
 		{
-			for(int j = 0; j<height; j++)
+			for(int j = j_deb; j<j_fin; j++)
 			{
 				rgb_im = im.getRGB(i, j);
 				rgb_laplacien = im_laplacien.getRGB(i, j);
-				
+
 				valR = Outil.getValidValuePixel((int)(outil.getR(rgb_im) - alpha * outil.getR(rgb_laplacien)));
 				valG = Outil.getValidValuePixel((int)(outil.getG(rgb_im) - alpha * outil.getG(rgb_laplacien)));
 				valB = Outil.getValidValuePixel((int)(outil.getB(rgb_im) - alpha * outil.getB(rgb_laplacien)));
-				
+
 				im_out.setRGB(i,  j,  outil.setR(valR)+outil.setG(valG)+outil.setB(valB));
 			}
 		}
-		
+
 		return im_out;
 	}
 
@@ -204,7 +234,7 @@ public class TraiteurImage {
 				image.setRGB(i, j, outil.setR(10)+outil.setB(50)+outil.setG(150));
 			}
 		}
-/*		cadre= new CadreImage(image);
+		/*		cadre= new CadreImage(image);
 		cadre.update(image.getGraphics());
 		cadre.setImage(image);
 		cadre.setBuffer((Graphics2D) image.getGraphics());

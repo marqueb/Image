@@ -25,6 +25,11 @@ public class Controler{
 	private InterfaceGraphique it;
 	private boolean echantillonageActif=false, selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
 
+	public boolean selectionActive()
+	{
+		return selectionActive;
+	}
+	
 	public void init(){
 		if(echantillonageActif){
 			modele.enleverCouleurPixel();
@@ -297,7 +302,7 @@ public class Controler{
 	}
 
 	public void addControlerRedimenssioner(JMenuItem redimensionner){
-		redimensionner.addActionListener(new ControlerRedimessionner(it));
+	//	redimensionner.addActionListener(new ControlerRedimessionner(it));
 	}
 	
 	public void addControlerCouleurPixel(JMenuItem couleurPixel){
@@ -380,6 +385,6 @@ public class Controler{
 	}
 
 	public void addRedimensionnerValider(JButton valider) {
-		valider.addActionListener(new ControlerRedimensionnerValider(modele));	
+	//	valider.addActionListener(new ControlerRedimensionnerValider(modele));	
 	}
 }

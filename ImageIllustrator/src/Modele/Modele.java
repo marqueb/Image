@@ -201,18 +201,57 @@ public class Modele {
 		BufferedImage imaToChange = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
 		float coef1 = (float) ((100.0-pourcentImageSecondaire)/100.0);
 		float coef2 = (float) (pourcentImageSecondaire/100.0);
-
+		float rapportLargeur, rapportHauteur;
+		int[] selection = selection();
+		
+		if(existeSelection())
+		{
+			rapportLargeur = ((float)selection[1])/(float)imaSecondaire.getWidth();
+			rapportHauteur = ((float)selection[2])/(float)imaSecondaire.getHeight();
+		}
+		else
+		{
+			rapportLargeur = ((float)imaPrincipale.getWidth())/(float)imaSecondaire.getWidth();
+			rapportHauteur = ((float)imaPrincipale.getHeight())/(float)imaSecondaire.getHeight();
+		}
+		
+		if(rapportLargeur<rapportHauteur)
+		{
+			imaSecondaire = Outil.resize(imaSecondaire, (int)(((float)imaSecondaire.getWidth())*rapportLargeur), (int)(((float)imaSecondaire.getHeight())*rapportLargeur));
+		}
+		else
+		{
+			imaSecondaire = Outil.resize(imaSecondaire, (int)(((float)imaSecondaire.getWidth())*rapportHauteur), (int)(((float)imaSecondaire.getHeight())*rapportHauteur));
+		}
 
 		//TODO redimensionner les images pour qu'elles aient les m�me dimensions ou trouver une autre solution
+		
 
 		float valR = 0, valG = 0, valB = 0;
 		int rgb1 = 0, rgb2 = 0, newRgb = 0;
 		int borneX = imaPrincipale.getWidth()<imaSecondaire.getWidth()?imaPrincipale.getWidth():imaSecondaire.getWidth();
 		int borneY = imaPrincipale.getHeight()<imaSecondaire.getHeight()?imaPrincipale.getHeight():imaSecondaire.getHeight();
+//		int borneX = imaPrincipale.getWidth();
+//		int borneY = imaPrincipale.getHeight();
+		int i_deb, i_fin, j_deb, j_fin;
+		
+		if(existeSelection()){
+			i_deb=selection[0];
+			i_fin=selection[2];
+			j_deb=selection[1];
+			j_fin=selection[3];
+			if(i_fin>borneX) i_fin = borneX;
+			if(j_fin>borneY) j_fin = borneY;
+		}else{
+			i_deb=0;
+			i_fin=borneX;
+			j_deb=0;
+			j_fin=borneY;
+		}
 
-		for(int i=0; i<borneX; i++)
+		for(int i=i_deb; i<i_fin; i++)
 		{
-			for(int j=0; j<borneY; j++)
+			for(int j=j_deb; j<j_fin; j++)
 			{
 				rgb1 = imaPrincipale.getRGB(i, j);
 				rgb2 = imaSecondaire.getRGB(i, j);
@@ -262,7 +301,7 @@ public class Modele {
 		}
 		else if(typeFiltre == TypeFiltre.MEDIAN && taille>0)
 		{
-			BufferedImage res = traiteurImage.convoluerFiltreMedian(imaAvantTraitement, taille);
+			BufferedImage res = traiteurImage.convoluerFiltreMedian(imaAvantTraitement, taille, existeSelection(), selection());
 			listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
 		}
 
@@ -294,7 +333,7 @@ public class Modele {
 		}
 		else if(typeFiltre == TypeFiltre.MEDIAN && taille>0)
 		{
-			BufferedImage res = traiteurImage.convoluerFiltreMedian(imaAvantTraitement, taille);
+			BufferedImage res = traiteurImage.convoluerFiltreMedian(imaAvantTraitement, taille, existeSelection(), selection());
 			listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
 		}
 
@@ -304,7 +343,7 @@ public class Modele {
 	public void rehausserContrastes()
 	{
 		BufferedImage im = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
-		im = traiteurImage.convoluer(FiltreConvolution.getNoyauContraste3x3(), im);
+		im = traiteurImage.convoluer(FiltreConvolution.getNoyauContraste3x3(), im, existeSelection(), selection());
 		listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(im);
 		actualiserImageIcon();
 		interfaceGraphique.rafraichirComponentOption();
@@ -313,7 +352,7 @@ public class Modele {
 	public void rehausserContours()
 	{
 		BufferedImage im = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
-		im = traiteurImage.rehausserContours(im);
+		im = traiteurImage.rehausserContours(im, existeSelection(), selection());
 		listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(im);
 		actualiserImageIcon();
 		interfaceGraphique.rafraichirComponentOption();
@@ -327,14 +366,14 @@ public class Modele {
 	public void appliquerFiltre(float[][] noyau)
 	{
 		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
-		BufferedImage res = traiteurImage.convoluer(noyau, bufImage);
+		BufferedImage res = traiteurImage.convoluer(noyau, bufImage, existeSelection(), selection());
 		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
 		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
 	}
 
 	public void appliquerFiltre(float[][] noyau, BufferedImage bufImage)
 	{
-		BufferedImage res = traiteurImage.convoluer(noyau, bufImage);
+		BufferedImage res = traiteurImage.convoluer(noyau, bufImage, existeSelection(), selection());
 		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
 		getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
 	}
@@ -504,7 +543,7 @@ public class Modele {
 	
 	public BufferedImage calculerConvolution(float[][] filtre, BufferedImage im)
 	{
-		return traiteurImage.convoluer(filtre, im);
+		return traiteurImage.convoluer(filtre, im, existeSelection(), selection());
 	}
 	
 	public Outil getOutil() {

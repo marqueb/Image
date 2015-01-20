@@ -104,8 +104,8 @@ public class Outil {
 
 	public BufferedImage imagris(BufferedImage image, boolean existeSelection, int[] selection){
 		int r,g,b,gris;
-		int i_deb, i_fin, j_deb, j_fin;
 		int couleur;
+		int i_deb, i_fin, j_deb, j_fin;
 		if(existeSelection){
 			i_deb=selection[0];
 			i_fin=selection[2];
