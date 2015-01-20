@@ -164,7 +164,6 @@ public class InterfaceGraphique implements Runnable{
 
 	//retourne un JButton pour completer la liste de bouton
 	public JButton ajouterOnglet(CadreImage image){
-
 		//final JPanel content = new JPanel();
 		JPanel tab = new JPanel();
 		tab.setOpaque(false);    
@@ -178,7 +177,7 @@ public class InterfaceGraphique implements Runnable{
 		//Ajout au panel de la partie nom+fermer
 		tab.add(labelOnglet, BorderLayout.WEST);
 		tab.add(boutonFermer, BorderLayout.EAST);
-		tabbedPane.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);        
+		tabbedPane.setTabComponentAt(tabbedPane.getTabCount()- 1, tab);  
 		tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
 		this.rafraichirComponentOption();	
 		egalisation.setEnabled(true);

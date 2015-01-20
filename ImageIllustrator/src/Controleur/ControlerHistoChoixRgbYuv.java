@@ -25,7 +25,6 @@ public class ControlerHistoChoixRgbYuv implements ActionListener {
 			it.getLuminance().setVisible(false);
 			it.getChrominanceU().setVisible(false);
 			it.getChrominanceV().setVisible(false);
-		
 		}
 		else{
 			it.getLuminance().setVisible(true);

@@ -72,6 +72,7 @@ public class Outil {
 	public CadreImage initCadre(BufferedImage image, Controler controler){
 		CadreImage cadreImage=new CadreImage(image);
 		JLabel icon=new JLabel(cadreImage.getImageIcon());
+		//System.out.println(icon.getIcon().);
 		JScrollPane imageScroller =new JScrollPane(icon);
 		imageScroller.setViewportView(icon);
 		imageScroller.setAutoscrolls(true);
@@ -83,8 +84,8 @@ public class Outil {
 		/*cadreImage.setMaxScrollX(imageScroller.getHorizontalScrollBar().getValue());
         cadreImage.setMaxScrollY(imageScroller.getVerticalScrollBar().getValue());
         imageScroller.getHorizontalScrollBar().setValue(0);
-        imageScroller.getVerticalScrollBar().setValue(0);*/
-		//scrollPanel.add(imageScroller); 
+        imageScroller.getVerticalScrollBar().setValue(0);
+		//scrollPanel.add(imageScroller); */
 		controler.addControlerSouris(icon);
 		//interfaceGraphique.getTabbedPane().setComponentAt(interfaceGraphique.getTabbedPane().getSelectedIndex(), imageScroller);
 		return cadreImage;
@@ -117,7 +118,6 @@ public class Outil {
 			j_deb=0;
 			j_fin=image.getHeight();
 		}
-
 		for (int i=i_deb;i<i_fin;i++){
 			for (int j=j_deb;j<j_fin;j++){
 				couleur=couleurPixel(image,i,j);
@@ -144,7 +144,7 @@ public class Outil {
 	public int[][] getTabRgbHisto(BufferedImage ima)
 	{
 		int[][] tab = new int[3][256];
-		int rgb = 0;
+		int rgb = 0, i_deb, i_fin, j_deb, j_fin;
 
 		//initialisation du tableau ï¿œ 0
 		for(int i = 0; i<3; i++)
@@ -154,13 +154,20 @@ public class Outil {
 				tab[i][j] = 0;
 			}
 		}
-
+		/*if(existeSelection){
+			i_deb=selection[0];
+			i_fin=selection[2];
+			j_deb=selection[1];
+			j_fin=selection[3];
+		}else{*/
+			i_deb=0;
+			i_fin=ima.getWidth();
+			j_deb=0;
+			j_fin=ima.getHeight();
+		//}
 		//cacule des effectifs de chaques valeurs pour chaques composantes
-		for(int i = 0; i<ima.getTileWidth(); i++)
-		{
-			for(int j = 0; j<ima.getTileHeight(); j++)
-			{
-
+		for (int i=i_deb;i<i_fin;i++){
+			for (int j=j_deb;j<j_fin;j++){
 				rgb = ima.getRGB(i, j);
 				tab[0][getR(rgb)]++;
 				tab[1][getG(rgb)]++;

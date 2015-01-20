@@ -56,18 +56,18 @@ public class Modele {
 			int index = monFichier.getName().indexOf('.');
 			CadreImage cadreImage=outil.initCadre(image, controler);
 			cadreImage.setNomFichier(monFichier.getName().substring(0,index));
-			interfaceGraphique.getTabbedPane().add(cadreImage.getImageScroller());
-			interfaceGraphique.setEnable(true);
 			//ajoute le cadre image à la liste de cadre image
 			listCadreImage.add(cadreImage);
+			interfaceGraphique.getTabbedPane().add(cadreImage.getImageScroller());
+			interfaceGraphique.setEnable(true);
 			//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image, ajoute le bouton creer a liste de bouton
 			listBoutonFermeture.add(interfaceGraphique.ajouterOnglet(cadreImage));
 			interfaceGraphique.getFrame().validate();
 			setScroll(cadreImage);
 			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(0);
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue(0);
-
-		}catch(Exception e){}
+			//interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(cadreImage.getImage()));
+			}catch(Exception e){}
 	}
 	
 	
@@ -75,8 +75,8 @@ public class Modele {
 		return listCadreImage.isEmpty();
 	}
 	
-	public void afficherpos(){
-		System.out.println(interfaceGraphique.getTabbedPane().getComponent(interfaceGraphique.getTabbedPane().getSelectedIndex()));
+	public void afficherpos(int x, int y){
+		System.out.println(x+" "+y);
 	}
 
 	public void sauvegarder(){
@@ -594,7 +594,7 @@ public class Modele {
 		}else if(x+distx2>cadreImage.getImage().getWidth()-cadreImage.getMaxScrollX()+cadreImage.getImageScroller().getHorizontalScrollBar().getValue()){
 			cadreImage.getImageScroller().getHorizontalScrollBar().setValue((cadreImage.getImageScroller().getHorizontalScrollBar().getValue())+(x+distx2)-(cadreImage.getImage().getWidth()-cadreImage.getMaxScrollX()+cadreImage.getImageScroller().getHorizontalScrollBar().getValue()));
 		}else if(y+disty2>cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
-			cadreImage.getImageScroller().getVerticalScrollBar().setValue((cadreImage.getImageScroller().getHorizontalScrollBar().getValue())+(y+disty2)-(cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()));
+			cadreImage.getImageScroller().getVerticalScrollBar().setValue((cadreImage.getImageScroller().getVerticalScrollBar().getValue())+(y+disty2)-(cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()));
 		}
 	}
 	
@@ -737,6 +737,16 @@ public class Modele {
 	public void setScroll(CadreImage cadreImage){
 		cadreImage.setMaxScrollX(cadreImage.getImageScroller().getHorizontalScrollBar().getValue());
 		cadreImage.setMaxScrollY(cadreImage.getImageScroller().getVerticalScrollBar().getValue());
+	}
+	
+	public int largeurImageVisible(){
+		CadreImage cadreImage=cadreImageCourant();
+		return cadreImage.getImage().getWidth()-cadreImage.getMaxScrollX();
+	}
+	
+	public int hauteurImageVisible(){
+		CadreImage cadreImage=cadreImageCourant();
+		return cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY();
 	}
 	
 	public void setDist(int x, int y){
