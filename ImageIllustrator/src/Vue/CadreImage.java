@@ -23,6 +23,7 @@ public class CadreImage extends JComponent{
 		image = i;
 		imageIcon = new ImageIcon(image);
 		buffer = image.createGraphics();
+		imageScroller=new JScrollPane();
 	}
 
 	public CadreImage()

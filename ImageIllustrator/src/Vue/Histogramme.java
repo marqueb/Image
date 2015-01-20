@@ -14,12 +14,14 @@ public class Histogramme extends JComponent{
 	private BufferedImage im = null;
 	private String titre = null;
 	private int[][] tab = null;
+	private int[][] yuv = null;	
 	private Dimension d;
 	private Graphics2D buffer;
 	private boolean afficheRouge,afficheVert,afficheBleu, afficheLuminence,afficheChrominanceU,afficheChrominanceV;
-	public Histogramme(int[][] tabHisto, String t, Dimension d)
+	public Histogramme(int[][] tabHisto,int[][]yuv, String t, Dimension d)
 	{
 		tab = tabHisto;
+		this.yuv=yuv;
 		titre = t;
 		this.d=d;
 		afficheRouge=true;
@@ -33,42 +35,57 @@ public class Histogramme extends JComponent{
 
 	public void paintComponent (Graphics g)
 	{	
-		double y0,y1,u0,u1,v0,v1;
 		im = new BufferedImage( getWidth(),getHeight(),BufferedImage.TYPE_INT_RGB);
 		buffer = im.createGraphics();
 		buffer.setColor(Color.WHITE);		
 		buffer.fillRect(0, 0, getWidth(),getHeight());
 		buffer.setColor(Color.BLACK);
-		int yuv[][] = new int[3][256];
 		
 		int max=tab[0][0];
-		for (int i=0;i<3;i++){
-			for (int j=0;j<tab[i].length;j++){
-				if (max<tab[i][j])
-					max=tab[i][j];
-			}
+	//	for (int i=0;i<3;i++){
+			for (int j=0;j<tab[0].length;j++){
+				if(afficheRouge){
+					if (max<tab[0][j])
+						max=tab[0][j];
+				}
+				if(afficheBleu){
+					if (max<tab[1][j])
+						max=tab[1][j];
+				}
+				if(afficheVert){
+					if (max<tab[2][j])
+						max=tab[2][j];
+				}
+				if(afficheLuminence){		
+					if (max<yuv[0][j])
+						max=yuv[0][j];
+				}
+				if(afficheChrominanceU){		
+					if (max<yuv[1][j])
+						max=yuv[1][j];
+				}
+				if(afficheChrominanceV){		
+					if (max<yuv[2][j])
+						max=yuv[2][j];
+				}
+		//	}
 		}
-		for (int i=0;i<tab[0].length;i++){
-			yuv[0][i]=(int) (0.299*(double)tab[0][i]  + 0.587*(double)tab[2][i]   + 0.114*(double)tab[2][i]);
-			yuv[1][i]=(int) (-0.147*(double)tab[0][i] - 0.288*(double)tab[2][i]   + 0.436*(double)tab[2][i]);
-			yuv[2][i]= (int)(0.615*(double)tab[0][i]  - 0.51498*(double)tab[2][i] - 0.10001*(double)tab[2][i]);
-		}
-		
+
 		int largeur=getWidth()/255;
 		int current=50;
 		int marge=50;
 		for (int i=0;i<tab[0].length-1;i++){ 
 			if(afficheLuminence){		
 				buffer.setColor(Color.orange);
-				buffer.drawLine(current, (getHeight()- (yuv[0][i]*(getHeight()-marge-5)/max)-marge), current+4, (getHeight()-(yuv[0][i+1]*(getHeight()-marge-5)/max)-marge));
+				buffer.drawLine(current, (getHeight()- (int)(yuv[0][i]*(getHeight()-marge-5)/max)-marge), current+4, (getHeight()-(yuv[0][i+1]*(getHeight()-marge-5)/max)-marge));
 			}
 			if(afficheChrominanceU){
 				buffer.setColor(Color.PINK);
-				buffer.drawLine(current,  (getHeight()-(yuv[1][i]*(getHeight()-marge-5)/max)-marge), current+4, (getHeight()-(yuv[1][i+1]*(getHeight()-marge-5)/max)-marge));
+				buffer.drawLine(current,  (getHeight()-(int)(yuv[1][i]*(getHeight()-marge-5)/max)-marge), current+4, (getHeight()-(yuv[1][i+1]*(getHeight()-marge-5)/max)-marge));
 			}
 			if(afficheChrominanceV){			
 				buffer.setColor(Color.MAGENTA);
-				buffer.drawLine(current,  (getHeight()-(yuv[2][i]*(getHeight()-marge-5)/max)-marge), current+4, (getHeight()-(yuv[2][i+1]*(getHeight()-marge-5)/max)-marge));
+				buffer.drawLine(current,  (getHeight()-(int)(yuv[2][i]*(getHeight()-marge-5)/max)-marge), current+4, (getHeight()-(yuv[2][i+1]*(getHeight()-marge-5)/max)-marge));
 			}
 			if(afficheRouge){
 				buffer.setColor(Color.RED);

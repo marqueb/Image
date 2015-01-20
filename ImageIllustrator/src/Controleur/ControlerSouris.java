@@ -5,6 +5,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JViewport;
 
 public class ControlerSouris extends MouseMotionAdapter implements MouseListener{
 	private Controler controler;
