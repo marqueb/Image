@@ -225,20 +225,22 @@ public class TraiteurImage {
 	}
 
 
-	public void redimenssioner(CadreImage cadre, int largeur, int hauteur,	int newlargeur, int newhauteur) {
+
+	public BufferedImage  redimenssioner(int largeur, int hauteur,	int newlargeur, int newhauteur) {
 		Outil outil = new Outil();
 		BufferedImage image= new BufferedImage(newlargeur, newhauteur,BufferedImage.TYPE_INT_ARGB);
-		cadre.setSize(new Dimension(newlargeur,newhauteur));
 		for (int i=0;i<newlargeur;i++){
 			for(int j=0; j<newhauteur; j++){
-				image.setRGB(i, j, outil.setR(10)+outil.setB(50)+outil.setG(150));
+				image.setRGB(i, j, outil.setR(0)+outil.setB(0)+outil.setG(150));
 			}
 		}
-		/*		cadre= new CadreImage(image);
-		cadre.update(image.getGraphics());
-		cadre.setImage(image);
-		cadre.setBuffer((Graphics2D) image.getGraphics());
-		cadre.setImageIcon(new ImageIcon(image));*/ 
-
+		
+		//cadre= new CadreImage(image);
+		//cadre.update(buffer);
+//		cadre.setImage(image);
+		//cadre.setBuffer((Graphics2D) image.getGraphics());
+		//cadre.setImageIcon(new ImageIcon(image));
+		//cadre.repaint();
+		return image;
 	}
 }

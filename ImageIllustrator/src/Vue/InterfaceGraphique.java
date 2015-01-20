@@ -49,7 +49,7 @@ public class InterfaceGraphique implements Runnable{
 	private JTabbedPane tabbedPane;
 	private Modele modele;
 	private Controler controler;
-	private JMenuItem sauvegarde, couleurPixel, fusion, imagris, moyen,egalisation,redimensionner ;
+	private JMenuItem sauvegarde, couleurPixel, fusion, imagris, moyen,egalisation,redimensionner,etalement,inverser ;
 	private CheckboxGroup groupe;
 	private Checkbox box1, box2;
 	private JCheckBox rouge,vert,bleu, luminance, chrominanceU , chrominanceV;
@@ -57,7 +57,7 @@ public class InterfaceGraphique implements Runnable{
 	private JSlider sliderFusion = null, sliderChoixTailleFiltre = null;
 	private JComboBox choixRgbYuv;
 	private JButton afficherHisto;
-	
+
 	public Image chargerImage(String bouton){
 		Image img=null;
 		switch (bouton) {
@@ -182,6 +182,8 @@ public class InterfaceGraphique implements Runnable{
 		tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
 		this.rafraichirComponentOption();	
 		egalisation.setEnabled(true);
+		etalement.setEnabled(true);
+		inverser.setEnabled(true);
 		redimensionner.setEnabled(true);
 		if(modele.getNbAffichageHisto()==0){
 			afficherHisto.setVisible(true);
@@ -391,7 +393,8 @@ public class InterfaceGraphique implements Runnable{
 		Outil outil = new Outil();
 		JFrame framePreview = new JFrame("Previsualisation du filtre");
 		JLabel labelNoModif = new JLabel("Avant");
-		JLabel labelModif = new JLabel("Après");
+		JLabel labelModif = new JLabel("Apres");
+
 		Font font = new Font("Arial",Font.BOLD,18);
 		
 		JPanel panel = new JPanel(new GridLayout());
@@ -601,6 +604,14 @@ public class InterfaceGraphique implements Runnable{
 		//		//filtre => Traitement
 		JMenu traitement = new JMenu("Traitement");
 		//filtre => Traitement => moyen
+		inverser = new JMenuItem("Inverser");
+		inverser.setEnabled(false);
+		controler.addControlerInverser(inverser);
+		traitement.add(inverser);
+		etalement = new JMenuItem("Etalement");
+		etalement.setEnabled(false);
+		controler.addControlerEtalement(etalement);
+		traitement.add(etalement);
 		egalisation = new JMenuItem("Egalisation");
 		egalisation.setEnabled(false);
 		controler.addControlerEgalisation(egalisation);
@@ -808,8 +819,25 @@ public class InterfaceGraphique implements Runnable{
 		this.hauteur = hauteur;
 	}
 
+	public JMenuItem getInverser() {
+		return inverser;
+	}
+
+	public void setInverser(JMenuItem inverser) {
+		this.inverser = inverser;
+	}
+
 	public JFrame getFrameRedim() {
 		return frameRedim;
+	}
+
+
+	public JMenuItem getEtalement() {
+		return etalement;
+	}
+
+	public void setEtalement(JMenuItem etalement) {
+		this.etalement = etalement;
 	}
 
 	public void setFrameRedim(JFrame frameRedim) {
@@ -817,3 +845,4 @@ public class InterfaceGraphique implements Runnable{
 	}
 
 }
+

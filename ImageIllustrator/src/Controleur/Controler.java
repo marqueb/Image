@@ -276,7 +276,6 @@ public class Controler{
 
 	public void boutonFlouterClic()
 	{
-		//modele.appliquerFiltre(TypeFiltre.MOYENNEUR);
 		modele.memoriseImage();
 		it.ajouterComponentChoixTailleFiltre(TypeFiltre.GAUSSIEN);
 	}
@@ -386,5 +385,15 @@ public class Controler{
 
 	public void addRedimensionnerValider(JButton valider) {
 	//	valider.addActionListener(new ControlerRedimensionnerValider(modele));	
+	}
+
+	public void addControlerEtalement(JMenuItem etalement) {
+		etalement.addActionListener(new ControlerEtalement(modele));	
+		
+	}
+
+	public void addControlerInverser(JMenuItem inverser) {
+		inverser.addActionListener(new ControlerInverser(modele));	
+		
 	}
 }

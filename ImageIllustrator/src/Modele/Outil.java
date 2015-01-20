@@ -63,7 +63,7 @@ public class Outil {
 		int[] histo = new int[255];
 		histo=getTabgrisHisto(image);
 		histoCumule[0]=histo[0];
-		//Calcul de l'histogramme cumul�
+		//Calcul de l'histogramme cumulé
 		for(int i = 1; i<255; i++)
 		{
 			histoCumule[i]=histoCumule[i-1]+histo[i];
@@ -139,14 +139,14 @@ public class Outil {
 		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
 	}
 
-	//retourne un tableau 2d correspondant � la repr�sentation des effectifs de chaques valeurs des 3 composantes R, G et B.
+	//retourne un tableau 2d correspondant ï¿œ la reprï¿œsentation des effectifs de chaques valeurs des 3 composantes R, G et B.
 	//tab[x][0] : effectif de la valeurs x pour la composante rouge (1: green; 2: blue)
 	public int[][] getTabRgbHisto(BufferedImage ima)
 	{
 		int[][] tab = new int[3][256];
 		int rgb = 0;
 
-		//initialisation du tableau � 0
+		//initialisation du tableau ï¿œ 0
 		for(int i = 0; i<3; i++)
 		{
 			for(int j = 0; j<256; j++)
@@ -175,7 +175,8 @@ public class Outil {
 		int[][] yuv = new int[3][256];
 		int rgb = 0,r,g,b,y,u,v;
 
-		//initialisation du tableau � 0
+
+		//initialisation du tableau ï¿œ 0
 		for(int i = 0; i<3; i++)
 		{
 			for(int j = 0; j<256; j++)
@@ -205,14 +206,14 @@ public class Outil {
 		return yuv;
 	}
 	
-	//retourne un tableau 2d correspondant � la repr�sentation des effectifs de chaque niveau de gris.
+
 	//tab[x] : effectif de la valeurs x pour la composante rouge (1: green; 2: blue)
 	public int[] getTabgrisHisto(BufferedImage ima)
 	{
 		int[] tab = new int[256];
 		int rgb = 0;
 
-		//initialisation du tableau � 0
+		//initialisation du tableau ï¿œ 0
 		for(int i = 0; i<256; i++)
 		{
 			tab[i] = 0;
@@ -224,7 +225,7 @@ public class Outil {
 			for(int j = 0; j<ima.getTileHeight(); j++)
 			{
 				rgb = ima.getRGB(i, j);
-				tab[getR(rgb)]++;	//remarque: les trois composantes on la m�me valeurs sur une image en noir et blanc
+				tab[getR(rgb)]++;	//remarque: les trois composantes on la mï¿œme valeurs sur une image en noir et blanc
 			}
 		}
 
