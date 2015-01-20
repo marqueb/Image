@@ -1,6 +1,14 @@
 package Modele;
 
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.image.RasterFormatException;
+
+import javax.swing.ImageIcon;
+
+import Vue.CadreImage;
 
 //classe outils
 public class TraiteurImage {
@@ -184,5 +192,23 @@ public class TraiteurImage {
 		}
 		
 		return im_out;
+	}
+
+
+	public void redimenssioner(CadreImage cadre, int largeur, int hauteur,	int newlargeur, int newhauteur) {
+		Outil outil = new Outil();
+		BufferedImage image= new BufferedImage(newlargeur, newhauteur,BufferedImage.TYPE_INT_ARGB);
+		cadre.setSize(new Dimension(newlargeur,newhauteur));
+		for (int i=0;i<newlargeur;i++){
+			for(int j=0; j<newhauteur; j++){
+				image.setRGB(i, j, outil.setR(10)+outil.setB(50)+outil.setG(150));
+			}
+		}
+/*		cadre= new CadreImage(image);
+		cadre.update(image.getGraphics());
+		cadre.setImage(image);
+		cadre.setBuffer((Graphics2D) image.getGraphics());
+		cadre.setImageIcon(new ImageIcon(image));*/ 
+
 	}
 }

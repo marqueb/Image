@@ -1,10 +1,13 @@
 package Controleur;
 
 import java.awt.Checkbox;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -12,6 +15,7 @@ import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 
 import Modele.Modele;
+import Modele.Outil;
 import Modele.TypeFiltre;
 import Vue.InterfaceGraphique;
 
@@ -116,7 +120,61 @@ public class Controler{
 			modele.afficherCouleurPixel(x, y, isRGB);
 		}
 	}
-
+	
+	public void addNbhisto(JFrame histo){
+		histo.addWindowListener(new WindowListener() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				// TODO Auto-generated method stub
+				if(!modele.isEstEgalisation()){
+					if(modele.isEstHistoCliquer()){
+						modele.fermetureHisto();
+						modele.setEstHistoCliquer(!modele.isEstHistoCliquer());
+					}
+				}
+				else
+					modele.setEstEgalisation(false);
+			}
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void windowClosed(WindowEvent e) {
+				// TODO Auto-generated method stub
+				//if(!modele.isEstEgalisation()){
+					if(modele.isEstHistoCliquer()){
+						modele.fermetureHisto();
+						modele.setEstHistoCliquer(!modele.isEstHistoCliquer());
+						
+					}
+					modele.setEstEgalisation(false);
+			}
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void windowOpened(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		//(new ControlerEgalisation(modele));
+	}
 	public void sourisEntre(int x, int y){
 		if(echantillonageActif){
 			modele.afficherCouleurPixel(x, y, isRGB);
@@ -217,7 +275,11 @@ public class Controler{
 		modele.memoriseImage();
 		it.ajouterComponentChoixTailleFiltre(TypeFiltre.GAUSSIEN);
 	}
-
+	
+	public void addControlerEgalisation(JMenuItem egalisation){
+		egalisation.addActionListener(new ControlerEgalisation(modele));
+	}
+	
 	public void addControlerCharger(JMenuItem charger){
 		charger.addActionListener(new ControlerCharger(this));
 	}
@@ -234,6 +296,10 @@ public class Controler{
 		sauvegarder.addActionListener(new ControlerSauvegarder(this));
 	}
 
+	public void addControlerRedimenssioner(JMenuItem redimensionner){
+		redimensionner.addActionListener(new ControlerRedimessionner(it));
+	}
+	
 	public void addControlerCouleurPixel(JMenuItem couleurPixel){
 		couleurPixel.addActionListener(new ControlerCouleurPixel(this));
 	}
@@ -289,10 +355,11 @@ public class Controler{
 		u.addActionListener(new ControlerBoutonFiltreUser(this.modele, this.it));
 	}
 	
-	public void addControlerFiltreUser(JButton valider, JButton annuler, JComboBox<String> boxChoixTailleFiltre, JPanel panelUser)
+	public void addControlerFiltreUser(JButton valider, JButton annuler, JButton previsualiser, JComboBox<String> boxChoixTailleFiltre, JPanel panelUser)
 	{
 		ControlerFiltreUser c = new ControlerFiltreUser(this.it, this.modele, boxChoixTailleFiltre, panelUser);
 		
+		previsualiser.addActionListener(c);
 		annuler.addActionListener(c);
 		valider.addActionListener(c);
 		boxChoixTailleFiltre.addActionListener(c);
@@ -306,5 +373,13 @@ public class Controler{
 	public void addControlerContours(JMenuItem contraste)
 	{
 		contraste.addActionListener(new ControlerContours(this));
+	}
+
+	public void addControlerAfficherHisto(JButton afficherHisto) {
+		afficherHisto.addActionListener(new ControlerAfficherHisto(this.modele));
+	}
+
+	public void addRedimensionnerValider(JButton valider) {
+		valider.addActionListener(new ControlerRedimensionnerValider(modele));	
 	}
 }
