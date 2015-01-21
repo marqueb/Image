@@ -58,6 +58,7 @@ public class Outil {
 		}
 		return null;
 	}
+	
 	public void histogrammeCumule(BufferedImage image, int[] histoCumule){
 		int rgb = 0;
 		int[] histo = new int[255];
@@ -69,6 +70,7 @@ public class Outil {
 			histoCumule[i]=histoCumule[i-1]+histo[i];
 		}
 	}
+	
 	public CadreImage initCadre(BufferedImage image, Controler controler){
 		CadreImage cadreImage=new CadreImage(image);
 		JLabel icon=new JLabel(cadreImage.getImageIcon());
@@ -103,10 +105,12 @@ public class Outil {
 		}
 	}
 
-	public BufferedImage imagris(BufferedImage image, boolean existeSelection, int[] selection){
+	public BufferedImage imagris(BufferedImage cadreImage, boolean existeSelection, int[] selection){
 		int r,g,b,gris;
 		int couleur;
 		int i_deb, i_fin, j_deb, j_fin;
+		//System.out.println(existeSelection);
+		//BufferedImage image;
 		if(existeSelection){
 			i_deb=selection[0];
 			i_fin=selection[2];
@@ -114,21 +118,22 @@ public class Outil {
 			j_fin=selection[3];
 		}else{
 			i_deb=0;
-			i_fin=image.getWidth();
+			i_fin=cadreImage.getWidth();
 			j_deb=0;
-			j_fin=image.getHeight();
+			j_fin=cadreImage.getHeight();
 		}
+		//image = new BufferedImage(i_fin-i_deb, j_fin-j_deb,BufferedImage.TYPE_INT_ARGB);
 		for (int i=i_deb;i<i_fin;i++){
 			for (int j=j_deb;j<j_fin;j++){
-				couleur=couleurPixel(image,i,j);
+				couleur=couleurPixel(cadreImage,i+i_deb,j+j_deb);
 				r=getR(couleur);
 				g=getG(couleur);
 				b=getB(couleur);
 				gris=(r+b+g)/3;
-				image.setRGB(i, j,setR(gris)+setB(gris)+setG(gris));
+				cadreImage.setRGB(i, j,setR(gris)+setB(gris)+setG(gris));
 			}
 		}
-		return image;
+		return cadreImage;
 	}
 
 	//copier une buffered image
@@ -307,9 +312,18 @@ public class Outil {
 		return image.getRGB(x,y);	
 	}
 	
-	
 	public static int getValidValuePixel(int val)
 	{
 		return Math.max(0, Math.min(255, val));
+	}
+	
+	public BufferedImage decouper(BufferedImage cadreImage, int[] selection){
+		BufferedImage image = new BufferedImage(selection[2]-selection[0], selection[3]-selection[1],BufferedImage.TYPE_INT_ARGB);
+		for (int i=0; i<selection[2]-selection[0]; i++){
+			for(int j=0; j<selection[3]-selection[1]; j++){
+				image.setRGB(i, j, cadreImage.getRGB(i+selection[0], j+selection[1]));
+			}
+		}
+		return image;
 	}
 }

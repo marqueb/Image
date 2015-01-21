@@ -310,6 +310,11 @@ public class Controler{
 		it.ajouterComponentChoixTailleFiltre(TypeFiltre.GAUSSIEN);
 	}
 	
+	public void decouper(){
+		modele.decouper();
+		modele.annulerSelection();
+	}
+	
 	public void addControlerEgalisation(JMenuItem egalisation){
 		egalisation.addActionListener(new ControlerEgalisation(modele));
 	}
@@ -413,7 +418,7 @@ public class Controler{
 	}
 
 	public void addRedimensionnerValider(JButton valider) {
-	//	valider.addActionListener(new ControlerRedimensionnerValider(modele));	
+		valider.addActionListener(new ControlerRedimensionnerValider(modele));	
 	}
 
 	public void addControlerEtalement(JMenuItem etalement) {
@@ -425,6 +430,6 @@ public class Controler{
 	}
 	
 	public void addControlerDecouper(JMenuItem decouper){
-		//decouper.addActionListener(new ControlerDecouper());
+		decouper.addActionListener(new ControlerDecouper(this));
 	}
 }

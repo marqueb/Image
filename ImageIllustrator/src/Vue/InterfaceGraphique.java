@@ -639,7 +639,7 @@ public class InterfaceGraphique implements Runnable{
 		//Ajout barre Principal à barre
 		barre.add(principal);
 		//Ajout barre Edition à barre
-		//barre.add(edition);
+		barre.add(edition);
 		//Ajout barre Image à barre
 		barre.add(image);
 		//Ajout barre filtre à barre
