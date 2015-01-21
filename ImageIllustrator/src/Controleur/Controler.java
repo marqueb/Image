@@ -114,7 +114,7 @@ public class Controler{
 	public void changerOnglet(){
 		init();
 		if(modele.existeSelection()){
-			modele.annulerSelection();
+			//modele.annulerSelection();
 		}
 	}
 

@@ -503,6 +503,11 @@ public class InterfaceGraphique implements Runnable{
 		egalisation.setEnabled(enable);
 		etalement.setEnabled(enable);
 		inverser.setEnabled(enable);
+		getAfficherHisto().setVisible(enable);
+		getRedimensionner().setEnabled(enable);
+		getEgalisation().setEnabled(enable);
+		getEtalement().setEnabled(enable);
+		getInverser().setEnabled(enable);
 		//moyen.setEnabled(enable);
 	}
 
@@ -724,6 +729,7 @@ public class InterfaceGraphique implements Runnable{
 		frame.setVisible(true);
 		setEnable(false);
 	}
+	
 	public JCheckBox getLuminance() {
 		return luminance;
 	}
@@ -832,7 +838,6 @@ public class InterfaceGraphique implements Runnable{
 		return frameRedim;
 	}
 
-
 	public JMenuItem getEtalement() {
 		return etalement;
 	}
@@ -844,6 +849,5 @@ public class InterfaceGraphique implements Runnable{
 	public void setFrameRedim(JFrame frameRedim) {
 		this.frameRedim = frameRedim;
 	}
-
 }
 

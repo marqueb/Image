@@ -12,7 +12,7 @@ import Vue.CadreImage;
 
 //classe outils
 public class TraiteurImage {
-
+	private Outil outil;
 	//Decouper
 	//Couleur pixel
 	//Redimensionner
@@ -20,6 +20,10 @@ public class TraiteurImage {
 	//Transformation
 	//Filtre
 
+	public TraiteurImage(Outil outil){
+		this.outil=outil;
+	}
+	
 	private static final float[][] MOYENNE = {
 		{1.0f, 1.0f, 1.0f},
 		{1.0f, 1.0f, 1.0f},
@@ -87,7 +91,7 @@ public class TraiteurImage {
 		{
 			for(j=j_deb; j<j_fin; j++)
 			{
-				bufIma_out.setRGB(i, j, convolutionOneStep(bufIma_in, i, j, ker));
+				bufIma_out.setRGB(i, j, convolutionOneStep(bufIma_in, i, j, ker)+outil.setAlpha(255));
 			}
 		}
 
@@ -126,7 +130,7 @@ public class TraiteurImage {
 		{
 			for(j=j_deb; j<j_fin; j++)
 			{
-				bufIma_out.setRGB(i, j, FiltreConvolution.GetValueFiltreMedian(i, j, nbVoisin, bufIma_in));
+				bufIma_out.setRGB(i, j, FiltreConvolution.GetValueFiltreMedian(i, j, nbVoisin, bufIma_in)+outil.setAlpha(255));
 			}
 		}
 		return bufIma_out;
@@ -217,7 +221,7 @@ public class TraiteurImage {
 				valG = Outil.getValidValuePixel((int)(outil.getG(rgb_im) - alpha * outil.getG(rgb_laplacien)));
 				valB = Outil.getValidValuePixel((int)(outil.getB(rgb_im) - alpha * outil.getB(rgb_laplacien)));
 
-				im_out.setRGB(i,  j,  outil.setR(valR)+outil.setG(valG)+outil.setB(valB));
+				im_out.setRGB(i,  j,  outil.setR(valR)+outil.setG(valG)+outil.setB(valB)+outil.setAlpha(255));
 			}
 		}
 
@@ -231,7 +235,7 @@ public class TraiteurImage {
 		BufferedImage image= new BufferedImage(newlargeur, newhauteur,BufferedImage.TYPE_INT_ARGB);
 		for (int i=0;i<newlargeur;i++){
 			for(int j=0; j<newhauteur; j++){
-				image.setRGB(i, j, outil.setR(0)+outil.setB(0)+outil.setG(150));
+				image.setRGB(i, j, outil.setR(0)+outil.setB(0)+outil.setG(150)+outil.setAlpha(255));
 			}
 		}
 		

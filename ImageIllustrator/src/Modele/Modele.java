@@ -43,7 +43,7 @@ public class Modele {
 		listCadreImage = new ArrayList<CadreImage>();
 		listBoutonFermeture = new ArrayList<JButton>();
 		outil = new Outil();
-		traiteurImage = new TraiteurImage();
+		traiteurImage = new TraiteurImage(outil);
 		nbAffichageHisto=0;
 		estHistoCliquer=false;
 		estEgalisation=false;
@@ -51,11 +51,21 @@ public class Modele {
 
 	public void charger(){	
 		try{
+			int couleur;
 			File monFichier=outil.lectureFichier();
 			BufferedImage image =outil.lectureImage(monFichier);
 			int index = monFichier.getName().indexOf('.');
+			/*BufferedImage image = new BufferedImage(100, 100,BufferedImage.TYPE_INT_ARGB);
+			for (int i=0;i<image.getWidth();i++){
+				for (int j=0;j<image.getHeight();j++){
+					//couleur=cadreImage.getRGB(i,j);	
+					image.setRGB(i, j,outil.setG(150)+outil.setAlpha(255));
+					
+				}
+			}*/
+			
 			CadreImage cadreImage=outil.initCadre(image, controler);
-			cadreImage.setNomFichier(monFichier.getName().substring(0,index));
+			cadreImage.setNomFichier(monFichier.getName().substring(0, index));
 			//ajoute le cadre image à la liste de cadre image
 			listCadreImage.add(cadreImage);
 			interfaceGraphique.getTabbedPane().add(cadreImage.getImageScroller());
@@ -120,7 +130,7 @@ public class Modele {
 				r=outil.getR(pixel);
 				g=outil.getG(pixel);
 				b=outil.getB(pixel);
-				image.setRGB(i, j,outil.setR(255-r)+outil.setG(255-g)+outil.setB(255-b));
+				image.setRGB(i, j,outil.setR(255-r)+outil.setG(255-g)+outil.setB(255-b)+outil.setAlpha(255));
 			}
 		}
 		cadreImageCourant().setImage(image);
@@ -161,7 +171,7 @@ public class Modele {
 				r=outil.getR(pixel);
 				g=outil.getG(pixel);
 				b=outil.getB(pixel);
-				image.setRGB(i, j,outil.setR((int) ((r-minr)*ratior))+outil.setG((int) ((g-ming)*ratiog))+outil.setB((int) ((b-minb)*ratiob)));
+				image.setRGB(i, j,outil.setR((int) ((r-minr)*ratior))+outil.setG((int) ((g-ming)*ratiog))+outil.setB((int) ((b-minb)*ratiob))+outil.setAlpha(255));
 			}
 		}
 		cadreImageCourant().setImage(image);
@@ -183,13 +193,14 @@ public class Modele {
 				  g=outil.getG(pixel);
 				  b=outil.getB(pixel);
 				  if(r==255 && b == 255 && g==255)
-					  image.setRGB(i, j,outil.setR(255)+outil.setG(255)+outil.setB(255));
+					  image.setRGB(i, j,outil.setR(255)+outil.setG(255)+outil.setB(255)+outil.setAlpha(255));
 				  else
-					  image.setRGB(i, j,outil.setR((int) (imageCumule[r]*ratio))+outil.setG((int) (imageCumule[g]*ratio))+outil.setB((int) (imageCumule[b]*ratio)));
+					  image.setRGB(i, j,outil.setR((int) (imageCumule[r]*ratio))+outil.setG((int) (imageCumule[g]*ratio))+outil.setB((int) (imageCumule[b]*ratio))+outil.setAlpha(255));
 			  }
 		  }
 		  cadreImageCourant().setImage(image);
-		  interfaceGraphique.getFrame().repaint();
+		  interfaceGraphique.getFrame().validate();
+		  //interfaceGraphique.getFrame().repaint();
 		  
 	
 	}
@@ -220,9 +231,27 @@ public class Modele {
 		cadreImage.setImage(outil.imagris(cadreImage.getImage(), existeSelection(),selection()));
 		actualiserImageIcon();*/
 		
-		CadreImage tmp=listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
-		outil.imagris(tmp.getImage(), existeSelection(), selection());
+		CadreImage cadreImage=cadreImageCourant();
+		outil.imagris(cadreImage.getImage(), existeSelection(), selection());
 		actualiserImageIcon();
+		
+		/*int i=interfaceGraphique.getTabbedPane().getSelectedIndex();
+		CadreImage cadreImage=cadreImageCourant();
+		BufferedImage image=outil.imagris(cadreImage.getImage(), existeSelection(), selection());
+		CadreImage nouveau=outil.initCadre(image, controler);
+		nouveau.setNomFichier(cadreImage.getNomFichier());
+		//ajoute le cadre image à la liste de cadre image
+		listCadreImage.remove(i);
+		listCadreImage.add(i,nouveau);
+		interfaceGraphique.getTabbedPane().remove(i);
+		interfaceGraphique.getTabbedPane().add(nouveau.getImageScroller(),i);
+		//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image, ajoute le bouton creer a liste de bouton
+		listBoutonFermeture.remove(i);
+		listBoutonFermeture.add(i,interfaceGraphique.ajouterOnglet(nouveau));
+		interfaceGraphique.getFrame().validate();
+		setScroll(nouveau);
+		nouveau.getImageScroller().getHorizontalScrollBar().setValue(0);
+		nouveau.getImageScroller().getVerticalScrollBar().setValue(0);*/
 	}
 
 	public void fermerOnglet(Object j){
@@ -458,13 +487,15 @@ public class Modele {
 		BufferedImage i = cadreImage.getImage();
 		cadreImage.setImageIcon(new ImageIcon(i));
 		JLabel icon=new JLabel(cadreImage.getImageIcon());
+		cadreImage.setImageScroller(new JScrollPane(icon));
 		controler.addControlerSouris(icon);
 		int x=cadreImage.getImageScroller().getVerticalScrollBar().getValue();
 		int y=cadreImage.getImageScroller().getHorizontalScrollBar().getValue();
 		cadreImage.getImageScroller().setViewportView(icon);
 		cadreImage.getImageScroller().getVerticalScrollBar().setValue(x);
 		cadreImage.getImageScroller().getHorizontalScrollBar().setValue(y);
-		//interfaceGraphique.
+		//interfaceGraphique.getFrame().validate();
+		interfaceGraphique.getTabbedPane().setComponentAt(interfaceGraphique.getTabbedPane().getSelectedIndex(), cadreImage.getImageScroller());
 	}
 
 	public boolean existeSelection(){
@@ -770,8 +801,27 @@ public class Modele {
 		if(this.existeSelection()){
 			CadreImage cadreImage=cadreImageCourant();
 			cadreImage.setImage(outil.decouper(cadreImage.getImage(), selection()));
-			actualiserImageIcon();
-		}
+			
+			/*CadreImage cadreImage=cadreImageCourant();
+			int i=interfaceGraphique.getTabbedPane().getSelectedIndex();
+			BufferedImage image=outil.decouper(cadreImage.getImage(), selection());
+			CadreImage nouveau=outil.initCadre(image, controler);
+			nouveau.setNomFichier(cadreImage.getNomFichier());
+			//ajoute le cadre image à la liste de cadre image
+			listCadreImage.remove(i);
+			listCadreImage.add(i,nouveau);
+			interfaceGraphique.getTabbedPane().remove(i);
+			interfaceGraphique.getTabbedPane().add(nouveau.getImageScroller(),i);
+			//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image, ajoute le bouton creer a liste de bouton
+			listBoutonFermeture.remove(i);
+			listBoutonFermeture.add(i,interfaceGraphique.ajouterOnglet(nouveau));
+			interfaceGraphique.getFrame().validate();
+			setScroll(nouveau);
+			nouveau.getImageScroller().getHorizontalScrollBar().setValue(0);
+			nouveau.getImageScroller().getVerticalScrollBar().setValue(0);
+			//cadreImage.setImage(outil.decouper(cadreImage.getImage(), selection()));
+			//actualiserImageIcon();
+		*/}
 	}
 }
 

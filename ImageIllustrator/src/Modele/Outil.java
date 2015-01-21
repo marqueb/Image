@@ -1,6 +1,7 @@
 package Modele;
 
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -83,11 +84,6 @@ public class Outil {
 		cadreImage.setImageScroller(imageScroller);
 		imageScroller.getHorizontalScrollBar().setValue(imageScroller.getHorizontalScrollBar().getMaximum());
 		imageScroller.getVerticalScrollBar().setValue(imageScroller.getVerticalScrollBar().getMaximum());
-		/*cadreImage.setMaxScrollX(imageScroller.getHorizontalScrollBar().getValue());
-        cadreImage.setMaxScrollY(imageScroller.getVerticalScrollBar().getValue());
-        imageScroller.getHorizontalScrollBar().setValue(0);
-        imageScroller.getVerticalScrollBar().setValue(0);
-		//scrollPanel.add(imageScroller); */
 		controler.addControlerSouris(icon);
 		//interfaceGraphique.getTabbedPane().setComponentAt(interfaceGraphique.getTabbedPane().getSelectedIndex(), imageScroller);
 		return cadreImage;
@@ -110,7 +106,7 @@ public class Outil {
 		int couleur;
 		int i_deb, i_fin, j_deb, j_fin;
 		//System.out.println(existeSelection);
-		//BufferedImage image;
+		//BufferedImage image=  new BufferedImage(cadreImage.getWidth(), cadreImage.getHeight(),BufferedImage.TYPE_INT_ARGB);
 		if(existeSelection){
 			i_deb=selection[0];
 			i_fin=selection[2];
@@ -122,18 +118,36 @@ public class Outil {
 			j_deb=0;
 			j_fin=cadreImage.getHeight();
 		}
-		//image = new BufferedImage(i_fin-i_deb, j_fin-j_deb,BufferedImage.TYPE_INT_ARGB);
+		
 		for (int i=i_deb;i<i_fin;i++){
 			for (int j=j_deb;j<j_fin;j++){
-				couleur=couleurPixel(cadreImage,i+i_deb,j+j_deb);
+				//couleur=cadreImage.getRGB(i,j);	
+				couleur=couleurPixel(cadreImage,i,j);
 				r=getR(couleur);
 				g=getG(couleur);
 				b=getB(couleur);
 				gris=(r+b+g)/3;
-				cadreImage.setRGB(i, j,setR(gris)+setB(gris)+setG(gris));
+				cadreImage.setRGB(i, j,setR(gris)+setB(gris)+setG(gris)+setAlpha(255));
 			}
 		}
 		return cadreImage;
+		
+		/*for (int i=i_deb;i<i_fin;i++){
+			for (int j=j_deb;j<j_fin;j++){
+				if(i>=i_deb && i<i_fin && j>=j_deb && j<j_fin){
+					couleur=couleurPixel(cadreImage,i,j);
+					//couleur=couleurPixel(cadreImage,i,j);
+					r=getR(couleur);
+					g=getG(couleur);
+					b=getB(couleur);
+					gris=(r+b+g)/3;
+					image.setRGB(i, j,setR(gris)+setB(gris)+setG(gris));
+				}else{
+					image.setRGB(i, j, cadreImage.getRGB(i, j));
+				}
+			}
+		}
+		return image;*/
 	}
 
 	//copier une buffered image
@@ -282,6 +296,10 @@ public class Outil {
 	public int getB(int rgb){
 		return rgb  & 0XFF;
 	}
+	
+	public int setAlpha(int rgb){
+		return (rgb & 0XFF) << 24;
+	}
 
 	public int setR(int rgb){
 		return (rgb & 0XFF) << 16;
@@ -318,10 +336,17 @@ public class Outil {
 	}
 	
 	public BufferedImage decouper(BufferedImage cadreImage, int[] selection){
+		//BufferedImage image = new BufferedImage(selection[2]-selection[0], selection[3]-selection[1],BufferedImage.TYPE_INT_ARGB);
+		/*BufferedImage image=resize(cadreImage, selection[2]-selection[0], selection[3]-selection[1]);
+		Graphics g = image.getGraphics();
+	    g.drawImage(cadreImage, 0, 0, image.getWidth(), image.getHeight(), selection[0], selection[1], selection[2], selection[3], null);
+	    g.dispose();
+	    return image;*/
+		
 		BufferedImage image = new BufferedImage(selection[2]-selection[0], selection[3]-selection[1],BufferedImage.TYPE_INT_ARGB);
 		for (int i=0; i<selection[2]-selection[0]; i++){
 			for(int j=0; j<selection[3]-selection[1]; j++){
-				image.setRGB(i, j, cadreImage.getRGB(i+selection[0], j+selection[1]));
+				image.setRGB(i, j, cadreImage.getRGB(i+selection[0], j+selection[1])+setAlpha(255));
 			}
 		}
 		return image;
