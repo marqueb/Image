@@ -464,6 +464,7 @@ public class Modele {
 		cadreImage.getImageScroller().setViewportView(icon);
 		cadreImage.getImageScroller().getVerticalScrollBar().setValue(x);
 		cadreImage.getImageScroller().getHorizontalScrollBar().setValue(y);
+		//interfaceGraphique.
 	}
 
 	public boolean existeSelection(){
