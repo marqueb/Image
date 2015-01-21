@@ -216,6 +216,10 @@ public class Modele {
 	}
 
 	public void imagris(){
+		/*CadreImage cadreImage=cadreImageCourant();
+		cadreImage.setImage(outil.imagris(cadreImage.getImage(), existeSelection(),selection()));
+		actualiserImageIcon();*/
+		
 		CadreImage tmp=listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
 		outil.imagris(tmp.getImage(), existeSelection(), selection());
 		actualiserImageIcon();
@@ -751,6 +755,22 @@ public class Modele {
 		disty1=y-yPrec;
 		distx2=xCour-x;
 		disty2=yCour-y;
+	}
+	
+	public void annulerSelection(){
+		xPrec=-1;
+		yPrec=-1;
+		xCour=-1;
+		yCour=-1;
+		this.actualiserImageIcon();
+	}
+	
+	public void decouper(){
+		if(this.existeSelection()){
+			CadreImage cadreImage=cadreImageCourant();
+			cadreImage.setImage(outil.decouper(cadreImage.getImage(), selection()));
+			actualiserImageIcon();
+		}
 	}
 }
 

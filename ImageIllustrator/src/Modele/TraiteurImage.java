@@ -226,7 +226,7 @@ public class TraiteurImage {
 
 
 
-	public BufferedImage  redimenssioner(int largeur, int hauteur,	int newlargeur, int newhauteur) {
+	public BufferedImage redimenssioner(int largeur, int hauteur,	int newlargeur, int newhauteur) {
 		Outil outil = new Outil();
 		BufferedImage image= new BufferedImage(newlargeur, newhauteur,BufferedImage.TYPE_INT_ARGB);
 		for (int i=0;i<newlargeur;i++){

@@ -17,15 +17,15 @@ public class ControlerSouris extends MouseMotionAdapter implements MouseListener
 	}
 
 	public void mouseMoved(MouseEvent e){
-		controler.sourisBouge(e.getX(), e.getY());
+		controler.sourisBouge(e.getX(), e.getY(), ((JLabel)e.getSource()).bounds().width, ((JLabel)e.getSource()).bounds().height);
 	}
 	
 	public void mouseEntered(MouseEvent e){
-		controler.sourisEntre(e.getX(), e.getY());
+		controler.sourisEntre(e.getX(), e.getY(), ((JLabel)e.getSource()).bounds().width, ((JLabel)e.getSource()).bounds().height);
 	}
 	
 	public void mouseExited(MouseEvent e){
-		controler.sourisSort(e.getX(), e.getY());
+		controler.sourisSort(e.getX(), e.getY(), ((JLabel)e.getSource()).bounds().width, ((JLabel)e.getSource()).bounds().height);
 	}	
 
 	@Override

@@ -42,7 +42,9 @@ public class Controler{
 		selectionActive=false;
 		ajustementSelection=false;
 		deplacementScroll=false;
-		if(!modele.getListCadreImage().isEmpty()){	it.rafraichirComponentOption();}
+		if(!modele.getListCadreImage().isEmpty()){	
+			it.rafraichirComponentOption();
+		}
 	}
 
 	public void annuler()
@@ -111,7 +113,9 @@ public class Controler{
 
 	public void changerOnglet(){
 		init();
-		modele.actualiserImageIcon();
+		if(modele.existeSelection()){
+			modele.annulerSelection();
+		}
 	}
 
 	public void fermerOnglet(Object o){
@@ -122,9 +126,15 @@ public class Controler{
 		isRGB=!isRGB;
 	}
 
-	public void sourisBouge(int x, int y){
+	public void sourisBouge(int x, int y, int u, int v){
+		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
+		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
 		if(echantillonageActif){
-			modele.afficherCouleurPixel(x, y, isRGB);
+			if(modele.estDansImage(x, y)){
+				modele.afficherCouleurPixel(x, y, isRGB);
+			}else{
+				modele.enleverCouleurPixel();
+			}
 		}
 	}
 	
@@ -182,8 +192,10 @@ public class Controler{
 		});
 		//(new ControlerEgalisation(modele));
 	}
-	public void sourisEntre(int x, int y){
-		if(echantillonageActif){
+	public void sourisEntre(int x, int y, int u, int v){
+		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
+		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
+		if(echantillonageActif && modele.estDansImage(x, y)){
 			modele.afficherCouleurPixel(x, y, isRGB);
 		}
 		if(selectionActive){
@@ -191,7 +203,9 @@ public class Controler{
 		}
 	}
 
-	public void sourisSort(int x, int y){
+	public void sourisSort(int x, int y, int u, int v){
+		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
+		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
 		if(echantillonageActif){
 			modele.enleverCouleurPixel();
 		}
@@ -294,6 +308,11 @@ public class Controler{
 	{
 		modele.memoriseImage();
 		it.ajouterComponentChoixTailleFiltre(TypeFiltre.GAUSSIEN);
+	}
+	
+	public void decouper(){
+		modele.decouper();
+		modele.annulerSelection();
 	}
 	
 	public void addControlerEgalisation(JMenuItem egalisation){
@@ -399,16 +418,18 @@ public class Controler{
 	}
 
 	public void addRedimensionnerValider(JButton valider) {
-	//	valider.addActionListener(new ControlerRedimensionnerValider(modele));	
+		valider.addActionListener(new ControlerRedimensionnerValider(modele));	
 	}
 
 	public void addControlerEtalement(JMenuItem etalement) {
 		etalement.addActionListener(new ControlerEtalement(modele));	
-		
 	}
 
 	public void addControlerInverser(JMenuItem inverser) {
 		inverser.addActionListener(new ControlerInverser(modele));	
-		
+	}
+	
+	public void addControlerDecouper(JMenuItem decouper){
+		decouper.addActionListener(new ControlerDecouper(this));
 	}
 }

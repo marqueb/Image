@@ -539,10 +539,10 @@ public class InterfaceGraphique implements Runnable{
 		principal.add(quitter);*/
 
 
-		/*		//Edition
+				//Edition
 		JMenu edition = new JMenu("Edition");
 		//Edition => copier
-		JMenuItem copier = new JMenuItem("Copier");
+		/*JMenuItem copier = new JMenuItem("Copier");
 		edition.add(copier);
 		//Edition => coller
 		JMenuItem coller = new JMenuItem("Coller");
@@ -552,10 +552,11 @@ public class InterfaceGraphique implements Runnable{
 		edition.add(annuler);
 		//Edition => refaire
 		JMenuItem refaire = new JMenuItem("Refaire");
-		edition.add(refaire);
+		edition.add(refaire);*/
 		//Edition => refaire
 		JMenuItem decouper = new JMenuItem("Decouper");
-		edition.add(decouper);*/
+		controler.addControlerDecouper(decouper);
+		edition.add(decouper);
 
 		//Image
 		JMenu image = new JMenu("Image");
@@ -638,7 +639,7 @@ public class InterfaceGraphique implements Runnable{
 		//Ajout barre Principal à barre
 		barre.add(principal);
 		//Ajout barre Edition à barre
-		//barre.add(edition);
+		barre.add(edition);
 		//Ajout barre Image à barre
 		barre.add(image);
 		//Ajout barre filtre à barre
