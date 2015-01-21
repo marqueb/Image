@@ -56,7 +56,7 @@ public class InterfaceGraphique implements Runnable{
 	private Histogramme histo;
 	private JSlider sliderFusion = null, sliderChoixTailleFiltre = null;
 	private JComboBox choixRgbYuv;
-	private JButton afficherHisto;
+	private JButton afficherHisto, segmenter;
 
 	public Image chargerImage(String bouton){
 		Image img=null;
@@ -569,9 +569,6 @@ public class InterfaceGraphique implements Runnable{
 		redimensionner.setEnabled(false);
 		image.add(redimensionner);
 		controler.addControlerRedimenssioner(redimensionner);
-		//Image => Segmenter
-		JMenuItem  segmenter = new JMenuItem("Segmenter");
-		image.add(segmenter);
 		 //Image => Transformation
 		JMenu  transformation = new JMenu("Transformation");      
 		//Image => transformation => fusion
@@ -711,6 +708,13 @@ public class InterfaceGraphique implements Runnable{
 		controler.addControlerAfficherHisto(afficherHisto);
 		afficherHisto.setVisible(false);
 		panelOption.add(afficherHisto);
+
+		//Image => Segmenter
+		segmenter = new JButton("Extraire le 1er plan");
+		segmenter.setEnabled(false);
+		panelOption.add(segmenter);
+		controler.addControlerSegmentation(segmenter);
+		
 		panelInfo = new JPanel();
 		PixelCouleur= new JTextArea();
 		panelInfo.add(PixelCouleur);
@@ -843,6 +847,11 @@ public class InterfaceGraphique implements Runnable{
 
 	public void setFrameRedim(JFrame frameRedim) {
 		this.frameRedim = frameRedim;
+	}
+	
+	public JButton getButtonSegmenter()
+	{
+		return this.segmenter;
 	}
 
 }
