@@ -49,7 +49,7 @@ public class InterfaceGraphique implements Runnable{
 	private JTabbedPane tabbedPane;
 	private Modele modele;
 	private Controler controler;
-	private JMenuItem sauvegarde, couleurPixel, fusion, imagris, moyen,egalisation,redimensionner,etalement,inverser ;
+	private JMenuItem sauvegarde, couleurPixel, fusion, imagris, moyen, egalisation, redimensionner, etalement, inverser, decouper, annuler, refaire ;
 	private CheckboxGroup groupe;
 	private Checkbox box1, box2;
 	private JCheckBox rouge,vert,bleu, luminance, chrominanceU , chrominanceV;
@@ -508,6 +508,7 @@ public class InterfaceGraphique implements Runnable{
 		getEgalisation().setEnabled(enable);
 		getEtalement().setEnabled(enable);
 		getInverser().setEnabled(enable);
+		decouper.setEnabled(enable);
 		//moyen.setEnabled(enable);
 	}
 
@@ -551,15 +552,19 @@ public class InterfaceGraphique implements Runnable{
 		edition.add(copier);
 		//Edition => coller
 		JMenuItem coller = new JMenuItem("Coller");
-		edition.add(coller);
+		edition.add(coller);*/
 		//Edition => annuler
-		JMenuItem annuler = new JMenuItem("Annuler");
+		annuler = new JMenuItem("Annuler");
 		edition.add(annuler);
+		controler.addControlerAnnuler(annuler);
+		annuler.setEnabled(false);
 		//Edition => refaire
-		JMenuItem refaire = new JMenuItem("Refaire");
-		edition.add(refaire);*/
-		//Edition => refaire
-		JMenuItem decouper = new JMenuItem("Decouper");
+		refaire = new JMenuItem("Refaire");
+		edition.add(refaire);
+		controler.addControlerRefaire(refaire);
+		refaire.setEnabled(false);
+		//Edition => decouper
+		decouper = new JMenuItem("Decouper");
 		controler.addControlerDecouper(decouper);
 		edition.add(decouper);
 
@@ -859,5 +864,20 @@ public class InterfaceGraphique implements Runnable{
 		return this.segmenter;
 	}
 
+	public JMenuItem getAnnuler() {
+		return annuler;
+	}
+
+	public void setAnnuler(JMenuItem annuler) {
+		this.annuler = annuler;
+	}
+
+	public JMenuItem getRefaire() {
+		return refaire;
+	}
+
+	public void setRefaire(JMenuItem refaire) {
+		this.refaire = refaire;
+	}
 }
 

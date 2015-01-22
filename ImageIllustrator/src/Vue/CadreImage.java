@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -16,6 +17,8 @@ public class CadreImage extends JComponent{
 	private String nomFichier;
 	private JScrollPane imageScroller;
 	private int maxScrollX, maxScrollY;
+	private ArrayList<BufferedImage> annuler;
+	private ArrayList<BufferedImage> refaire;
 
 	//constructeur a implementer
 	public CadreImage(BufferedImage i)
@@ -24,6 +27,8 @@ public class CadreImage extends JComponent{
 		imageIcon = new ImageIcon(image);
 		buffer = image.createGraphics();
 		imageScroller=new JScrollPane();
+		annuler = new ArrayList<BufferedImage>();
+		refaire = new ArrayList<BufferedImage>();
 	}
 
 	public CadreImage()
@@ -100,5 +105,21 @@ public class CadreImage extends JComponent{
 
 	public void setMaxScrollY(int maxScrollY) {
 		this.maxScrollY = maxScrollY;
+	}
+
+	public ArrayList<BufferedImage> getAnnuler() {
+		return annuler;
+	}
+
+	public void setAnnuler(ArrayList<BufferedImage> annuler) {
+		this.annuler = annuler;
+	}
+
+	public ArrayList<BufferedImage> getRefaire() {
+		return refaire;
+	}
+
+	public void setRefaire(ArrayList<BufferedImage> refaire) {
+		this.refaire = refaire;
 	}
 }

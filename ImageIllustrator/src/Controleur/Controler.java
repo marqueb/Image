@@ -117,6 +117,21 @@ public class Controler{
 		if(modele.existeSelection()){
 			//modele.annulerSelection();
 		}
+		if(!modele.getListImage().isEmpty()){
+			if(modele.cadreImageCourant().getAnnuler().isEmpty()){
+				it.getAnnuler().setEnabled(false);
+			}else{
+				it.getAnnuler().setEnabled(true);
+			}
+			if(modele.cadreImageCourant().getRefaire().isEmpty()){
+				it.getRefaire().setEnabled(false);
+			}else{
+				it.getRefaire().setEnabled(true);
+			}
+		}else{
+			it.getAnnuler().setEnabled(false);
+			it.getRefaire().setEnabled(false);
+		}
 	}
 
 	public void fermerOnglet(Object o){
@@ -318,6 +333,16 @@ public class Controler{
 		modele.annulerSelection();
 	}
 	
+	public void annuler2(){
+		modele.annuler();
+		//modele.annulerSelection();
+	}
+	
+	public void refaire(){
+		modele.refaire();
+		//modele.annulerSelection();
+	}
+	
 	public void addControlerEgalisation(JMenuItem egalisation){
 		egalisation.addActionListener(new ControlerEgalisation(modele));
 	}
@@ -436,8 +461,15 @@ public class Controler{
 		decouper.addActionListener(new ControlerDecouper(this));
 	}
 	
-	public void addControlerSegmentation(JButton segmenter)
-	{
+	public void addControlerSegmentation(JButton segmenter){
 		segmenter.addActionListener(new ControlerSegmentation(this));
+	}
+	
+	public void addControlerAnnuler(JMenuItem annuler){
+		annuler.addActionListener(new ControlerAnnuler(this));
+	}
+	
+	public void addControlerRefaire(JMenuItem refaire){
+		refaire.addActionListener(new ControlerRefaire(this));
 	}
 }
