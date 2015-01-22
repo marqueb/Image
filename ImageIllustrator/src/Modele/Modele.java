@@ -99,17 +99,15 @@ public class Modele {
 		return (x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight());
 	}	
 
-
-
-	public void redimensionner( int newlargeur,int newhauteur) {
-		CadreImage  cadre = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
-		int largeur=cadre.getImage().getWidth();
-		int hauteur=cadre.getImage().getHeight();
-		cadre.setImage(traiteurImage.redimenssioner(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
+	public void redimensionner( int newLargeur,int newHauteur) {
+		CadreImage  cadre = cadreImageCourant();
+		cadre.setImage(traiteurImage.redimenssionerLargeur(cadre.getImage(), newLargeur));
+		//traiteurImage.redimenssionerHauteur(cadre.getImage(), newHauteur);
+		//cadre.setImage(traiteurImage.redimenssioner(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
 		actualiserImageIcon();
-		cadre.setVisible(true);
+		/*cadre.setVisible(true);
 		interfaceGraphique.getFrame().repaint();
-		interfaceGraphique.getFrame().validate();
+		interfaceGraphique.getFrame().validate();*/
 	}
 	
 	private JPanel createPanelCadreImage(CadreImage cadre)

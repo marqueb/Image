@@ -23,7 +23,7 @@ public class TraiteurImage {
 	public TraiteurImage(Outil outil){
 		this.outil=outil;
 	}
-	
+
 	private static final float[][] MOYENNE = {
 		{1.0f, 1.0f, 1.0f},
 		{1.0f, 1.0f, 1.0f},
@@ -228,12 +228,12 @@ public class TraiteurImage {
 		BufferedImage newimage= new BufferedImage(newlargeur, newhauteur,BufferedImage.TYPE_INT_ARGB);
 		double ratio=(double)((double)(newlargeur*newhauteur)/(double)(largeur*hauteur));
 		double ratiocourant;
-	/*	for (int i=0;i<newlargeur;i++){
+		/*	for (int i=0;i<newlargeur;i++){
 			for(int j=0; j<newhauteur; j++){
-				
+
 				pixel=image.getRGB((int)(i/ratio),(int)(j/ratio));
 				newimage.setRGB(i, j, outil.setR(outil.getR(pixel))+outil.setB(outil.getB(pixel))+outil.setG(outil.getG(pixel))+outil.setAlpha(255));				
-				
+
 				if(ratiocourant!=0){
 					newimage.setRGB(i, j, outil.setR(outil.getR(pixel))+outil.setB(outil.getB(pixel))+outil.setG(outil.getG(pixel))+outil.setAlpha(255));	
 				}
@@ -261,11 +261,41 @@ public class TraiteurImage {
 					//newimage.setRGB(icourant, jcourant, outil.setR((int) (r*ratio))+outil.setB((int) (g*ratio))+outil.setG((int) (g*ratio))+outil.setAlpha(255));
 					reste=ratio+1;
 				}
-				
-			jcourant++;	
+
+				jcourant++;	
 			}
 			icourant++;
 		}
 		return newimage;
+	}
+
+	public BufferedImage redimenssionerLargeur(BufferedImage image, int newLargeur){
+		BufferedImage nouvelle=outil.resize(image, newLargeur, image.getHeight());
+		double ratio = ((double)newLargeur)/((double)image.getWidth());
+		double k, reste, ratioCourant;
+		for(int j=0; j<image.getHeight();j++){
+			for(int i=0; i<image.getWidth();i++){
+				k=i*ratio;
+				reste=k;
+				while(reste>1){
+					reste--;
+				}
+				ratioCourant=k-(1-reste);
+				k=k-reste;
+				nouvelle.setRGB(((int)k), j,((int) (nouvelle.getRGB(((int)k), j)+(1-reste)*image.getRGB(i, j))));
+				k++;
+				while(ratioCourant>1){
+					nouvelle.setRGB(((int)k),  j, image.getRGB(i, j));
+					k++;
+					ratioCourant--;
+				}
+				nouvelle.setRGB(((int)k), j,((int) (ratioCourant)*image.getRGB(i, j)));				
+			}
+		}
+		return nouvelle;
+	}
+
+	public void redimenssionerHauteur(CadreImage cadreImage, int newHauteur){
+		//cadreImage.setImage(outil.resize(cadreImage.getImage(), newW, newH));
 	}
 }
