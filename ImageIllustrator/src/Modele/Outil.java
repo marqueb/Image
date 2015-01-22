@@ -132,22 +132,6 @@ public class Outil {
 		}
 		return cadreImage;
 		
-		/*for (int i=i_deb;i<i_fin;i++){
-			for (int j=j_deb;j<j_fin;j++){
-				if(i>=i_deb && i<i_fin && j>=j_deb && j<j_fin){
-					couleur=couleurPixel(cadreImage,i,j);
-					//couleur=couleurPixel(cadreImage,i,j);
-					r=getR(couleur);
-					g=getG(couleur);
-					b=getB(couleur);
-					gris=(r+b+g)/3;
-					image.setRGB(i, j,setR(gris)+setB(gris)+setG(gris));
-				}else{
-					image.setRGB(i, j, cadreImage.getRGB(i, j));
-				}
-			}
-		}
-		return image;*/
 	}
 
 	//copier une buffered image
@@ -158,9 +142,7 @@ public class Outil {
 		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
 	}
 
-	//retourne un tableau 2d correspondant ï¿œ la reprï¿œsentation des effectifs de chaques valeurs des 3 composantes R, G et B.
-	//tab[x][0] : effectif de la valeurs x pour la composante rouge (1: green; 2: blue)
-	public int[][] getTabRgbHisto(BufferedImage ima)
+	public int[][] getTabRgbHisto(BufferedImage ima, boolean existeSelection, int[] selection)
 	{
 		int[][] tab = new int[3][256];
 		int rgb = 0, i_deb, i_fin, j_deb, j_fin;
@@ -173,17 +155,17 @@ public class Outil {
 				tab[i][j] = 0;
 			}
 		}
-		/*if(existeSelection){
+		if(existeSelection){
 			i_deb=selection[0];
 			i_fin=selection[2];
 			j_deb=selection[1];
 			j_fin=selection[3];
-		}else{*/
+		}else{
 			i_deb=0;
 			i_fin=ima.getWidth();
 			j_deb=0;
 			j_fin=ima.getHeight();
-		//}
+		}
 		//cacule des effectifs de chaques valeurs pour chaques composantes
 		for (int i=i_deb;i<i_fin;i++){
 			for (int j=j_deb;j<j_fin;j++){
@@ -196,10 +178,10 @@ public class Outil {
 		return tab;
 	}
 
-	public int[][] getTabyuvHisto(BufferedImage ima)
+	public int[][] getTabyuvHisto(BufferedImage ima, boolean existeSelection, int[] selection)
 	{
 		int[][] yuv = new int[3][256];
-		int rgb = 0,r,g,b,y,u,v;
+		int rgb = 0,r,g,b,y,u,v, i_deb, i_fin, j_deb, j_fin;
 
 
 		//initialisation du tableau ï¿œ 0
@@ -212,10 +194,20 @@ public class Outil {
 		}
 
 		//cacule des effectifs de chaques valeurs pour chaques composantes
-		for(int i = 0; i<ima.getTileWidth(); i++)
-		{
-			for(int j = 0; j<ima.getTileHeight(); j++)
-			{
+		if(existeSelection){
+			i_deb=selection[0];
+			i_fin=selection[2];
+			j_deb=selection[1];
+			j_fin=selection[3];
+		}else{
+			i_deb=0;
+			i_fin=ima.getWidth();
+			j_deb=0;
+			j_fin=ima.getHeight();
+		}
+		//cacule des effectifs de chaques valeurs pour chaques composantes
+		for (int i=i_deb;i<i_fin;i++){
+			for (int j=j_deb;j<j_fin;j++){
 
 				rgb = ima.getRGB(i, j);
 				r=getR(rgb);
@@ -224,14 +216,21 @@ public class Outil {
 				y=(int) ((r*0.299)+ (0.587*g)+ (0.114*b));
 				yuv[0][y]++;			
 				u=(int)(-(r*0.147)- (0.289*g)+ (0.436*b))+128;
+				if(u>255)
+					u=255;
+				if(u<0)
+					u=0;
 				yuv[1][u]++;
 				v=(int)((r*0.615)- (0.515*g)- (0.100*b))+128;
+				if(v>255)
+					v=255;
+				if(v<0)
+					v=0;				
 				yuv[2][v]++;
 			}
 		}	
 		return yuv;
 	}
-	
 
 	//tab[x] : effectif de la valeurs x pour la composante rouge (1: green; 2: blue)
 	public int[] getTabgrisHisto(BufferedImage ima)

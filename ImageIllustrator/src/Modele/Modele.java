@@ -100,23 +100,16 @@ public class Modele {
 	}	
 
 
+
 	public void redimensionner( int newlargeur,int newhauteur) {
 		CadreImage  cadre = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
-			int largeur=cadre.getImage().getWidth();
-			int hauteur=cadre.getImage().getHeight();
-
-			BufferedImage res = traiteurImage.redimenssioner(largeur,hauteur,newlargeur,newhauteur, cadre.getImage());
-//			cadre.setImageIcon(new ImageIcon(res));
-//			JLabel icon=new JLabel(cadre.getImageIcon());
-//			cadre.getImageScroller().setViewportView(icon);
-
-//			System.out.println(((JScrollPane)interfaceGraphique.getTabbedPane().getSelectedComponent()).setViewportView(arg0));
-			
-			actualiserImageIcon(res);
-			interfaceGraphique.getFrame().repaint();
-			interfaceGraphique.getFrame().validate();
-			
-			System.out.println(this.getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).toString());
+		int largeur=cadre.getImage().getWidth();
+		int hauteur=cadre.getImage().getHeight();
+		cadre.setImage(traiteurImage.redimenssioner(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
+		actualiserImageIcon();
+		cadre.setVisible(true);
+		interfaceGraphique.getFrame().repaint();
+		interfaceGraphique.getFrame().validate();
 	}
 	
 	private JPanel createPanelCadreImage(CadreImage cadre)
@@ -129,11 +122,24 @@ public class Modele {
 	}
 	
 	public void inverser(){
-		int pixel,r,g,b;
+
 		initAnnulerRefaire(cadreImageCourant());
+		int pixel,r,g,b,i_deb, i_fin, j_deb, j_fin;
 		BufferedImage image= cadreImageCourant().getImage();
-		for(int i=0;i<image.getWidth();i++){
-			for(int j=0;j<image.getHeight();j++){				
+		if(existeSelection()){
+			int[] selection=selection();
+			i_deb=selection[0];
+			i_fin=selection[2];
+			j_deb=selection[1];
+			j_fin=selection[3];
+		}else{
+			i_deb=0;
+			i_fin=image.getWidth();
+			j_deb=0;
+			j_fin=image.getHeight();
+		}
+		for (int i=i_deb;i<i_fin;i++){
+			for (int j=j_deb;j<j_fin;j++){		
 				pixel = image.getRGB(i, j);
 				r=outil.getR(pixel);
 				g=outil.getG(pixel);
@@ -142,17 +148,30 @@ public class Modele {
 			}
 		}
 		cadreImageCourant().setImage(image);
-		interfaceGraphique.getFrame().repaint();
+		actualiserImageIcon();
 	}
-	
+
 	public void etalement() {
 		double ratior=0,ratiob=0,ratiog=0;
+		int i_deb,i_fin,j_deb,j_fin;
 		int minr=255,ming=255,minb=255,maxr=0,maxg=0,maxb=0;
 		int pixel,r,g,b;
 		initAnnulerRefaire(cadreImageCourant());
 		BufferedImage image= cadreImageCourant().getImage();
-		for(int i=0;i<image.getWidth();i++){
-			for(int j=0;j<image.getHeight();j++){	
+		if(existeSelection()){
+			int[] selection=selection();
+			i_deb=selection[0];
+			i_fin=selection[2];
+			j_deb=selection[1];
+			j_fin=selection[3];
+		}else{
+			i_deb=0;
+			i_fin=image.getWidth();
+			j_deb=0;
+			j_fin=image.getHeight();
+		}
+		for (int i=i_deb;i<i_fin;i++){
+			for (int j=j_deb;j<j_fin;j++){	
 				pixel = image.getRGB(i, j);
 				r=outil.getR(pixel);
 				g=outil.getG(pixel);
@@ -174,8 +193,8 @@ public class Modele {
 		ratior=255/(maxr-minr);
 		ratiog=255/(maxg-ming);
 		ratiob=255/(maxb-minb);
-		for(int i=0;i<image.getWidth();i++){
-			for(int j=0;j<image.getHeight();j++){	
+		for (int i=i_deb;i<i_fin;i++){
+			for (int j=j_deb;j<j_fin;j++){	
 				pixel = image.getRGB(i, j);
 				r=outil.getR(pixel);
 				g=outil.getG(pixel);
@@ -184,11 +203,12 @@ public class Modele {
 			}
 		}
 		cadreImageCourant().setImage(image);
-		interfaceGraphique.getFrame().repaint();
-		  
+		actualiserImageIcon();
+
 	}
 
-	public void egalisation (){
+	public void egalisation (){/*
+<<<<<<< HEAD
 		  double ratio;
 		  int pixel,r,g,b;
 		  int imageCumule[]=new int[256];
@@ -211,7 +231,42 @@ public class Modele {
 		  cadreImageCourant().setImage(image);
 		  interfaceGraphique.getFrame().validate();
 		  //interfaceGraphique.getFrame().repaint();
+=======*/
+		double ratio;
+		int pixel,r,g,b,i_deb,i_fin,j_deb,j_fin;
+		int imageCumule[]=new int[256];
+		initAnnulerRefaire(cadreImageCourant());
+		BufferedImage image= cadreImageCourant().getImage();
+		ratio = 255.0 / (image.getWidth()*image.getHeight());
+		outil.histogrammeCumule(image,imageCumule);
+		if(existeSelection()){
+			int[] selection=selection();
+			i_deb=selection[0];
+			i_fin=selection[2];
+			j_deb=selection[1];
+			j_fin=selection[3];
+		}else{
+			i_deb=0;
+			i_fin=image.getWidth();
+			j_deb=0;
+			j_fin=image.getHeight();
+		}
+		for (int i=i_deb;i<i_fin;i++){
+			for (int j=j_deb;j<j_fin;j++){	
+				pixel = image.getRGB(i, j);
+				r=outil.getR(pixel);
+				g=outil.getG(pixel);
+				b=outil.getB(pixel);
+				if(r==255 && b == 255 && g==255)
+					image.setRGB(i, j,outil.setR(255)+outil.setG(255)+outil.setB(255)+outil.setAlpha(255));
+				else
+					image.setRGB(i, j,outil.setR((int) (imageCumule[r]*ratio))+outil.setG((int) (imageCumule[g]*ratio))+outil.setB((int) (imageCumule[b]*ratio))+outil.setAlpha(255));
+			}
+		}
+		cadreImageCourant().setImage(image);
+		actualiserImageIcon();
 	}
+
 	
 	public void afficherCouleurPixel(int x, int y, boolean isRGB){
 		//recupere la valeur du pixel en fonction de l'image et des coordonnées
@@ -235,32 +290,10 @@ public class Modele {
 	}
 
 	public void imagris(){
-		/*CadreImage cadreImage=cadreImageCourant();
-		cadreImage.setImage(outil.imagris(cadreImage.getImage(), existeSelection(),selection()));
-		actualiserImageIcon();*/
-		
 		CadreImage cadreImage=cadreImageCourant();
 		initAnnulerRefaire(cadreImage);
 		outil.imagris(cadreImage.getImage(), existeSelection(), selection());
 		actualiserImageIcon();
-		
-		/*int i=interfaceGraphique.getTabbedPane().getSelectedIndex();
-		CadreImage cadreImage=cadreImageCourant();
-		BufferedImage image=outil.imagris(cadreImage.getImage(), existeSelection(), selection());
-		CadreImage nouveau=outil.initCadre(image, controler);
-		nouveau.setNomFichier(cadreImage.getNomFichier());
-		//ajoute le cadre image à la liste de cadre image
-		listCadreImage.remove(i);
-		listCadreImage.add(i,nouveau);
-		interfaceGraphique.getTabbedPane().remove(i);
-		interfaceGraphique.getTabbedPane().add(nouveau.getImageScroller(),i);
-		//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image, ajoute le bouton creer a liste de bouton
-		listBoutonFermeture.remove(i);
-		listBoutonFermeture.add(i,interfaceGraphique.ajouterOnglet(nouveau));
-		interfaceGraphique.getFrame().validate();
-		setScroll(nouveau);
-		nouveau.getImageScroller().getHorizontalScrollBar().setValue(0);
-		nouveau.getImageScroller().getVerticalScrollBar().setValue(0);*/
 	}
 
 	public void fermerOnglet(Object j){
@@ -302,7 +335,7 @@ public class Modele {
 	public void validerFusion()
 	{
 		interfaceGraphique.retirerComponentFusion();
-		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()),outil.getTabyuvHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
+		//interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()),outil.getTabyuvHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
 	}
 
 	//appel� lorsqu'on change le pourcentage d'image avec le scroll
@@ -471,9 +504,9 @@ public class Modele {
 
 	public void calculerHistogrammeRGB()
 	{
-		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()),outil.getTabyuvHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
+		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage(), this.existeSelection(), this.selection()),outil.getTabyuvHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage(), this.existeSelection(), this.selection()));
 	}
-
+	
 	public void appliquerFiltre(float[][] noyau)
 	{
 		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
@@ -829,27 +862,7 @@ public class Modele {
 			CadreImage cadreImage=cadreImageCourant();
 			initAnnulerRefaire(cadreImage);
 			cadreImage.setImage(outil.decouper(cadreImage.getImage(), selection()));
-			
-			/*CadreImage cadreImage=cadreImageCourant();
-			int i=interfaceGraphique.getTabbedPane().getSelectedIndex();
-			BufferedImage image=outil.decouper(cadreImage.getImage(), selection());
-			CadreImage nouveau=outil.initCadre(image, controler);
-			nouveau.setNomFichier(cadreImage.getNomFichier());
-			//ajoute le cadre image à la liste de cadre image
-			listCadreImage.remove(i);
-			listCadreImage.add(i,nouveau);
-			interfaceGraphique.getTabbedPane().remove(i);
-			interfaceGraphique.getTabbedPane().add(nouveau.getImageScroller(),i);
-			//creer l'onglet en lui affectant le cadre image, le selectionne et affecte le controleur au cadre image, ajoute le bouton creer a liste de bouton
-			listBoutonFermeture.remove(i);
-			listBoutonFermeture.add(i,interfaceGraphique.ajouterOnglet(nouveau));
-			interfaceGraphique.getFrame().validate();
-			setScroll(nouveau);
-			nouveau.getImageScroller().getHorizontalScrollBar().setValue(0);
-			nouveau.getImageScroller().getVerticalScrollBar().setValue(0);
-			//cadreImage.setImage(outil.decouper(cadreImage.getImage(), selection()));
-			//actualiserImageIcon();
-		*/}
+		}
 	}
 	
 	public void annuler(){
