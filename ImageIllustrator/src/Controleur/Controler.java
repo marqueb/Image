@@ -466,8 +466,8 @@ public class Controler{
 		afficherHisto.addActionListener(new ControlerAfficherHisto(this.modele));
 	}
 
-	public void addRedimensionnerValider(JButton valider) {
-		valider.addActionListener(new ControlerRedimensionnerValider(modele));	
+	public void addRedimensionnerValider(JButton valider, JComboBox<String> boxTypeRedim) {
+		valider.addActionListener(new ControlerRedimensionnerValider(modele, boxTypeRedim));	
 	}
 
 	public void addControlerEtalement(JMenuItem etalement) {
