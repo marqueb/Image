@@ -45,6 +45,8 @@ public class Controler{
 		deplacementScroll=false;
 		if(flouActive){
 			it.retirerComponent();
+			modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
+			modele.actualiserImageIcon();
 			flouActive=false;
 		}
 		if(fusionActive){
@@ -68,6 +70,8 @@ public class Controler{
 	{
 		modele.actualiserImageIcon();
 		it.rafraichirComponentOption();
+		it.retirerComponent();
+		flouActive=false;
 		init();
 	}
 
@@ -127,6 +131,7 @@ public class Controler{
 		if(modele.existeSelection()){
 			//modele.annulerSelection();
 		}
+
 		if(!modele.getListImage().isEmpty()){
 			if(modele.cadreImageCourant().getAnnuler().isEmpty()){
 				it.getAnnuler().setEnabled(false);
@@ -349,11 +354,13 @@ public class Controler{
 	}
 
 	public void annuler2(){
+		init();
 		modele.annuler();
 		//modele.annulerSelection();
 	}
 
 	public void refaire(){
+		init();
 		modele.refaire();
 		//modele.annulerSelection();
 	}
@@ -479,7 +486,6 @@ public class Controler{
 	public void addControlerSegmentation(JButton segmenter){
 		segmenter.addActionListener(new ControlerSegmentation(this));
 	}
-
 
 	public void addControlerMoyen(JMenuItem moyen){
 		moyen.addActionListener(new ControlerFlouter(this));

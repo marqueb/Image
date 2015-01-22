@@ -228,7 +228,7 @@ public class Modele {
 		int imageCumule[]=new int[256];
 		initAnnulerRefaire(cadreImageCourant());
 		BufferedImage image= cadreImageCourant().getImage();
-		ratio = 255.0 / (image.getWidth()*image.getHeight());
+		
 		outil.histogrammeCumule(image,imageCumule);
 		if(existeSelection()){
 			int[] selection=selection();
@@ -242,6 +242,7 @@ public class Modele {
 			j_deb=0;
 			j_fin=image.getHeight();
 		}
+		ratio = 255.0 / ((i_fin-i_deb)*(j_fin-j_deb));
 		for (int i=i_deb;i<i_fin;i++){
 			for (int j=j_deb;j<j_fin;j++){	
 				pixel = image.getRGB(i, j);
@@ -254,7 +255,7 @@ public class Modele {
 					image.setRGB(i, j,outil.setR((int) (imageCumule[r]*ratio))+outil.setG((int) (imageCumule[g]*ratio))+outil.setB((int) (imageCumule[b]*ratio))+outil.setAlpha(255));
 			}
 		}
-		cadreImageCourant().setImage(image);
+		//cadreImageCourant().setImage(image);
 		actualiserImageIcon();
 	}
 
@@ -864,7 +865,6 @@ public class Modele {
 			interfaceGraphique.getAnnuler().setEnabled(false);
 		}
 		interfaceGraphique.getRefaire().setEnabled(true);
-		interfaceGraphique.retirerComponentFusion();
 		actualiserImageIcon();
 	}
 	
@@ -877,7 +877,6 @@ public class Modele {
 			interfaceGraphique.getRefaire().setEnabled(false);
 		}
 		interfaceGraphique.getAnnuler().setEnabled(true);
-		interfaceGraphique.retirerComponentFusion();
 		actualiserImageIcon();
 	}
 	
