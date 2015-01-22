@@ -33,11 +33,9 @@ import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
-import javax.swing.border.Border;
 
 import Controleur.Controler;
 import Controleur.ControlerBoutonFusion;
-import Controleur.ControlerFlouter;
 import Modele.Modele;
 import Modele.Outil;
 import Modele.TypeFiltre;

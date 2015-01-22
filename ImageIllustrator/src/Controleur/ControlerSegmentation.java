@@ -8,11 +8,6 @@ import static com.googlecode.javacv.cpp.opencv_imgproc.grabCut;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -85,22 +80,22 @@ public class ControlerSegmentation implements ActionListener{
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		CadreImage cadre = controler.getModele().getListCadreImage().get(controler.getModele().getInterfaceGraphique().getTabbedPane().getSelectedIndex());
-		BufferedImage image = cadre.getImage();
-
-		//System.out.println("java.library.path="+System.getProperty("java.library.path"));
-        
-		
-		System.out.println("Welcome to OpenCV " + Core.VERSION);
-		Mat m = new Mat(5, 10, CvType.CV_8UC1, new Scalar(0));
-		System.out.println("OpenCV Mat: " + m);
-		Mat mr1 = m.row(1);
-		mr1.setTo(new Scalar(1));
-		Mat mc5 = m.col(5);
-		mc5.setTo(new Scalar(5));
-		System.out.println("OpenCV Mat data:\n" + m.dump());
-
-		myGrabCut(image);
+//		CadreImage cadre = controler.getModele().getListCadreImage().get(controler.getModele().getInterfaceGraphique().getTabbedPane().getSelectedIndex());
+//		BufferedImage image = cadre.getImage();
+//
+//		//System.out.println("java.library.path="+System.getProperty("java.library.path"));
+//        
+//		
+//		System.out.println("Welcome to OpenCV " + Core.VERSION);
+//		Mat m = new Mat(5, 10, CvType.CV_8UC1, new Scalar(0));
+//		System.out.println("OpenCV Mat: " + m);
+//		Mat mr1 = m.row(1);
+//		mr1.setTo(new Scalar(1));
+//		Mat mc5 = m.col(5);
+//		mc5.setTo(new Scalar(5));
+//		System.out.println("OpenCV Mat data:\n" + m.dump());
+//
+//		myGrabCut(image);
 		
 
 
@@ -109,46 +104,46 @@ public class ControlerSegmentation implements ActionListener{
 
 
 	
-	public BufferedImage myGrabCut(BufferedImage bImage) {
+//	public BufferedImage myGrabCut(BufferedImage bImage) {
 		
-		int[] selection = controler.getModele().selection();
-		BufferedImage res = null;
-		//load an image
-        IplImage loadedImage = IplImage.createFrom(Outil.deepCopy(bImage));
-        int width = bImage.getWidth();
-        int height = bImage.getHeight();
-
-        //get the image in the format needed by grabCut
-        IplImage template = IplImage.create(width, height, CvType.CV_8U, 3);
-        IplImage image = IplImage.createIfNotCompatible(loadedImage, template);
-
-        //other parameters used in grabcut
-        IplImage mask = IplImage.create(width, height, 1, 1);
-        CvRect area = cvRect(selection[0], selection[2], selection[1]-selection[0], selection[3]-selection[2]); //This square is around Lenna's shoulder.
-        CvMat bgdModel = new CvMat();
-        CvMat fgdModel = new CvMat();
-
-        //run the grabcut algorithm
-        grabCut(image, mask, area, bgdModel, fgdModel, 0, Imgproc.GC_INIT_WITH_RECT); //CRASH ON THIS LINE
-        grabCut(image, mask, area, bgdModel, fgdModel, 2, Imgproc.GC_EVAL);
-
-        //show results
-        CanvasFrame canvas = new CanvasFrame("In (press any key)");
-        canvas.showImage(image);
-        canvas.waitKey();
-        canvas.setTitle("Out (press any key)");
-        canvas.showImage(image);
-        canvas.waitKey();
-        canvas.dispose();
-
-        //cleanup
-        image.release();
-        mask.release();
-        loadedImage.release();
-        template.release();
-        bgdModel.release();
-        fgdModel.release();
-
-        return res;
-	} 
+//		int[] selection = controler.getModele().selection();
+//		BufferedImage res = null;
+//		//load an image
+//        IplImage loadedImage = IplImage.createFrom(Outil.deepCopy(bImage));
+//        int width = bImage.getWidth();
+//        int height = bImage.getHeight();
+//
+//        //get the image in the format needed by grabCut
+//        IplImage template = IplImage.create(width, height, CvType.CV_8U, 3);
+//        IplImage image = IplImage.createIfNotCompatible(loadedImage, template);
+//
+//        //other parameters used in grabcut
+//        IplImage mask = IplImage.create(width, height, 1, 1);
+//        CvRect area = cvRect(selection[0], selection[2], selection[1]-selection[0], selection[3]-selection[2]); //This square is around Lenna's shoulder.
+//        CvMat bgdModel = new CvMat();
+//        CvMat fgdModel = new CvMat();
+//
+//        //run the grabcut algorithm
+//        grabCut(image, mask, area, bgdModel, fgdModel, 0, Imgproc.GC_INIT_WITH_RECT); //CRASH ON THIS LINE
+//        grabCut(image, mask, area, bgdModel, fgdModel, 2, Imgproc.GC_EVAL);
+//
+//        //show results
+//        CanvasFrame canvas = new CanvasFrame("In (press any key)");
+//        canvas.showImage(image);
+//        canvas.waitKey();
+//        canvas.setTitle("Out (press any key)");
+//        canvas.showImage(image);
+//        canvas.waitKey();
+//        canvas.dispose();
+//
+//        //cleanup
+//        image.release();
+//        mask.release();
+//        loadedImage.release();
+//        template.release();
+//        bgdModel.release();
+//        fgdModel.release();
+//
+//        return res;
+//	} 
 }
