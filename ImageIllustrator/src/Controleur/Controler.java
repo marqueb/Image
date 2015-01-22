@@ -40,6 +40,7 @@ public class Controler{
 		}
 		echantillonageActif=false;
 		selectionActive=false;
+		it.getButtonSegmenter().setEnabled(false);
 		ajustementSelection=false;
 		deplacementScroll=false;
 		if(!modele.getListCadreImage().isEmpty()){	
@@ -241,6 +242,7 @@ public class Controler{
 			}else{
 				init();
 				selectionActive=true;
+				it.getButtonSegmenter().setEnabled(true);
 				modele.setPrec(x, y);
 			}
 		}else{
@@ -269,6 +271,7 @@ public class Controler{
 			modele.deplacerScrollAjustement(x, y);
 			modele.ajustementSelection(x, y);
 			selectionActive=true;
+			it.getButtonSegmenter().setEnabled(true);
 			//modele.calculerHistogrammeRGB();
 		}
 	}
@@ -336,7 +339,7 @@ public class Controler{
 	}
 
 	public void addControlerRedimenssioner(JMenuItem redimensionner){
-	//	redimensionner.addActionListener(new ControlerRedimessionner(it));
+		redimensionner.addActionListener(new ControlerRedimessionner(it));
 	}
 	
 	public void addControlerCouleurPixel(JMenuItem couleurPixel){
@@ -431,5 +434,10 @@ public class Controler{
 	
 	public void addControlerDecouper(JMenuItem decouper){
 		decouper.addActionListener(new ControlerDecouper(this));
+	}
+	
+	public void addControlerSegmentation(JButton segmenter)
+	{
+		segmenter.addActionListener(new ControlerSegmentation(this));
 	}
 }

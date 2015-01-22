@@ -230,7 +230,7 @@ public class TraiteurImage {
 
 
 
-	public BufferedImage redimenssioner(int largeur, int hauteur,	int newlargeur, int newhauteur) {
+	public BufferedImage redimenssioner(int largeur, int hauteur,	int newlargeur, int newhauteur, BufferedImage im) {
 		Outil outil = new Outil();
 		BufferedImage image= new BufferedImage(newlargeur, newhauteur,BufferedImage.TYPE_INT_ARGB);
 		for (int i=0;i<newlargeur;i++){
@@ -245,6 +245,6 @@ public class TraiteurImage {
 		//cadre.setBuffer((Graphics2D) image.getGraphics());
 		//cadre.setImageIcon(new ImageIcon(image));
 		//cadre.repaint();
-		return image;
+		return Outil.resize(im, newlargeur, newhauteur);
 	}
 }

@@ -104,21 +104,28 @@ public class Modele {
 		CadreImage  cadre = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
 			int largeur=cadre.getImage().getWidth();
 			int hauteur=cadre.getImage().getHeight();
-			System.out.println(largeur+" "+hauteur+" "+newlargeur+" "+newhauteur);
 
-//			cadre.setSize(new Dimension(newlargeur,newhauteur));
-			listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(traiteurImage.redimenssioner(largeur,hauteur,newlargeur,newhauteur));
-			Graphics2D buffer=listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().createGraphics();
-			listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).repaint();
-			//CadreImage cadre1 = new CadreImage();
-			//cadre1.setImage(cadre.getImage());
-			//cadre1.setImageScroller(new JScrollPane());
-			//listCadreImage.remove(getInterfaceGraphique().getTabbedPane().getSelectedIndex());
-			//interfaceGraphique.getTabbedPane().getComponentAt(getInterfaceGraphique().getTabbedPane().getSelectedIndex()).set;
-			//listCadreImage.add(getInterfaceGraphique().getTabbedPane().getSelectedIndex(),cadre1);
-			actualiserImageIcon();
+			BufferedImage res = traiteurImage.redimenssioner(largeur,hauteur,newlargeur,newhauteur, cadre.getImage());
+//			cadre.setImageIcon(new ImageIcon(res));
+//			JLabel icon=new JLabel(cadre.getImageIcon());
+//			cadre.getImageScroller().setViewportView(icon);
+
+//			System.out.println(((JScrollPane)interfaceGraphique.getTabbedPane().getSelectedComponent()).setViewportView(arg0));
+			
+			actualiserImageIcon(res);
 			interfaceGraphique.getFrame().repaint();
 			interfaceGraphique.getFrame().validate();
+			
+			System.out.println(this.getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).toString());
+	}
+	
+	private JPanel createPanelCadreImage(CadreImage cadre)
+	{
+		JPanel res = new JPanel();
+		
+		
+		
+		return res;
 	}
 	
 	public void inverser(){
@@ -496,6 +503,20 @@ public class Modele {
 		cadreImage.getImageScroller().getHorizontalScrollBar().setValue(y);
 		//interfaceGraphique.getFrame().validate();
 		interfaceGraphique.getTabbedPane().setComponentAt(interfaceGraphique.getTabbedPane().getSelectedIndex(), cadreImage.getImageScroller());
+	}
+	
+	public void actualiserImageIcon(BufferedImage im){
+		CadreImage cadreImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex());
+		cadreImage.setImage(im);
+		cadreImage.setImageIcon(new ImageIcon(im));
+		JLabel icon=new JLabel(cadreImage.getImageIcon());
+		controler.addControlerSouris(icon);
+		int x=cadreImage.getImageScroller().getVerticalScrollBar().getValue();
+		int y=cadreImage.getImageScroller().getHorizontalScrollBar().getValue();
+		cadreImage.getImageScroller().setViewportView(icon);
+		cadreImage.getImageScroller().getVerticalScrollBar().setValue(x);
+		cadreImage.getImageScroller().getHorizontalScrollBar().setValue(y);
+		//interfaceGraphique.
 	}
 
 	public boolean existeSelection(){
