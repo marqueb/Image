@@ -1,8 +1,7 @@
 package Controleur;
 
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JMenuItem;
+import java.awt.event.ActionListener;
 
 public class ControlerImagris implements ActionListener{
 	private Controler controler;

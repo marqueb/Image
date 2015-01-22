@@ -3,7 +3,6 @@ package Controleur;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import Modele.Modele;
 import Vue.Histogramme;
 import Vue.InterfaceGraphique;
 

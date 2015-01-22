@@ -1,8 +1,7 @@
 package Controleur;
 
-import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
-import javax.swing.JMenuItem;
+import java.awt.event.ItemListener;
 
 public class ControlerYUV implements ItemListener{
 	private Controler controler;

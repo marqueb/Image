@@ -3,9 +3,9 @@ import java.awt.EventQueue;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import Controleur.*;
-import Vue.*;
-import Modele.*;
+import Controleur.Controler;
+import Modele.Modele;
+import Vue.InterfaceGraphique;
 
 public class Main {
 	private static Modele modele;

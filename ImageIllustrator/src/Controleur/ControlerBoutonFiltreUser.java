@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import Modele.Modele;
-import Modele.TypeFiltre;
 import Vue.InterfaceGraphique;
 
 public class ControlerBoutonFiltreUser  implements ActionListener{

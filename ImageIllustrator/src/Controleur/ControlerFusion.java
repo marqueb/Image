@@ -21,7 +21,7 @@ public class ControlerFusion implements ActionListener, ChangeListener{
 
 	@Override
 	public void stateChanged(ChangeEvent arg0) {
-		controler.sliderFusionChange();
+		controler.sliderFusionChange();	
 	}
 	
 	

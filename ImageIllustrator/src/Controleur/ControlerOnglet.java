@@ -1,9 +1,7 @@
 package Controleur;
 
-import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.JTabbedPane;
 
 public class ControlerOnglet implements ChangeListener{
 	private Controler controler;

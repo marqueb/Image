@@ -1,17 +1,11 @@
 package Modele;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-import java.awt.Graphics2D;
-import java.awt.TextArea;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -55,15 +49,6 @@ public class Modele {
 			File monFichier=outil.lectureFichier();
 			BufferedImage image =outil.lectureImage(monFichier);
 			int index = monFichier.getName().indexOf('.');
-			/*BufferedImage image = new BufferedImage(100, 100,BufferedImage.TYPE_INT_ARGB);
-			for (int i=0;i<image.getWidth();i++){
-				for (int j=0;j<image.getHeight();j++){
-					//couleur=cadreImage.getRGB(i,j);	
-					image.setRGB(i, j,outil.setG(150)+outil.setAlpha(255));
-					
-				}
-			}*/
-			
 			CadreImage cadreImage=outil.initCadre(image, controler);
 			cadreImage.setNomFichier(monFichier.getName().substring(0, index));
 			//ajoute le cadre image à la liste de cadre image
@@ -76,7 +61,7 @@ public class Modele {
 			setScroll(cadreImage);
 			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(0);
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue(0);
-			//interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(cadreImage.getImage()));
+
 		}catch(Exception e){}
 	}
 	
@@ -101,7 +86,7 @@ public class Modele {
 
 	public void redimensionner( int newLargeur,int newHauteur) {
 		CadreImage  cadre = cadreImageCourant();
-		cadre.setImage(traiteurImage.redimenssionerLargeur(cadre.getImage(), newLargeur));
+		//cadre.setImage(traiteurImage.redimenssionerLargeur(cadre.getImage(), newLargeur));
 		//traiteurImage.redimenssionerHauteur(cadre.getImage(), newHauteur);
 		//cadre.setImage(traiteurImage.redimenssioner(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
 		actualiserImageIcon();
@@ -235,7 +220,7 @@ public class Modele {
 		int imageCumule[]=new int[256];
 		initAnnulerRefaire(cadreImageCourant());
 		BufferedImage image= cadreImageCourant().getImage();
-		ratio = 255.0 / (image.getWidth()*image.getHeight());
+		
 		outil.histogrammeCumule(image,imageCumule);
 		if(existeSelection()){
 			int[] selection=selection();
@@ -249,6 +234,7 @@ public class Modele {
 			j_deb=0;
 			j_fin=image.getHeight();
 		}
+		ratio = 255.0 / ((i_fin-i_deb)*(j_fin-j_deb));
 		for (int i=i_deb;i<i_fin;i++){
 			for (int j=j_deb;j<j_fin;j++){	
 				pixel = image.getRGB(i, j);
@@ -261,7 +247,7 @@ public class Modele {
 					image.setRGB(i, j,outil.setR((int) (imageCumule[r]*ratio))+outil.setG((int) (imageCumule[g]*ratio))+outil.setB((int) (imageCumule[b]*ratio))+outil.setAlpha(255));
 			}
 		}
-		cadreImageCourant().setImage(image);
+		//cadreImageCourant().setImage(image);
 		actualiserImageIcon();
 	}
 
@@ -332,8 +318,7 @@ public class Modele {
 
 	public void validerFusion()
 	{
-		interfaceGraphique.retirerComponentFusion();
-		//interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()),outil.getTabyuvHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
+		//interfaceGraphique.getPanelOption().remove(1);
 	}
 
 	//appel� lorsqu'on change le pourcentage d'image avec le scroll
@@ -872,7 +857,6 @@ public class Modele {
 			interfaceGraphique.getAnnuler().setEnabled(false);
 		}
 		interfaceGraphique.getRefaire().setEnabled(true);
-		interfaceGraphique.retirerComponentFusion();
 		actualiserImageIcon();
 	}
 	
@@ -885,7 +869,6 @@ public class Modele {
 			interfaceGraphique.getRefaire().setEnabled(false);
 		}
 		interfaceGraphique.getAnnuler().setEnabled(true);
-		interfaceGraphique.retirerComponentFusion();
 		actualiserImageIcon();
 	}
 	

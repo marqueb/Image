@@ -1,14 +1,6 @@
 package Modele;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.RasterFormatException;
-
-import javax.swing.ImageIcon;
-
-import Vue.CadreImage;
 
 //classe outils
 public class TraiteurImage {
@@ -45,14 +37,6 @@ public class TraiteurImage {
 			break;
 		}
 
-		//BufferedImage dst = new BufferedImage(buf_ima_in.getWidth(), buf_ima_in.getHeight(), BufferedImage.TYPE_INT_ARGB);
-
-		//		Kernel ker = new Kernel(3,3,noyau);
-		//		ConvolveOp convolveOp = new ConvolveOp(ker, ConvolveOp.EDGE_NO_OP,null);
-		//
-		//		convolveOp.filter(buf_ima_in,dst);
-		//		return dst;
-		//return convoluer(noyau, buf_ima_in, ModeConvolution.SAME);
 		if(noyau == null) return null;
 		return convoluer(noyau, buf_ima_in, existeSelection, selection);
 	}
@@ -94,17 +78,7 @@ public class TraiteurImage {
 		int decalageBord = nbVoisin;
 		int i=0, j=0;
 
-		//on recopie les parties ou on n'applique pas la convolution (on applique la convolution sur la partie "VALID" de l'image).
-		//		for(i=0; i<decalageBord; i++)
-		//		{
-		//			for(j=0; j<decalageBord; j++)
-		//			{
-		//				bufIma_out.setRGB(i, j, bufIma_in.getRGB(i,  j));
-		//				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
-		//				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, j, bufIma_in.getRGB(i,  j));
-		//				bufIma_out.setRGB(i, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
-		//			}
-		//		}
+
 		int i_deb, i_fin, j_deb, j_fin;
 		if(existeSelection && selection[0]>=decalageBord) i_deb=selection[0];
 		else i_deb = decalageBord;
@@ -217,13 +191,10 @@ public class TraiteurImage {
 
 		return im_out;
 	}
-
-
-
+	
 	public BufferedImage  redimenssioner(int largeur, int hauteur,	int newlargeur, int newhauteur, BufferedImage image) {
 
 		Outil outil = new Outil();
-		//new CadreImage(Outil.resize(Outil.deepCopy(cadre.getImage()), newlargeur, newhauteur));
 		int pixel;
 		BufferedImage newimage= new BufferedImage(newlargeur, newhauteur,BufferedImage.TYPE_INT_ARGB);
 		double ratio=(double)((double)(newlargeur*newhauteur)/(double)(largeur*hauteur));
@@ -266,8 +237,13 @@ public class TraiteurImage {
 			}
 			icourant++;
 		}
+
+		//double ratiocourant=0;
+
+
 		return newimage;
 	}
+
 
 	public BufferedImage redimenssionerLargeur(BufferedImage image, int newLargeur){
 		BufferedImage nouvelle=outil.resize(image, newLargeur, image.getHeight());
@@ -295,7 +271,8 @@ public class TraiteurImage {
 		return nouvelle;
 	}
 
-	public void redimenssionerHauteur(CadreImage cadreImage, int newHauteur){
+	public void redimenssionerHauteur(BufferedImage image, int newHauteur){
 		//cadreImage.setImage(outil.resize(cadreImage.getImage(), newW, newH));
 	}
 }
+
