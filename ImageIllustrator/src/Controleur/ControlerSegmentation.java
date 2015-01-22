@@ -6,18 +6,18 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.imageio.ImageIO;
-
+/*
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
-
+*/
 import Vue.CadreImage;
-
+/*
 import com.googlecode.javacv.CanvasFrame;
 import com.googlecode.javacv.cpp.opencv_core.CvMat;
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
-import com.googlecode.javacv.cpp.opencv_core.IplImage;
+import com.googlecode.javacv.cpp.opencv_core.IplImage;*/
 //import com.googlecode.javacpp.Loader;
 //import com.googlecode.javacv.CanvasFrame;
 //import static com.googlecode.javacpp.Loader.*;
@@ -27,7 +27,7 @@ import com.googlecode.javacv.cpp.opencv_core.IplImage;
 public class ControlerSegmentation implements ActionListener{
 
 	Controler controler = null;
-	static{ System.loadLibrary("opencv_java2410"); }
+//	static{ System.loadLibrary("opencv_java2410"); }
 
 
 	public ControlerSegmentation(Controler c)
@@ -36,7 +36,7 @@ public class ControlerSegmentation implements ActionListener{
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		CadreImage cadre = controler.getModele().getListCadreImage().get(controler.getModele().getInterfaceGraphique().getTabbedPane().getSelectedIndex());
+	/*	CadreImage cadre = controler.getModele().getListCadreImage().get(controler.getModele().getInterfaceGraphique().getTabbedPane().getSelectedIndex());
 		BufferedImage image = cadre.getImage();
 
 		System.out.println("Welcome to OpenCV " + Core.VERSION);
@@ -46,7 +46,7 @@ public class ControlerSegmentation implements ActionListener{
 		mr1.setTo(new Scalar(1));
 		Mat mc5 = m.col(5);
 		mc5.setTo(new Scalar(5));
-		System.out.println("OpenCV Mat data:\n" + m.dump());
+		System.out.println("OpenCV Mat data:\n" + m.dump());*/
 
 
 
@@ -55,7 +55,7 @@ public class ControlerSegmentation implements ActionListener{
 
 	}
 
-
+/*
 	
 	public BufferedImage grabCut(BufferedImage im) {
 		//load an image
@@ -96,5 +96,5 @@ public class ControlerSegmentation implements ActionListener{
         fgdModel.release();
 
 
-	}
+	}*/
 }
