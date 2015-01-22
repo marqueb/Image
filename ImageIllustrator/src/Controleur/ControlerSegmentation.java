@@ -13,6 +13,11 @@ import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 
 import Vue.CadreImage;
+
+import com.googlecode.javacv.CanvasFrame;
+import com.googlecode.javacv.cpp.opencv_core.CvMat;
+import com.googlecode.javacv.cpp.opencv_core.CvRect;
+import com.googlecode.javacv.cpp.opencv_core.IplImage;
 //import com.googlecode.javacpp.Loader;
 //import com.googlecode.javacv.CanvasFrame;
 //import static com.googlecode.javacpp.Loader.*;
@@ -53,8 +58,6 @@ public class ControlerSegmentation implements ActionListener{
 
 	
 	public BufferedImage grabCut(BufferedImage im) {
-
-	
 		//load an image
         BufferedImage bImage = ImageIO.read(new File(filename));
         IplImage loadedImage = IplImage.createFrom(reconstructImageToNewType(bImage, BufferedImage.TYPE_INT_RGB));
