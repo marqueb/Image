@@ -15,7 +15,7 @@ public class TraiteurImage {
 	public TraiteurImage(Outil outil){
 		this.outil=outil;
 	}
-	
+
 	private static final float[][] MOYENNE = {
 		{1.0f, 1.0f, 1.0f},
 		{1.0f, 1.0f, 1.0f},
@@ -37,14 +37,6 @@ public class TraiteurImage {
 			break;
 		}
 
-		//BufferedImage dst = new BufferedImage(buf_ima_in.getWidth(), buf_ima_in.getHeight(), BufferedImage.TYPE_INT_ARGB);
-
-		//		Kernel ker = new Kernel(3,3,noyau);
-		//		ConvolveOp convolveOp = new ConvolveOp(ker, ConvolveOp.EDGE_NO_OP,null);
-		//
-		//		convolveOp.filter(buf_ima_in,dst);
-		//		return dst;
-		//return convoluer(noyau, buf_ima_in, ModeConvolution.SAME);
 		if(noyau == null) return null;
 		return convoluer(noyau, buf_ima_in, existeSelection, selection);
 	}
@@ -86,17 +78,7 @@ public class TraiteurImage {
 		int decalageBord = nbVoisin;
 		int i=0, j=0;
 
-		//on recopie les parties ou on n'applique pas la convolution (on applique la convolution sur la partie "VALID" de l'image).
-		//		for(i=0; i<decalageBord; i++)
-		//		{
-		//			for(j=0; j<decalageBord; j++)
-		//			{
-		//				bufIma_out.setRGB(i, j, bufIma_in.getRGB(i,  j));
-		//				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
-		//				bufIma_out.setRGB(bufIma_in.getWidth()-i-1, j, bufIma_in.getRGB(i,  j));
-		//				bufIma_out.setRGB(i, bufIma_in.getHeight()-j-1, bufIma_in.getRGB(i,  j));
-		//			}
-		//		}
+
 		int i_deb, i_fin, j_deb, j_fin;
 		if(existeSelection && selection[0]>=decalageBord) i_deb=selection[0];
 		else i_deb = decalageBord;
@@ -209,55 +191,15 @@ public class TraiteurImage {
 
 		return im_out;
 	}
-
-
-
+	
 	public BufferedImage  redimenssioner(int largeur, int hauteur,	int newlargeur, int newhauteur, BufferedImage image) {
 
 		Outil outil = new Outil();
-		//new CadreImage(Outil.resize(Outil.deepCopy(cadre.getImage()), newlargeur, newhauteur));
 		int pixel;
 		BufferedImage newimage= new BufferedImage(newlargeur, newhauteur,BufferedImage.TYPE_INT_ARGB);
 		double ratio=(double)((double)(newlargeur*newhauteur)/(double)(largeur*hauteur));
-		double ratiocourant;
-	/*	for (int i=0;i<newlargeur;i++){
-			for(int j=0; j<newhauteur; j++){
-				
-				pixel=image.getRGB((int)(i/ratio),(int)(j/ratio));
-				newimage.setRGB(i, j, outil.setR(outil.getR(pixel))+outil.setB(outil.getB(pixel))+outil.setG(outil.getG(pixel))+outil.setAlpha(255));				
-				
-				if(ratiocourant!=0){
-					newimage.setRGB(i, j, outil.setR(outil.getR(pixel))+outil.setB(outil.getB(pixel))+outil.setG(outil.getG(pixel))+outil.setAlpha(255));	
-				}
-			}*/
-		int r,g,b,icourant=0,jcourant=0;System.out.println(icourant+" "+jcourant);
-		double reste=0;
-		for (int i=0;i<largeur;i++){
-			jcourant=0;
-			for(int j=0; j<hauteur; j++){
-				ratiocourant=ratio;
-				pixel=image.getRGB(i,j);
-				r=outil.getR(pixel);
-				g=outil.getG(pixel);
-				b=outil.getB(pixel);
-				while(ratiocourant>0){
-					if(reste!=0){
-						//newimage.setRGB(icourant, jcourant, outil.setR((int) (r*reste))+outil.setB((int) (g*reste))+outil.setG((int) (g*reste))+outil.setAlpha(255));
-						jcourant++;
-						reste=0;
-					}
-					//newimage.setRGB(icourant, jcourant, outil.setR(r)+outil.setB(g)+outil.setG(g)+outil.setAlpha(255));
-					ratiocourant--;
-				}
-				if(ratio+1!=0){
-					//newimage.setRGB(icourant, jcourant, outil.setR((int) (r*ratio))+outil.setB((int) (g*ratio))+outil.setG((int) (g*ratio))+outil.setAlpha(255));
-					reste=ratio+1;
-				}
-				
-			jcourant++;	
-			}
-			icourant++;
-		}
+		double ratiocourant=0;
+
 		return newimage;
 	}
 }

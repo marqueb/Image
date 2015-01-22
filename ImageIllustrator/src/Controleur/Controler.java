@@ -22,13 +22,13 @@ import Vue.InterfaceGraphique;
 public class Controler{
 	private Modele modele;
 	private InterfaceGraphique it;
-	private boolean echantillonageActif=false, selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
+	private boolean echantillonageActif=false,flouActive=false, fusionActive=false, selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
 
 	public boolean selectionActive()
 	{
 		return selectionActive;
 	}
-	
+
 	public void init(){
 		if(echantillonageActif){
 			modele.enleverCouleurPixel();
@@ -42,6 +42,16 @@ public class Controler{
 		it.getButtonSegmenter().setEnabled(false);
 		ajustementSelection=false;
 		deplacementScroll=false;
+		if(flouActive){
+			it.retirerComponent();
+			modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
+			modele.actualiserImageIcon();
+			flouActive=false;
+		}
+		if(fusionActive){
+			it.retirerComponent();
+			fusionActive=false;
+		}
 		if(!modele.getListCadreImage().isEmpty()){	
 			it.rafraichirComponentOption();
 		}
@@ -52,12 +62,16 @@ public class Controler{
 		modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
 		modele.actualiserImageIcon();
 		it.rafraichirComponentOption();
+		init();
 	}
 
 	public void valider()
 	{
 		modele.actualiserImageIcon();
 		it.rafraichirComponentOption();
+		it.retirerComponent();
+		flouActive=false;
+		init();
 	}
 
 	public Modele getModele()
@@ -84,7 +98,7 @@ public class Controler{
 	public void addControlerHistoChoixRgbYuv(JComboBox choixRgbYuv){
 		choixRgbYuv.addActionListener(new ControlerHistoChoixRgbYuv(it,it.getHisto()));
 	}
-	
+
 	public void charger(){
 		init();
 		modele.charger();
@@ -116,6 +130,22 @@ public class Controler{
 		if(modele.existeSelection()){
 			//modele.annulerSelection();
 		}
+
+		if(!modele.getListImage().isEmpty()){
+			if(modele.cadreImageCourant().getAnnuler().isEmpty()){
+				it.getAnnuler().setEnabled(false);
+			}else{
+				it.getAnnuler().setEnabled(true);
+			}
+			if(modele.cadreImageCourant().getRefaire().isEmpty()){
+				it.getRefaire().setEnabled(false);
+			}else{
+				it.getRefaire().setEnabled(true);
+			}
+		}else{
+			it.getAnnuler().setEnabled(false);
+			it.getRefaire().setEnabled(false);
+		}
 	}
 
 	public void fermerOnglet(Object o){
@@ -137,7 +167,7 @@ public class Controler{
 			}
 		}
 	}
-	
+
 	public void addNbhisto(JFrame histo){
 		histo.addWindowListener(new WindowListener() {
 			@Override
@@ -155,40 +185,40 @@ public class Controler{
 			@Override
 			public void windowActivated(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 			@Override
 			public void windowClosed(WindowEvent e) {
 				// TODO Auto-generated method stub
 				//if(!modele.isEstEgalisation()){
-					if(modele.isEstHistoCliquer()){
-						modele.fermetureHisto();
-						modele.setEstHistoCliquer(!modele.isEstHistoCliquer());
-						
-					}
-					modele.setEstEgalisation(false);
+				if(modele.isEstHistoCliquer()){
+					modele.fermetureHisto();
+					modele.setEstHistoCliquer(!modele.isEstHistoCliquer());
+
+				}
+				modele.setEstEgalisation(false);
 			}
 			@Override
 			public void windowDeactivated(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 			@Override
 			public void windowDeiconified(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 			@Override
 			public void windowIconified(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 			@Override
 			public void windowOpened(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 		});
 		//(new ControlerEgalisation(modele));
 	}
@@ -286,6 +316,8 @@ public class Controler{
 
 	public void boutonFusionClic()
 	{
+		init();
+		fusionActive=true;
 		modele.traiterFusion();
 	}
 
@@ -296,7 +328,8 @@ public class Controler{
 
 	public void boutonAppliquerFusionClic()
 	{
-		this.it.retirerComponentFusion();
+		init();
+		//this.it.retirerComponentFusion();
 		//modele.calculerHistogrammeRGB();
 	}
 
@@ -308,19 +341,33 @@ public class Controler{
 
 	public void boutonFlouterClic()
 	{
+		init();
+		flouActive=true;
 		modele.memoriseImage();
 		it.ajouterComponentChoixTailleFiltre(TypeFiltre.GAUSSIEN);
 	}
-	
+
 	public void decouper(){
 		modele.decouper();
 		modele.annulerSelection();
 	}
-	
+
+	public void annuler2(){
+		init();
+		modele.annuler();
+		//modele.annulerSelection();
+	}
+
+	public void refaire(){
+		init();
+		modele.refaire();
+		//modele.annulerSelection();
+	}
+
 	public void addControlerEgalisation(JMenuItem egalisation){
 		egalisation.addActionListener(new ControlerEgalisation(modele));
 	}
-	
+
 	public void addControlerCharger(JMenuItem charger){
 		charger.addActionListener(new ControlerCharger(this));
 	}
@@ -340,7 +387,7 @@ public class Controler{
 	public void addControlerRedimenssioner(JMenuItem redimensionner){
 		redimensionner.addActionListener(new ControlerRedimessionner(it));
 	}
-	
+
 	public void addControlerCouleurPixel(JMenuItem couleurPixel){
 		couleurPixel.addActionListener(new ControlerCouleurPixel(this));
 	}
@@ -395,7 +442,7 @@ public class Controler{
 	{
 		u.addActionListener(new ControlerBoutonFiltreUser(this.modele, this.it));
 	}
-	
+
 	public void addControlerFiltreUser(JButton valider, JButton annuler, JButton previsualiser, JComboBox<String> boxChoixTailleFiltre, JPanel panelUser)
 	{
 		ControlerFiltreUser c = new ControlerFiltreUser(this.it, this.modele, boxChoixTailleFiltre, panelUser);		
@@ -430,13 +477,24 @@ public class Controler{
 	public void addControlerInverser(JMenuItem inverser) {
 		inverser.addActionListener(new ControlerInverser(modele));	
 	}
-	
+
 	public void addControlerDecouper(JMenuItem decouper){
 		decouper.addActionListener(new ControlerDecouper(this));
 	}
-	
-	public void addControlerSegmentation(JButton segmenter)
-	{
+
+	public void addControlerSegmentation(JButton segmenter){
 		segmenter.addActionListener(new ControlerSegmentation(this));
+	}
+
+	public void addControlerMoyen(JMenuItem moyen){
+		moyen.addActionListener(new ControlerFlouter(this));
+	}
+
+	public void addControlerAnnuler(JMenuItem annuler){
+		annuler.addActionListener(new ControlerAnnuler(this));
+	}
+
+	public void addControlerRefaire(JMenuItem refaire){
+		refaire.addActionListener(new ControlerRefaire(this));
 	}
 }

@@ -49,15 +49,6 @@ public class Modele {
 			File monFichier=outil.lectureFichier();
 			BufferedImage image =outil.lectureImage(monFichier);
 			int index = monFichier.getName().indexOf('.');
-			/*BufferedImage image = new BufferedImage(100, 100,BufferedImage.TYPE_INT_ARGB);
-			for (int i=0;i<image.getWidth();i++){
-				for (int j=0;j<image.getHeight();j++){
-					//couleur=cadreImage.getRGB(i,j);	
-					image.setRGB(i, j,outil.setG(150)+outil.setAlpha(255));
-					
-				}
-			}*/
-			
 			CadreImage cadreImage=outil.initCadre(image, controler);
 			cadreImage.setNomFichier(monFichier.getName().substring(0, index));
 			//ajoute le cadre image à la liste de cadre image
@@ -70,7 +61,7 @@ public class Modele {
 			setScroll(cadreImage);
 			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(0);
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue(0);
-			//interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(cadreImage.getImage()));
+
 		}catch(Exception e){}
 	}
 	
@@ -116,6 +107,8 @@ public class Modele {
 	}
 	
 	public void inverser(){
+
+		initAnnulerRefaire(cadreImageCourant());
 		int pixel,r,g,b,i_deb, i_fin, j_deb, j_fin;
 		BufferedImage image= cadreImageCourant().getImage();
 		if(existeSelection()){
@@ -148,6 +141,7 @@ public class Modele {
 		int i_deb,i_fin,j_deb,j_fin;
 		int minr=255,ming=255,minb=255,maxr=0,maxg=0,maxb=0;
 		int pixel,r,g,b;
+		initAnnulerRefaire(cadreImageCourant());
 		BufferedImage image= cadreImageCourant().getImage();
 		if(existeSelection()){
 			int[] selection=selection();
@@ -198,12 +192,37 @@ public class Modele {
 
 	}
 
-	public void egalisation (){
+	public void egalisation (){/*
+<<<<<<< HEAD
+		  double ratio;
+		  int pixel,r,g,b;
+		  int imageCumule[]=new int[256];
+		  initAnnulerRefaire(cadreImageCourant());
+		  BufferedImage image= cadreImageCourant().getImage();
+		  ratio = 255.0 / (image.getWidth()*image.getHeight());
+		  outil.histogrammeCumule(image,imageCumule);
+		  for(int i=0;i<image.getWidth();i++){
+			  for(int j=0;j<image.getHeight();j++){
+				  pixel = image.getRGB(i, j);
+				  r=outil.getR(pixel);
+				  g=outil.getG(pixel);
+				  b=outil.getB(pixel);
+				  if(r==255 && b == 255 && g==255)
+					  image.setRGB(i, j,outil.setR(255)+outil.setG(255)+outil.setB(255)+outil.setAlpha(255));
+				  else
+					  image.setRGB(i, j,outil.setR((int) (imageCumule[r]*ratio))+outil.setG((int) (imageCumule[g]*ratio))+outil.setB((int) (imageCumule[b]*ratio))+outil.setAlpha(255));
+			  }
+		  }
+		  cadreImageCourant().setImage(image);
+		  interfaceGraphique.getFrame().validate();
+		  //interfaceGraphique.getFrame().repaint();
+=======*/
 		double ratio;
 		int pixel,r,g,b,i_deb,i_fin,j_deb,j_fin;
 		int imageCumule[]=new int[256];
+		initAnnulerRefaire(cadreImageCourant());
 		BufferedImage image= cadreImageCourant().getImage();
-		ratio = 255.0 / (image.getWidth()*image.getHeight());
+		
 		outil.histogrammeCumule(image,imageCumule);
 		if(existeSelection()){
 			int[] selection=selection();
@@ -217,6 +236,7 @@ public class Modele {
 			j_deb=0;
 			j_fin=image.getHeight();
 		}
+		ratio = 255.0 / ((i_fin-i_deb)*(j_fin-j_deb));
 		for (int i=i_deb;i<i_fin;i++){
 			for (int j=j_deb;j<j_fin;j++){	
 				pixel = image.getRGB(i, j);
@@ -229,7 +249,7 @@ public class Modele {
 					image.setRGB(i, j,outil.setR((int) (imageCumule[r]*ratio))+outil.setG((int) (imageCumule[g]*ratio))+outil.setB((int) (imageCumule[b]*ratio))+outil.setAlpha(255));
 			}
 		}
-		cadreImageCourant().setImage(image);
+		//cadreImageCourant().setImage(image);
 		actualiserImageIcon();
 	}
 
@@ -257,6 +277,7 @@ public class Modele {
 
 	public void imagris(){
 		CadreImage cadreImage=cadreImageCourant();
+		initAnnulerRefaire(cadreImage);
 		outil.imagris(cadreImage.getImage(), existeSelection(), selection());
 		actualiserImageIcon();
 	}
@@ -293,13 +314,13 @@ public class Modele {
 		if(cadre_ima_fusion!=null){
 			imaAvantTraitement = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
 			interfaceGraphique.ajouterComponentFusion(cadre_ima_fusion);
+			initAnnulerRefaire(cadreImageCourant());
 		}
 	}
 
 	public void validerFusion()
 	{
-		interfaceGraphique.retirerComponentFusion();
-		//interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()),outil.getTabyuvHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
+		//interfaceGraphique.getPanelOption().remove(1);
 	}
 
 	//appel� lorsqu'on change le pourcentage d'image avec le scroll
@@ -376,7 +397,7 @@ public class Modele {
 				imaToChange.setRGB(i, j, newRgb);
 			}
 		}
-
+		
 		actualiserImageIcon();
 		interfaceGraphique.getFrame().repaint();
 	}
@@ -450,6 +471,7 @@ public class Modele {
 	{
 		BufferedImage im = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
 		im = traiteurImage.convoluer(FiltreConvolution.getNoyauContraste3x3(), im, existeSelection(), selection());
+		initAnnulerRefaire(cadreImageCourant());
 		listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(im);
 		actualiserImageIcon();
 		interfaceGraphique.rafraichirComponentOption();
@@ -460,6 +482,7 @@ public class Modele {
 		BufferedImage im = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
 		im = traiteurImage.rehausserContours(im, existeSelection(), selection());
 		listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(im);
+		initAnnulerRefaire(cadreImageCourant());
 		actualiserImageIcon();
 		interfaceGraphique.rafraichirComponentOption();
 	}
@@ -487,6 +510,7 @@ public class Modele {
 	public void memoriseImage()
 	{
 		this.imaAvantTraitement = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
+		initAnnulerRefaire(cadreImageCourant());
 	}
 
 	public void actualiserImageIcon(){
@@ -821,8 +845,41 @@ public class Modele {
 	public void decouper(){
 		if(this.existeSelection()){
 			CadreImage cadreImage=cadreImageCourant();
+			initAnnulerRefaire(cadreImage);
 			cadreImage.setImage(outil.decouper(cadreImage.getImage(), selection()));
 		}
+	}
+	
+	public void annuler(){
+		CadreImage cadreImage=cadreImageCourant();
+		BufferedImage image = outil.deepCopy(cadreImage.getImage());
+		cadreImage.getRefaire().add(image);
+		cadreImage.setImage(cadreImage.getAnnuler().remove(cadreImage.getAnnuler().size()-1));
+		if(cadreImage.getAnnuler().isEmpty()){
+			interfaceGraphique.getAnnuler().setEnabled(false);
+		}
+		interfaceGraphique.getRefaire().setEnabled(true);
+		actualiserImageIcon();
+	}
+	
+	public void refaire(){
+		CadreImage cadreImage=cadreImageCourant();
+		BufferedImage image = outil.deepCopy(cadreImage.getImage());
+		cadreImage.getAnnuler().add(image);
+		cadreImage.setImage(cadreImage.getRefaire().remove(cadreImage.getRefaire().size()-1));
+		if(cadreImage.getRefaire().isEmpty()){
+			interfaceGraphique.getRefaire().setEnabled(false);
+		}
+		interfaceGraphique.getAnnuler().setEnabled(true);
+		actualiserImageIcon();
+	}
+	
+	public void initAnnulerRefaire(CadreImage cadreImage){
+		BufferedImage image = outil.deepCopy(cadreImage.getImage());
+		cadreImage.getAnnuler().add(image);
+		interfaceGraphique.getAnnuler().setEnabled(true);
+		interfaceGraphique.getRefaire().setEnabled(false);
+		cadreImage.getRefaire().clear();
 	}
 }
 

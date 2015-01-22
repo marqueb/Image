@@ -113,7 +113,6 @@ public class ControlerSegmentation implements ActionListener{
 		
 		int[] selection = controler.getModele().selection();
 		BufferedImage res = null;
-		
 		//load an image
         IplImage loadedImage = IplImage.createFrom(Outil.deepCopy(bImage));
         int width = bImage.getWidth();
@@ -151,5 +150,5 @@ public class ControlerSegmentation implements ActionListener{
         fgdModel.release();
 
         return res;
-	}
+	} 
 }
