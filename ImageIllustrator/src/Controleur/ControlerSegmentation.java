@@ -2,10 +2,32 @@ package Controleur;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
+/*
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
+*/
+import Vue.CadreImage;
+/*
+import com.googlecode.javacv.CanvasFrame;
+import com.googlecode.javacv.cpp.opencv_core.CvMat;
+import com.googlecode.javacv.cpp.opencv_core.CvRect;
+import com.googlecode.javacv.cpp.opencv_core.IplImage;*/
+//import com.googlecode.javacpp.Loader;
+//import com.googlecode.javacv.CanvasFrame;
+//import static com.googlecode.javacpp.Loader.*;
+
+
 
 public class ControlerSegmentation implements ActionListener{
 
 	Controler controler = null;
+
 	static{ System.loadLibrary("opencv_java2410"); }
 	//static{ System.loadLibrary("javaccpp-0.5.jar"); }
 
@@ -38,7 +60,7 @@ public class ControlerSegmentation implements ActionListener{
 
 	}
 
-
+/*
 	
 //	public BufferedImage myGrabCut(BufferedImage bImage) {
 //		
