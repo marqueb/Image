@@ -15,7 +15,6 @@ import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 
 import Modele.Modele;
-import Modele.Outil;
 import Modele.TypeFiltre;
 import Vue.InterfaceGraphique;
 

@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import Modele.Modele;
-import Vue.InterfaceGraphique;
 
 public class ControlerRedimensionnerValider implements ActionListener {
 

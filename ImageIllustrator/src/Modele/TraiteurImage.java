@@ -1,14 +1,6 @@
 package Modele;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.RasterFormatException;
-
-import javax.swing.ImageIcon;
-
-import Vue.CadreImage;
 
 //classe outils
 public class TraiteurImage {

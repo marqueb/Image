@@ -1,8 +1,18 @@
 package Controleur;
+//
+//import static com.googlecode.javacv.cpp.opencv_core.cvRect;
+//import static com.googlecode.javacv.cpp.opencv_imgproc.grabCut;
+import static com.googlecode.javacv.cpp.opencv_core.cvRect;
+import static com.googlecode.javacv.cpp.opencv_imgproc.grabCut;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -17,25 +27,61 @@ import com.googlecode.javacv.CanvasFrame;
 import com.googlecode.javacv.cpp.opencv_core.CvMat;
 import com.googlecode.javacv.cpp.opencv_core.CvRect;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
-//import com.googlecode.javacpp.Loader;
-//import com.googlecode.javacv.CanvasFrame;
-//import static com.googlecode.javacpp.Loader.*;
-
-
-import static com.googlecode.javacv.cpp.opencv_core.*;
-import static com.googlecode.javacv.cpp.opencv_imgproc.*;
 
 public class ControlerSegmentation implements ActionListener{
 
 	Controler controler = null;
 
 	static{ System.loadLibrary("opencv_java2410"); }
-	//static{ System.loadLibrary("javaccpp-0.5.jar"); }
-
+//	static{ System.loadLibrary("jniopencv_core"); }
+//
+//	static{ System.loadLibrary("opencv"); }
+//	static{ System.loadLibrary("javacv"); }
+//	static{ System.loadLibrary("javacpp"); }
 
 	public ControlerSegmentation(Controler c)
 	{
 		controler = c;
+		
+		
+//		final String iDLLName = "javacpp.dll";
+//		  final InputStream iStream = ControlerSegmentation.class.getResourceAsStream("/dll/" + iDLLName);
+//		  final String iTmpDir = System.getProperty("java.io.tmpdir");
+//		  final File iParentFolder = new File(iTmpDir, "dll");
+//		  iParentFolder.mkdir();
+//		  final File iDllFile = new File(iParentFolder, iDLLName);
+//		  if (!iDllFile.exists()) {
+//		    try {
+//		      iDllFile.createNewFile();
+//		    } catch (final IOException iException) {
+//		      iException.printStackTrace();
+//		    }
+//		  }
+//		  if (iStream != null) {
+//		    FileOutputStream iOutStream = null;
+//		    try {
+//		      iOutStream = new FileOutputStream(iDllFile);
+//		      final byte[] iBuffer = new byte[1024];
+//		      while (iStream.read(iBuffer) > 0) {
+//		        iOutStream.write(iBuffer);
+//		      }
+//		    } catch (final FileNotFoundException iException) {
+//		      iException.printStackTrace();
+//		    } catch (final IOException iException) {
+//		      iException.printStackTrace();
+//		    } finally {
+//		      if (iOutStream != null) {
+//		        try {
+//		          iOutStream.flush();
+//		          iOutStream.close();
+//		          iStream.close();
+//		        } catch (final IOException iException) {
+//		          iException.printStackTrace();
+//		        }
+//		      }
+//		    }
+//		    System.load(iDllFile.getAbsolutePath());
+//		  }
 	}
 
 	public void actionPerformed(ActionEvent e) {

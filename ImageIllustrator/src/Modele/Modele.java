@@ -1,17 +1,11 @@
 package Modele;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-import java.awt.Graphics2D;
-import java.awt.TextArea;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
