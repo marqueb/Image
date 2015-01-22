@@ -23,6 +23,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -32,6 +33,7 @@ import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
+import javax.swing.border.Border;
 
 import Controleur.Controler;
 import Controleur.ControlerBoutonFusion;
@@ -88,7 +90,6 @@ public class InterfaceGraphique implements Runnable{
 		image=modele.cadreImageCourant();
 		frameRedim = new JFrame();
 		frameRedim.setSize(new Dimension(800,200));
-		//frameRedim.setLocation(image.getWidth(),image.getHeight());
 		largeur= new TextArea(""+image.getImage().getWidth());
 		hauteur= new TextArea(""+image.getImage().getHeight());
 		JPanel text = new JPanel();
@@ -111,6 +112,14 @@ public class InterfaceGraphique implements Runnable{
 	public JPanel getPanelInfo()
 	{
 		return this.panelInfo;
+	}
+
+	public JPanel getPanelOption() {
+		return panelOption;
+	}
+
+	public void setPanelOption(JPanel panelOption) {
+		this.panelOption = panelOption;
 	}
 
 	public int getSliderChoixTailleFiltreValue()
@@ -227,7 +236,6 @@ public class InterfaceGraphique implements Runnable{
 	{
 
 		frameHisto = new JFrame();
-		panelOption.setLayout(new BoxLayout(panelOption, BoxLayout.Y_AXIS));
 		histo = new Histogramme(tabsHisto,yuv,"histogramme", new Dimension(1000,600));
 		
 		JPanel panel = new JPanel();
@@ -284,7 +292,25 @@ public class InterfaceGraphique implements Runnable{
 
 		frame.validate();
 	}
-
+	
+	public void retirerComponentFusion()
+	{	
+		panelOption.remove(2);
+		panelOption.repaint();
+		frame.validate();
+	
+		
+	}
+	public void retirerComponent()
+	{	
+		panelOption.remove(2);
+		panelOption.repaint();
+		frame.validate();
+	
+		
+	}
+	
+	
 	public void ajouterComponentFusion(CadreImage cadre_ima_fusion)
 	{
 		int newWidth = panelOption.getWidth();
@@ -292,22 +318,29 @@ public class InterfaceGraphique implements Runnable{
 
 		CadreImage cadre_ima = new CadreImage(Outil.resize(Outil.deepCopy(cadre_ima_fusion.getImage()), newWidth, 
 				newHeight));
-
+		JLayeredPane pane = new JLayeredPane();
 		cadre_ima.setPreferredSize(new Dimension(newWidth, newHeight));
+		JPanel panelfusion = new JPanel();
+	
+		
 
 		sliderFusion = new JSlider(0,100,0);
 		JButton appliquer = new JButton("Appliquer fusion");		
 		controler.addControlerFusion(sliderFusion, appliquer);
-		//slider.addChangeListener(controler);
-		//appliquer.addActionListener(controler);
-
-		panelOption.removeAll();
-		panelOption.add(appliquer);
-		panelOption.add(sliderFusion);
-		panelOption.add(cadre_ima);
-		panelOption.repaint();
+		JLabel label= new JLabel("        Fusion :");
+		
+		panelfusion.setSize(new Dimension(200,650));
+		panelfusion.setLayout(new BoxLayout(panelfusion, BoxLayout.PAGE_AXIS));
+		panelfusion.add(label);
+		panelfusion.add(appliquer);
+		panelfusion.add(sliderFusion);
+		panelfusion.add(cadre_ima);	
+		pane.add(panelfusion);
+		panelOption.add(pane);
 		frame.validate();
+
 	}
+
 
 	public JCheckBox getRouge() {
 		return rouge;
@@ -317,27 +350,28 @@ public class InterfaceGraphique implements Runnable{
 		this.rouge = rouge;
 	}
 
-	public void retirerComponentFusion()
-	{
-		panelOption.removeAll();
-		panelOption.repaint();
-		frame.validate();
-	}
 
 	public void ajouterComponentChoixTailleFiltre(TypeFiltre typeFiltre)
 	{
 		JComboBox<String> boxTypeFiltre = null;
-		panelOption.removeAll();
 		String[] stringTailles = {"3x3","5x5","7x7","9x9"};
-		JComboBox<String> boxChoixTailleFiltre = new JComboBox<String>(stringTailles);
-
-
+		JComboBox<String> boxChoixTailleFiltre = new JComboBox<String>(stringTailles);		
+		JPanel panelfusion = new JPanel();
+		JLayeredPane pane = new JLayeredPane();
+		panelfusion.setSize(new Dimension(200,200));
+		JLabel label= new JLabel(" Filtre :");
+		panelfusion.add(label);
+		panelfusion.setLayout(new BoxLayout(panelfusion, BoxLayout.PAGE_AXIS));
+		
 		switch (typeFiltre)
 		{
 		case GAUSSIEN:
 			String[] stringsTypesFiltres =  {"Flitre Gaussien", "Filtre Moyenneur"};
 			boxTypeFiltre = new JComboBox<String>(stringsTypesFiltres);
-			panelOption.add(boxTypeFiltre);
+			JPanel panel = new JPanel();
+			panel.add(boxTypeFiltre);
+			panelfusion.add(panel);
+			
 			break;
 		case MEDIAN:
 			break;
@@ -346,11 +380,14 @@ public class InterfaceGraphique implements Runnable{
 		JButton annuler = new JButton("Annuler");
 
 		controler.addControlerChoixTailleFiltre(boxChoixTailleFiltre, annuler, appliquer, typeFiltre, boxTypeFiltre);
-		panelOption.add(new JLabel("Choisissez la taille du filtre :"));
-		panelOption.add(boxChoixTailleFiltre);
-		panelOption.add(appliquer);
-		panelOption.add(annuler);
-		panelOption.repaint();
+		JPanel panel2 = new JPanel();
+		panel2.add(boxChoixTailleFiltre);
+		panelfusion.add(panel2);
+		panelfusion.add(appliquer);
+		panelfusion.add(annuler);
+		pane.add(panelfusion);
+		panelfusion.setBorder(BorderFactory.createLineBorder(Color.black));
+		panelOption.add(pane);
 		frame.validate();
 	}
 
@@ -473,8 +510,6 @@ public class InterfaceGraphique implements Runnable{
 
 	public void rafraichirComponentOption()
 	{
-		//panelOption.removeAll();
-		//modele.calculerHistogrammeRGB();
 		panelOption.repaint();
 		frame.validate();
 	}
@@ -619,7 +654,8 @@ public class InterfaceGraphique implements Runnable{
 		controler.addControlerEgalisation(egalisation);
 		traitement.add(egalisation);
 		JMenuItem moyen = new JMenuItem("Flouter");
-		moyen.addActionListener(new ControlerFlouter(controler));
+		controler.addControlerMoyen(moyen);
+		//moyen.addActionListener(Fchoixfiltre);
 		traitement.add(moyen);
 		//filtre => Traitement => gaussien
 		//		JMenuItem gaussien = new JMenuItem("Gaussien");
@@ -703,7 +739,8 @@ public class InterfaceGraphique implements Runnable{
 		tabbedPane.setBackground(Color.WHITE);
 		
 		frame.add(tabbedPane,BorderLayout.CENTER);
-		panelOption = new JPanel();
+		panelOption = new JPanel();	
+		panelOption.setLayout(new BoxLayout(panelOption, BoxLayout.Y_AXIS));
 		//JTextArea texte= new JTextArea("Zone d'option/bouton rapide");
 		//panelOption.add(texte);
 

@@ -55,15 +55,6 @@ public class Modele {
 			File monFichier=outil.lectureFichier();
 			BufferedImage image =outil.lectureImage(monFichier);
 			int index = monFichier.getName().indexOf('.');
-			/*BufferedImage image = new BufferedImage(100, 100,BufferedImage.TYPE_INT_ARGB);
-			for (int i=0;i<image.getWidth();i++){
-				for (int j=0;j<image.getHeight();j++){
-					//couleur=cadreImage.getRGB(i,j);	
-					image.setRGB(i, j,outil.setG(150)+outil.setAlpha(255));
-					
-				}
-			}*/
-			
 			CadreImage cadreImage=outil.initCadre(image, controler);
 			cadreImage.setNomFichier(monFichier.getName().substring(0, index));
 			//ajoute le cadre image à la liste de cadre image
@@ -76,7 +67,7 @@ public class Modele {
 			setScroll(cadreImage);
 			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(0);
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue(0);
-			//interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(cadreImage.getImage()));
+
 		}catch(Exception e){}
 	}
 	
@@ -304,8 +295,7 @@ public class Modele {
 
 	public void validerFusion()
 	{
-		interfaceGraphique.retirerComponentFusion();
-		//interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()),outil.getTabyuvHisto(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage()));
+		//interfaceGraphique.getPanelOption().remove(1);
 	}
 
 	//appel� lorsqu'on change le pourcentage d'image avec le scroll

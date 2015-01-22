@@ -23,7 +23,7 @@ import Vue.InterfaceGraphique;
 public class Controler{
 	private Modele modele;
 	private InterfaceGraphique it;
-	private boolean echantillonageActif=false, selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
+	private boolean echantillonageActif=false,flouActive=false, fusionActive=false, selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
 
 	public boolean selectionActive()
 	{
@@ -43,6 +43,14 @@ public class Controler{
 		it.getButtonSegmenter().setEnabled(false);
 		ajustementSelection=false;
 		deplacementScroll=false;
+		if(flouActive){
+			it.retirerComponent();
+			flouActive=false;
+		}
+		if(fusionActive){
+			it.retirerComponent();
+			fusionActive=false;
+		}
 		if(!modele.getListCadreImage().isEmpty()){	
 			it.rafraichirComponentOption();
 		}
@@ -53,12 +61,14 @@ public class Controler{
 		modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
 		modele.actualiserImageIcon();
 		it.rafraichirComponentOption();
+		init();
 	}
 
 	public void valider()
 	{
 		modele.actualiserImageIcon();
 		it.rafraichirComponentOption();
+		init();
 	}
 
 	public Modele getModele()
@@ -287,6 +297,8 @@ public class Controler{
 
 	public void boutonFusionClic()
 	{
+		init();
+		fusionActive=true;
 		modele.traiterFusion();
 	}
 
@@ -297,7 +309,8 @@ public class Controler{
 
 	public void boutonAppliquerFusionClic()
 	{
-		this.it.retirerComponentFusion();
+		init();
+		//this.it.retirerComponentFusion();
 		//modele.calculerHistogrammeRGB();
 	}
 
@@ -309,6 +322,8 @@ public class Controler{
 
 	public void boutonFlouterClic()
 	{
+		init();
+		flouActive=true;
 		modele.memoriseImage();
 		it.ajouterComponentChoixTailleFiltre(TypeFiltre.GAUSSIEN);
 	}
@@ -439,5 +454,9 @@ public class Controler{
 	public void addControlerSegmentation(JButton segmenter)
 	{
 		segmenter.addActionListener(new ControlerSegmentation(this));
+	}
+	
+	public void addControlerMoyen(JMenuItem moyen){
+		moyen.addActionListener(new ControlerFlouter(this));
 	}
 }

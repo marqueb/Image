@@ -75,7 +75,6 @@ public class Outil {
 	public CadreImage initCadre(BufferedImage image, Controler controler){
 		CadreImage cadreImage=new CadreImage(image);
 		JLabel icon=new JLabel(cadreImage.getImageIcon());
-		//System.out.println(icon.getIcon().);
 		JScrollPane imageScroller =new JScrollPane(icon);
 		imageScroller.setViewportView(icon);
 		imageScroller.setAutoscrolls(true);
@@ -85,7 +84,6 @@ public class Outil {
 		imageScroller.getHorizontalScrollBar().setValue(imageScroller.getHorizontalScrollBar().getMaximum());
 		imageScroller.getVerticalScrollBar().setValue(imageScroller.getVerticalScrollBar().getMaximum());
 		controler.addControlerSouris(icon);
-		//interfaceGraphique.getTabbedPane().setComponentAt(interfaceGraphique.getTabbedPane().getSelectedIndex(), imageScroller);
 		return cadreImage;
 	}
 
@@ -335,13 +333,6 @@ public class Outil {
 	}
 	
 	public BufferedImage decouper(BufferedImage cadreImage, int[] selection){
-		//BufferedImage image = new BufferedImage(selection[2]-selection[0], selection[3]-selection[1],BufferedImage.TYPE_INT_ARGB);
-		/*BufferedImage image=resize(cadreImage, selection[2]-selection[0], selection[3]-selection[1]);
-		Graphics g = image.getGraphics();
-	    g.drawImage(cadreImage, 0, 0, image.getWidth(), image.getHeight(), selection[0], selection[1], selection[2], selection[3], null);
-	    g.dispose();
-	    return image;*/
-		
 		BufferedImage image = new BufferedImage(selection[2]-selection[0], selection[3]-selection[1],BufferedImage.TYPE_INT_ARGB);
 		for (int i=0; i<selection[2]-selection[0]; i++){
 			for(int j=0; j<selection[3]-selection[1]; j++){
