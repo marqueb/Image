@@ -841,8 +841,10 @@ public class Modele {
 		cadreImage.setImage(cadreImage.getAnnuler().remove(cadreImage.getAnnuler().size()-1));
 		if(cadreImage.getAnnuler().isEmpty()){
 			interfaceGraphique.getAnnuler().setEnabled(false);
+			interfaceGraphique.getBtnAnnuler().setEnabled(false);
 		}
 		interfaceGraphique.getRefaire().setEnabled(true);
+		interfaceGraphique.getBtnRefaire().setEnabled(true);
 		actualiserImageIcon();
 	}
 	
@@ -853,8 +855,10 @@ public class Modele {
 		cadreImage.setImage(cadreImage.getRefaire().remove(cadreImage.getRefaire().size()-1));
 		if(cadreImage.getRefaire().isEmpty()){
 			interfaceGraphique.getRefaire().setEnabled(false);
+			interfaceGraphique.getBtnRefaire().setEnabled(false);
 		}
 		interfaceGraphique.getAnnuler().setEnabled(true);
+		interfaceGraphique.getBtnAnnuler().setEnabled(true);
 		actualiserImageIcon();
 	}
 	
@@ -862,7 +866,9 @@ public class Modele {
 		BufferedImage image = outil.deepCopy(cadreImage.getImage());
 		cadreImage.getAnnuler().add(image);
 		interfaceGraphique.getAnnuler().setEnabled(true);
+		interfaceGraphique.getBtnAnnuler().setEnabled(true);
 		interfaceGraphique.getRefaire().setEnabled(false);
+		interfaceGraphique.getBtnRefaire().setEnabled(false);
 		cadreImage.getRefaire().clear();
 	}
 

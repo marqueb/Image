@@ -48,12 +48,12 @@ public class Histogramme extends JComponent{
 					max=tab[0][j];
 			}
 			if(afficheBleu){
-				if (max<tab[1][j])
-					max=tab[1][j];
-			}
-			if(afficheVert){
 				if (max<tab[2][j])
 					max=tab[2][j];
+			}
+			if(afficheVert){
+				if (max<tab[1][j])
+					max=tab[1][j];
 			}
 			if(afficheLuminence){		
 				if (max<yuv[0][j])

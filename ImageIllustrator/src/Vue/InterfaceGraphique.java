@@ -58,7 +58,7 @@ public class InterfaceGraphique implements Runnable{
 	private Histogramme histo;
 	private JSlider sliderFusion = null, sliderChoixTailleFiltre = null;
 	private JComboBox choixRgbYuv;
-	private JButton afficherHisto, segmenter;
+	private JButton afficherHisto, segmenter,btnAnnuler, btnRefaire,btnCouleur,btnDecouper,btnFusion,btnHisto,btnSauver;
 
 	public Image chargerImage(String bouton){
 		Image img=null;
@@ -75,13 +75,44 @@ public class InterfaceGraphique implements Runnable{
 			} catch (IOException ex) {
 			}
 			break;
-		case "Imprimer" :
+		case "Annuler" :
 			try {
-				img = ImageIO.read(getClass().getResource("Image/imprimer.png"));
+				img = ImageIO.read(getClass().getResource("Image/annuler.png"));
+			} catch (IOException ex) {
+			}
+			break;
+		case "Refaire" :
+			try {
+				img = ImageIO.read(getClass().getResource("Image/refaire.png"));
+			} catch (IOException ex) {
+			}
+			break;
+		case "Couleur" :
+			try {
+				img = ImageIO.read(getClass().getResource("Image/couleur.png"));
+			} catch (IOException ex) {
+			}
+			break;
+		case "Decouper" :
+			try {
+				img = ImageIO.read(getClass().getResource("Image/decouper.png"));
+			} catch (IOException ex) {
+			}
+			break;
+		case "Fusion" :
+			try {
+				img = ImageIO.read(getClass().getResource("Image/fusion.png"));
+			} catch (IOException ex) {
+			}
+			break;
+		case "Histogramme" :
+			try {
+				img = ImageIO.read(getClass().getResource("Image/histogramme.png"));
 			} catch (IOException ex) {
 			}
 			break;
 		}
+
 		return img;
 	}
 	
@@ -413,9 +444,6 @@ public class InterfaceGraphique implements Runnable{
 
 		JPanel panelUser = ajouterGrilleFiltreUser(3);
 
-		//		previsualiser.setEnabled(false);
-		//		valider.setEnabled(false);
-
 		controler.addControlerFiltreUser(valider, annuler, previsualiser, boxChoixTailleFiltre, panelUser);
 
 		//modification du panelOption
@@ -545,6 +573,7 @@ public class InterfaceGraphique implements Runnable{
 	public void setEnable(boolean enable){
 		sauvegarde.setEnabled(enable);
 		couleurPixel.setEnabled(enable);
+		btnCouleur.setEnabled(enable);
 		fusion.setEnabled(enable);
 		imagris.setEnabled(enable);
 		egalisation.setEnabled(enable);
@@ -562,7 +591,10 @@ public class InterfaceGraphique implements Runnable{
 		utilisateur.setEnabled(enable);
 		median.setEnabled(enable);
 		sepia.setEnabled(enable);
-	
+		btnDecouper.setEnabled(enable);
+		btnFusion.setEnabled(enable);
+		btnHisto.setEnabled(enable);
+		btnSauver.setEnabled(enable);
 	}
 
 	public void run(){
@@ -706,9 +738,7 @@ public class InterfaceGraphique implements Runnable{
 		toolBar.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		toolBar.setAlignmentX(Component.LEFT_ALIGNMENT);
 		toolBar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		toolBar.setBackground(Color.WHITE);
 		toolBar.setForeground(Color.BLACK);
-
   
 		JButton btnCharger = new JButton();
 		btnCharger.setToolTipText("Charger");
@@ -717,7 +747,8 @@ public class InterfaceGraphique implements Runnable{
 		btnCharger.setFocusable(false);
 		controler.addControlerCharger(btnCharger);
 		toolBar.add(btnCharger);
-		JButton btnSauver = new JButton();
+		
+		btnSauver = new JButton();
 		btnSauver.setIcon(new ImageIcon(chargerImage("Sauver")));
 		btnSauver.setMnemonic('s');
 		btnSauver.setEnabled(false);
@@ -725,11 +756,60 @@ public class InterfaceGraphique implements Runnable{
 		btnSauver.setFocusable(false);
 		controler.addControlerSauvegarder(btnSauver);
 		toolBar.add(btnSauver);
-		JButton btnImprimer = new JButton();
-		btnImprimer.setIcon(new ImageIcon(chargerImage("Imprimer")));
-		btnImprimer.setToolTipText("Imprimer");
-		btnImprimer.setFocusable(false);
-		toolBar.add(btnImprimer);
+		
+		JLabel vide = new JLabel("       ");
+		toolBar.add(vide);
+		
+		btnAnnuler = new JButton();
+		btnAnnuler.setIcon(new ImageIcon(chargerImage("Annuler")));
+		btnAnnuler.setToolTipText("Annuler");
+		btnAnnuler.setFocusable(false);
+		btnAnnuler.setEnabled(false);
+		controler.addControlerAnnuler(btnAnnuler);
+		toolBar.add(btnAnnuler);
+		
+		btnRefaire = new JButton();
+		btnRefaire.setIcon(new ImageIcon(chargerImage("Refaire")));
+		btnRefaire.setToolTipText("Refaire");
+		btnRefaire.setFocusable(false);
+		btnRefaire.setEnabled(false);
+		controler.addControlerRefaire(btnRefaire);
+		toolBar.add(btnRefaire);
+		JLabel vide2 = new JLabel("       ");
+		toolBar.add(vide2);
+		
+		btnCouleur = new JButton();
+		btnCouleur.setIcon(new ImageIcon(chargerImage("Couleur")));
+		btnCouleur.setToolTipText("Couleur");
+		btnCouleur.setFocusable(false);
+		btnCouleur.setEnabled(false);
+		controler.addControlerCouleurPixel(btnCouleur);
+		toolBar.add(btnCouleur);	
+		
+		btnDecouper = new JButton();
+		btnDecouper.setIcon(new ImageIcon(chargerImage("Decouper")));
+		btnDecouper.setToolTipText("Decouper");
+		btnDecouper.setFocusable(false);
+		btnDecouper.setEnabled(false);
+		controler.addControlerDecouper(btnDecouper);
+		toolBar.add(btnDecouper);	
+		
+		btnFusion = new JButton();
+		btnFusion.setIcon(new ImageIcon(chargerImage("Fusion")));
+		btnFusion.setToolTipText("Fusion");
+		btnFusion.setFocusable(false);
+		btnFusion.setEnabled(false);
+		btnFusion.addActionListener(new ControlerBoutonFusion(controler));
+		toolBar.add(btnFusion);	
+		
+		btnHisto = new JButton();
+		btnHisto.setIcon(new ImageIcon(chargerImage("Histogramme")));
+		btnHisto.setToolTipText("Histogramme");
+		btnHisto.setFocusable(false);
+		btnHisto.setEnabled(false);
+		controler.addControlerAfficherHisto(btnHisto);
+		toolBar.add(btnHisto);	
+		
 		frame.add(panel,BorderLayout.NORTH);
 		tabbedPane = new JTabbedPane();
 		tabbedPane=new JTabbedPane();
@@ -818,6 +898,14 @@ public class InterfaceGraphique implements Runnable{
 		this.bleu = bleu;
 	}
 
+	public JButton getBtnAnnuler() {
+		return btnAnnuler;
+	}
+
+	public void setBtnAnnuler(JButton btnAnnuler) {
+		this.btnAnnuler = btnAnnuler;
+	}
+
 	public JFrame getFrameHisto() {
 		return frameHisto;
 	}
@@ -901,6 +989,14 @@ public class InterfaceGraphique implements Runnable{
 	public JButton getButtonSegmenter()
 	{
 		return this.segmenter;
+	}
+
+	public JButton getBtnRefaire() {
+		return btnRefaire;
+	}
+
+	public void setBtnRefaire(JButton btnRefaire) {
+		btnRefaire = btnRefaire;
 	}
 
 	public JMenuItem getAnnuler() {

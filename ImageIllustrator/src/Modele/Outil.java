@@ -113,7 +113,6 @@ public class Outil {
 			j_deb=0;
 			j_fin=cadreImage.getHeight();
 		}
-		int sepiaDepth = 20;
 		for (int i=i_deb;i<i_fin;i++){
 			for (int j=j_deb;j<j_fin;j++){
 				couleur=couleurPixel(cadreImage,i,j);
@@ -143,10 +142,9 @@ public class Outil {
 			j_deb=0;
 			j_fin=cadreImage.getHeight();
 		}
-		int sepiaDepth = 20;
+		int sepiaDepth =50;
 		for (int i=i_deb;i<i_fin;i++){
 			for (int j=j_deb;j<j_fin;j++){
-
 				couleur=couleurPixel(cadreImage,i,j);
 				r=getR(couleur);
 				g=getG(couleur);
@@ -157,7 +155,7 @@ public class Outil {
 				if (r>255) r=255;
 		        if (g>255) g=255;
 		        if (b>255) b=255;
-		        b-= 100;
+		        b-= 50;
 		        if (b<0) b=0;
 		        if (b>255) b=255;
 		        cadreImage.setRGB(i, j,setR(r)+setB(b)+setG(g)+setAlpha(255));

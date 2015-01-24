@@ -66,6 +66,7 @@ public class Controler{
 		modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
 		modele.actualiserImageIcon();
 		it.rafraichirComponentOption();
+		flouActive=false;
 		init();
 	}
 
@@ -138,17 +139,23 @@ public class Controler{
 		if(!modele.getListImage().isEmpty()){
 			if(modele.cadreImageCourant().getAnnuler().isEmpty()){
 				it.getAnnuler().setEnabled(false);
+				it.getBtnAnnuler().setEnabled(false);
 			}else{
 				it.getAnnuler().setEnabled(true);
+				it.getBtnAnnuler().setEnabled(true);
 			}
 			if(modele.cadreImageCourant().getRefaire().isEmpty()){
 				it.getRefaire().setEnabled(false);
+				it.getBtnRefaire().setEnabled(false);
 			}else{
 				it.getRefaire().setEnabled(true);
+				it.getBtnRefaire().setEnabled(true);
 			}
 		}else{
 			it.getAnnuler().setEnabled(false);
+			it.getBtnAnnuler().setEnabled(false);
 			it.getRefaire().setEnabled(false);
+			it.getBtnRefaire().setEnabled(false);
 		}
 	}
 
@@ -332,8 +339,6 @@ public class Controler{
 	public void boutonAppliquerFusionClic()
 	{
 		init();
-		//this.it.retirerComponentFusion();
-		//modele.calculerHistogrammeRGB();
 	}
 
 	public void boutonAppliquerFiltre()
@@ -496,13 +501,31 @@ public class Controler{
 	public void addControlerAnnuler(JMenuItem annuler){
 		annuler.addActionListener(new ControlerAnnuler(this));
 	}
-
+	
+	public void addControlerAnnuler(JButton annuler){
+		annuler.addActionListener(new ControlerAnnuler(this));
+	}
+	
 	public void addControlerRefaire(JMenuItem refaire){
 		refaire.addActionListener(new ControlerRefaire(this));
 	}
 
 	public void addControlerSepia(JMenuItem sepia) {
 		sepia.addActionListener(new ControlerSepia(this));
+		
+	}
+
+	public void addControlerRefaire(JButton btnRefaire) {
+		btnRefaire.addActionListener(new ControlerRefaire(this));		
+	}
+
+	public void addControlerCouleurPixel(JButton btnCouleur) {
+		btnCouleur.addActionListener(new ControlerCouleurPixel(this));
+		
+	}
+
+	public void addControlerDecouper(JButton btnDecouper) {
+		btnDecouper.addActionListener(new ControlerDecouper(this));
 		
 	}
 }

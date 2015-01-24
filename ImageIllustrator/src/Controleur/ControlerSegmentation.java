@@ -38,7 +38,6 @@ public class ControlerSegmentation implements ActionListener{
 	public ControlerSegmentation(Controler c)
 	{
 		controler = c;
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -55,7 +54,6 @@ public class ControlerSegmentation implements ActionListener{
 		Mat img= new Mat(rows,cols,type);
 
 		data = new byte[rows * cols * (int)img.elemSize()];
-		System.out.println((int)img.elemSize());
 		int[] dataBuff = controler.getModele().cadreImageCourant().getImage().getRGB(0, 0, cols, rows, null, 0, cols);
 		for(int i = 0; i < dataBuff.length; i++)
 		{
@@ -118,8 +116,6 @@ public class ControlerSegmentation implements ActionListener{
 		img.put(0, 0, data);
 		imageretour.put(0,0,dataretour);	
 		
-
-
 		Highgui.imencode(".jpg",img, mb); 
 		try {
 			imagegrab = ImageIO.read(new ByteArrayInputStream(mb.toArray()));
