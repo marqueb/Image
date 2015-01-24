@@ -259,6 +259,13 @@ public class Modele {
 		actualiserImageIcon();
 	}
 
+	public void eclaircir(){
+		CadreImage cadreImage=cadreImageCourant();
+		initAnnulerRefaire(cadreImage);
+		outil.eclaircir(cadreImage.getImage(), existeSelection(), selection());
+		actualiserImageIcon();
+	}
+	
 	public void sepia() {
 		CadreImage cadreImage=cadreImageCourant();
 		initAnnulerRefaire(cadreImage);

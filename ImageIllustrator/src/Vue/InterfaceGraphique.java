@@ -51,7 +51,8 @@ public class InterfaceGraphique implements Runnable{
 	private JTabbedPane tabbedPane;
 	private Modele modele;
 	private Controler controler;
-	private JMenuItem sauvegarde, couleurPixel, fusion, imagris, moyen, egalisation, redimensionner, etalement, inverser, decouper, annuler, refaire, median, utilisateur, contours, contraste,sepia ;
+	private JMenuItem sauvegarde, couleurPixel, fusion, imagris, moyen, egalisation, redimensionner, etalement,
+	inverser, decouper, annuler, refaire, median, utilisateur, contours, contraste,sepia, eclaircir ;
 	private CheckboxGroup groupe;
 	private Checkbox box1, box2;
 	private JCheckBox rouge,vert,bleu, luminance, chrominanceU , chrominanceV;
@@ -115,7 +116,7 @@ public class InterfaceGraphique implements Runnable{
 
 		return img;
 	}
-	
+
 	public void redimensionner() {
 		CadreImage image = new CadreImage();
 		image=modele.cadreImageCourant();
@@ -136,7 +137,7 @@ public class InterfaceGraphique implements Runnable{
 		frameRedim.add(text);
 		frameRedim.setVisible(true);
 	}
-	
+
 	public int getSliderFusionValue()
 	{
 		if(this.sliderFusion == null) return -1;
@@ -214,7 +215,7 @@ public class InterfaceGraphique implements Runnable{
 		//partie onglet nom
 		JLabel labelOnglet = new JLabel(image.getNomFichier()+" "+(getTabbedPane().getTabCount()));
 		//partie onglet fermerOnglet
-		
+
 		JButton boutonFermer = new JButton("X");
 		controler.addControlerX(boutonFermer);
 		//Ajout au panel de la partie nom+fermer
@@ -271,10 +272,10 @@ public class InterfaceGraphique implements Runnable{
 
 		frameHisto = new JFrame();
 		histo = new Histogramme(tabsHisto,yuv,"histogramme", new Dimension(1000,600));
-		
+
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
-		
+
 		JPanel option = new JPanel();
 		option.setLayout(new BoxLayout(option, BoxLayout.Y_AXIS));
 		rouge= new JCheckBox("Rouge  ");
@@ -283,29 +284,29 @@ public class InterfaceGraphique implements Runnable{
 		luminance= new JCheckBox("Lum Y");
 		chrominanceU= new JCheckBox("Chrom U");
 		chrominanceV= new JCheckBox("Chrom V");
-	
+
 		//initalisation
 		rouge.setSelected(true);
 		vert.setSelected(true);
 		bleu.setSelected(true);
-		
+
 		luminance.setVisible(false);
 		chrominanceU.setVisible(false);
 		chrominanceV.setVisible(false);
-		
+
 		luminance.setSelected(false);
 		chrominanceU.setSelected(false);
 		chrominanceV.setSelected(false);
-		
+
 		String[] choix = { "RGB","YUV" };
 		choixRgbYuv = new JComboBox(choix);
 		choixRgbYuv.setSelectedIndex(0);
 		controler.addControlerHistoChoixRgbYuv(choixRgbYuv);
-		
+
 		JPanel panelBox = new JPanel();
 		panelBox.add(choixRgbYuv);
 		option.add(panelBox);
-		
+
 		controler.addControlerCheckCouleur(rouge,vert,bleu,luminance, chrominanceU,chrominanceV);
 		option.add(rouge);
 		option.add(vert);
@@ -313,12 +314,12 @@ public class InterfaceGraphique implements Runnable{
 		option.add(luminance);
 		option.add(chrominanceU);
 		option.add(chrominanceV);
-		
+
 		panel.add(histo,BorderLayout.CENTER);
 		panel.add(option,BorderLayout.EAST);
-		
-		
-	
+
+
+
 		frameHisto.add(panel);
 		controler.addNbhisto(frameHisto);
 		frameHisto.setSize(1200, 600);
@@ -326,25 +327,25 @@ public class InterfaceGraphique implements Runnable{
 
 		frame.validate();
 	}
-	
+
 	public void retirerComponentFusion()
 	{	
 		panelOption.remove(2);
 		panelOption.repaint();
 		frame.validate();
-	
-		
+
+
 	}
 	public void retirerComponent()
 	{	
 		panelOption.remove(2);
 		panelOption.repaint();
 		frame.validate();
-	
-		
+
+
 	}
-	
-	
+
+
 	public void ajouterComponentFusion(CadreImage cadre_ima_fusion)
 	{
 		int newWidth = panelOption.getWidth();
@@ -355,14 +356,14 @@ public class InterfaceGraphique implements Runnable{
 		JLayeredPane pane = new JLayeredPane();
 		cadre_ima.setPreferredSize(new Dimension(newWidth, newHeight));
 		JPanel panelfusion = new JPanel();
-	
-		
+
+
 
 		sliderFusion = new JSlider(0,100,0);
 		JButton appliquer = new JButton("Appliquer fusion");		
 		controler.addControlerFusion(sliderFusion, appliquer);
 		JLabel label= new JLabel("        Fusion :");
-		
+
 		panelfusion.setSize(new Dimension(200,650));
 		panelfusion.setLayout(new BoxLayout(panelfusion, BoxLayout.PAGE_AXIS));
 		panelfusion.add(label);
@@ -396,7 +397,7 @@ public class InterfaceGraphique implements Runnable{
 		JLabel label= new JLabel(" Filtre :");
 		panelfusion.add(label);
 		panelfusion.setLayout(new BoxLayout(panelfusion, BoxLayout.PAGE_AXIS));
-		
+
 		switch (typeFiltre)
 		{
 		case GAUSSIEN:
@@ -405,7 +406,7 @@ public class InterfaceGraphique implements Runnable{
 			JPanel panel = new JPanel();
 			panel.add(boxTypeFiltre);
 			panelfusion.add(panel);
-			
+
 			break;
 		case MEDIAN:
 			break;
@@ -434,7 +435,7 @@ public class InterfaceGraphique implements Runnable{
 		JLabel label= new JLabel(" Filtre :");
 		panelfusion.add(label);
 		panelfusion.setLayout(new BoxLayout(panelfusion, BoxLayout.PAGE_AXIS));
-		
+
 		JButton previsualiser = new JButton("Previsualiser");
 		JButton valider = new JButton("Valider");
 		JButton annuler = new JButton("Annuler");
@@ -447,7 +448,7 @@ public class InterfaceGraphique implements Runnable{
 		controler.addControlerFiltreUser(valider, annuler, previsualiser, boxChoixTailleFiltre, panelUser);
 
 		//modification du panelOption
-		
+
 		JPanel panel2 = new JPanel();
 		panel2.add(previsualiser);
 		panelfusion.add(panel2);
@@ -460,7 +461,7 @@ public class InterfaceGraphique implements Runnable{
 		panelOption.add(pane);
 		frame.validate();
 	}
-	
+
 	public void previsualiserApplicationFiltreUser(BufferedImage im_no_modif, BufferedImage im_modif)
 	{
 		Outil outil = new Outil();
@@ -469,7 +470,7 @@ public class InterfaceGraphique implements Runnable{
 		JLabel labelModif = new JLabel("Apres");
 
 		Font font = new Font("Arial",Font.BOLD,18);
-		
+
 		JPanel panel = new JPanel(new GridLayout());
 		JPanel panelImNoModif = new JPanel(new BorderLayout());
 		JPanel panelImModif = new JPanel(new BorderLayout());
@@ -477,13 +478,13 @@ public class InterfaceGraphique implements Runnable{
 		JPanel panelScrollModif = new JPanel(new BorderLayout());
 		JScrollPane scrollPaneNoModif = new JScrollPane();
 		JScrollPane scrollPaneModif = new JScrollPane();
-		
+
 		CadreImage cadreImageNoModif=outil.initCadre(im_no_modif, controler);
 		CadreImage cadreImageModif=outil.initCadre(im_modif, controler);
-		
+
 		labelNoModif.setFont(font);
 		labelModif.setFont(font);
-		
+
 		panelScrollNoModif.add(cadreImageNoModif);
 		scrollPaneNoModif.setViewportView(panelScrollNoModif);
 		//JScrollPane scrollPaneNoModif = new JScrollPane(panelScrollNoModif);
@@ -498,7 +499,7 @@ public class InterfaceGraphique implements Runnable{
 		panel.add(panelImNoModif);
 		panel.add(panelImModif);
 		framePreview.add(panel);
-		
+
 		framePreview.dispose();
 		framePreview.setSize(1200, 600);
 		framePreview.setVisible(true);
@@ -569,7 +570,7 @@ public class InterfaceGraphique implements Runnable{
 		}
 		return isRGB;
 	}
-	
+
 	public void setEnable(boolean enable){
 		sauvegarde.setEnabled(enable);
 		couleurPixel.setEnabled(enable);
@@ -595,6 +596,7 @@ public class InterfaceGraphique implements Runnable{
 		btnFusion.setEnabled(enable);
 		btnHisto.setEnabled(enable);
 		btnSauver.setEnabled(enable);
+		eclaircir.setEnabled(enable);
 	}
 
 	public void run(){
@@ -655,7 +657,7 @@ public class InterfaceGraphique implements Runnable{
 		redimensionner.setEnabled(false);
 		image.add(redimensionner);
 		controler.addControlerRedimenssioner(redimensionner);
-		 //Image => Transformation
+		//Image => Transformation
 		JMenu  transformation = new JMenu("Transformation");      
 		//Image => transformation => fusion
 		fusion = new JMenuItem("Fusion");
@@ -668,20 +670,18 @@ public class InterfaceGraphique implements Runnable{
 		sepia = new JMenuItem("Image Sepia");
 		sepia.setEnabled(false);
 		controler.addControlerSepia(sepia);
-		transformation.add(sepia);       
-		//Image => transformation => contraste
-		contraste = new JMenuItem("Réhausser les contrastes");
-		controler.addControlerContraste(contraste);
-		contraste.setEnabled(false);
-		transformation.add(contraste);       
+		transformation.add(sepia);    
+		inverser = new JMenuItem("Négatif");
+		inverser.setEnabled(false);
+		controler.addControlerInverser(inverser);
+		transformation.add(inverser);
+		eclaircir= new JMenuItem("Eclaircir");
+		eclaircir.setEnabled(false);
+		controler.addControlerEclaircir(eclaircir);
+		transformation.add(eclaircir);
+		
 		image.add(transformation);
-		//Image => transformation => contours
-		contours = new JMenuItem("Accentuer les contours");
-		contours.setEnabled(false);
-		controler.addControlerContours(contours);
-		transformation.add(contours);       
-		image.add(transformation);
-
+		
 		//Traitement 
 		JMenu traitement = new JMenu("Traitement");
 		//Traitement => Amélioration
@@ -691,10 +691,7 @@ public class InterfaceGraphique implements Runnable{
 		//Traitement => filtre 
 		traitement.add(filtre);
 
-		inverser = new JMenuItem("Inverser");
-		inverser.setEnabled(false);
-		controler.addControlerInverser(inverser);
-		amelioration.add(inverser);
+	
 		etalement = new JMenuItem("Etalement");
 		etalement.setEnabled(false);
 		controler.addControlerEtalement(etalement);
@@ -703,6 +700,16 @@ public class InterfaceGraphique implements Runnable{
 		egalisation.setEnabled(false);
 		controler.addControlerEgalisation(egalisation);
 		amelioration.add(egalisation);
+		//filtre => contraste
+		contraste = new JMenuItem("Réhausser les contrastes");
+		controler.addControlerContraste(contraste);
+		contraste.setEnabled(false);
+		filtre.add(contraste);  
+		//filtre  => contours
+		contours = new JMenuItem("Accentuer les contours");
+		contours.setEnabled(false);
+		controler.addControlerContours(contours);
+		filtre.add(contours);       
 		moyen = new JMenuItem("Flouter");
 		moyen.setEnabled(false);
 		controler.addControlerMoyen(moyen);
@@ -715,6 +722,7 @@ public class InterfaceGraphique implements Runnable{
 		controler.addControlerBoutonFiltreUser(utilisateur);
 		utilisateur.setEnabled(false);
 		filtre.add(utilisateur);
+
 
 		// Barre de menu
 		JMenuBar barre = new JMenuBar();
@@ -733,13 +741,15 @@ public class InterfaceGraphique implements Runnable{
 
 		//implementation de la toolbar
 		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+
 		JToolBar toolBar = new JToolBar();
-		panel.add(toolBar);
+		panel.add(toolBar,BorderLayout.WEST);
 		toolBar.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		toolBar.setAlignmentX(Component.LEFT_ALIGNMENT);
 		toolBar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		toolBar.setForeground(Color.BLACK);
-  
+
 		JButton btnCharger = new JButton();
 		btnCharger.setToolTipText("Charger");
 		btnCharger.setMnemonic('c');
@@ -747,7 +757,7 @@ public class InterfaceGraphique implements Runnable{
 		btnCharger.setFocusable(false);
 		controler.addControlerCharger(btnCharger);
 		toolBar.add(btnCharger);
-		
+
 		btnSauver = new JButton();
 		btnSauver.setIcon(new ImageIcon(chargerImage("Sauver")));
 		btnSauver.setMnemonic('s');
@@ -756,10 +766,10 @@ public class InterfaceGraphique implements Runnable{
 		btnSauver.setFocusable(false);
 		controler.addControlerSauvegarder(btnSauver);
 		toolBar.add(btnSauver);
-		
-		JLabel vide = new JLabel("       ");
+
+		JLabel vide = new JLabel("                  ");
 		toolBar.add(vide);
-		
+
 		btnAnnuler = new JButton();
 		btnAnnuler.setIcon(new ImageIcon(chargerImage("Annuler")));
 		btnAnnuler.setToolTipText("Annuler");
@@ -767,7 +777,7 @@ public class InterfaceGraphique implements Runnable{
 		btnAnnuler.setEnabled(false);
 		controler.addControlerAnnuler(btnAnnuler);
 		toolBar.add(btnAnnuler);
-		
+
 		btnRefaire = new JButton();
 		btnRefaire.setIcon(new ImageIcon(chargerImage("Refaire")));
 		btnRefaire.setToolTipText("Refaire");
@@ -775,9 +785,9 @@ public class InterfaceGraphique implements Runnable{
 		btnRefaire.setEnabled(false);
 		controler.addControlerRefaire(btnRefaire);
 		toolBar.add(btnRefaire);
-		JLabel vide2 = new JLabel("       ");
+		JLabel vide2 = new JLabel("                  ");
 		toolBar.add(vide2);
-		
+
 		btnCouleur = new JButton();
 		btnCouleur.setIcon(new ImageIcon(chargerImage("Couleur")));
 		btnCouleur.setToolTipText("Couleur");
@@ -785,7 +795,7 @@ public class InterfaceGraphique implements Runnable{
 		btnCouleur.setEnabled(false);
 		controler.addControlerCouleurPixel(btnCouleur);
 		toolBar.add(btnCouleur);	
-		
+
 		btnDecouper = new JButton();
 		btnDecouper.setIcon(new ImageIcon(chargerImage("Decouper")));
 		btnDecouper.setToolTipText("Decouper");
@@ -793,7 +803,7 @@ public class InterfaceGraphique implements Runnable{
 		btnDecouper.setEnabled(false);
 		controler.addControlerDecouper(btnDecouper);
 		toolBar.add(btnDecouper);	
-		
+
 		btnFusion = new JButton();
 		btnFusion.setIcon(new ImageIcon(chargerImage("Fusion")));
 		btnFusion.setToolTipText("Fusion");
@@ -801,7 +811,7 @@ public class InterfaceGraphique implements Runnable{
 		btnFusion.setEnabled(false);
 		btnFusion.addActionListener(new ControlerBoutonFusion(controler));
 		toolBar.add(btnFusion);	
-		
+
 		btnHisto = new JButton();
 		btnHisto.setIcon(new ImageIcon(chargerImage("Histogramme")));
 		btnHisto.setToolTipText("Histogramme");
@@ -809,7 +819,7 @@ public class InterfaceGraphique implements Runnable{
 		btnHisto.setEnabled(false);
 		controler.addControlerAfficherHisto(btnHisto);
 		toolBar.add(btnHisto);	
-		
+
 		frame.add(panel,BorderLayout.NORTH);
 		tabbedPane = new JTabbedPane();
 		tabbedPane=new JTabbedPane();
@@ -817,7 +827,7 @@ public class InterfaceGraphique implements Runnable{
 		controler.addControlerOnglet(tabbedPane);
 		tabbedPane.setOpaque(true);
 		tabbedPane.setBackground(Color.WHITE);
-		
+
 		frame.add(tabbedPane,BorderLayout.CENTER);
 		panelOption = new JPanel();	
 		panelOption.setLayout(new BoxLayout(panelOption, BoxLayout.Y_AXIS));
@@ -834,7 +844,7 @@ public class InterfaceGraphique implements Runnable{
 		segmenter.setEnabled(false);
 		panelOption.add(segmenter);
 		controler.addControlerSegmentation(segmenter);
-		
+
 		panelInfo = new JPanel();
 		PixelCouleur= new JLabel();
 		panelInfo.add(PixelCouleur);
@@ -849,7 +859,7 @@ public class InterfaceGraphique implements Runnable{
 		frame.setVisible(true);
 		setEnable(false);
 	}
-	
+
 	public JCheckBox getLuminance() {
 		return luminance;
 	}
@@ -929,7 +939,7 @@ public class InterfaceGraphique implements Runnable{
 	public void setTabbedAffichage(JTabbedPane tabbedAffichage) {
 		this.tabbedPane = tabbedAffichage;
 	}
-	
+
 	public JMenuItem getEgalisation() {
 		return egalisation;
 	}
@@ -945,7 +955,7 @@ public class InterfaceGraphique implements Runnable{
 	public void setRedimensionner(JMenuItem redimensionner) {
 		this.redimensionner = redimensionner;
 	}
-	
+
 	public TextArea getLargeur() {
 		return largeur;
 	}
@@ -985,7 +995,7 @@ public class InterfaceGraphique implements Runnable{
 	public void setFrameRedim(JFrame frameRedim) {
 		this.frameRedim = frameRedim;
 	}
-	
+
 	public JButton getButtonSegmenter()
 	{
 		return this.segmenter;

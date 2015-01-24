@@ -130,6 +130,12 @@ public class Controler{
 		modele.imagris();
 	}	
 
+	public void eclaircir() {
+		init();
+		modele.eclaircir();
+		
+	}
+	
 	public void changerOnglet(){
 		init();
 		if(modele.existeSelection()){
@@ -528,4 +534,11 @@ public class Controler{
 		btnDecouper.addActionListener(new ControlerDecouper(this));
 		
 	}
+
+	public void addControlerEclaircir(JMenuItem eclaircir) {
+		eclaircir.addActionListener(new ControlerEclaircir(this));
+		
+	}
+
+	
 }
