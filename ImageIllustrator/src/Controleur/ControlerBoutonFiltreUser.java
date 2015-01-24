@@ -18,6 +18,7 @@ public class ControlerBoutonFiltreUser  implements ActionListener{
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		
 		modele.memoriseImage();
 		it.ajouterComponentFiltreUser();
 	}

@@ -192,31 +192,8 @@ public class Modele {
 
 	}
 
-	public void egalisation (){/*
-<<<<<<< HEAD
-		  double ratio;
-		  int pixel,r,g,b;
-		  int imageCumule[]=new int[256];
-		  initAnnulerRefaire(cadreImageCourant());
-		  BufferedImage image= cadreImageCourant().getImage();
-		  ratio = 255.0 / (image.getWidth()*image.getHeight());
-		  outil.histogrammeCumule(image,imageCumule);
-		  for(int i=0;i<image.getWidth();i++){
-			  for(int j=0;j<image.getHeight();j++){
-				  pixel = image.getRGB(i, j);
-				  r=outil.getR(pixel);
-				  g=outil.getG(pixel);
-				  b=outil.getB(pixel);
-				  if(r==255 && b == 255 && g==255)
-					  image.setRGB(i, j,outil.setR(255)+outil.setG(255)+outil.setB(255)+outil.setAlpha(255));
-				  else
-					  image.setRGB(i, j,outil.setR((int) (imageCumule[r]*ratio))+outil.setG((int) (imageCumule[g]*ratio))+outil.setB((int) (imageCumule[b]*ratio))+outil.setAlpha(255));
-			  }
-		  }
-		  cadreImageCourant().setImage(image);
-		  interfaceGraphique.getFrame().validate();
-		  //interfaceGraphique.getFrame().repaint();
-=======*/
+	public void egalisation (){
+
 		double ratio;
 		int pixel,r,g,b,i_deb,i_fin,j_deb,j_fin;
 		int imageCumule[]=new int[256];
@@ -282,6 +259,13 @@ public class Modele {
 		actualiserImageIcon();
 	}
 
+	public void sepia() {
+		CadreImage cadreImage=cadreImageCourant();
+		initAnnulerRefaire(cadreImage);
+		outil.sepia(cadreImage.getImage(), existeSelection(), selection());
+		actualiserImageIcon();		
+	}
+	
 	public void fermerOnglet(Object j){
 		//cherche l'index de l'onglet à l'aide de la table de bouton
 		int i = listBoutonFermeture.indexOf(j);
@@ -881,6 +865,8 @@ public class Modele {
 		interfaceGraphique.getRefaire().setEnabled(false);
 		cadreImage.getRefaire().clear();
 	}
+
+
 }
 
 

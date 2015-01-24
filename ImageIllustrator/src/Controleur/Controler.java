@@ -22,7 +22,7 @@ import Vue.InterfaceGraphique;
 public class Controler{
 	private Modele modele;
 	private InterfaceGraphique it;
-	private boolean echantillonageActif=false,flouActive=false, fusionActive=false, selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
+	private boolean echantillonageActif=false,flouActive=false,utilisateurActive=false, fusionActive=false, selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
 
 	public boolean selectionActive()
 	{
@@ -47,6 +47,10 @@ public class Controler{
 			modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
 			modele.actualiserImageIcon();
 			flouActive=false;
+		}
+		if(utilisateurActive){
+			it.retirerComponent();
+			utilisateurActive=false;
 		}
 		if(fusionActive){
 			it.retirerComponent();
@@ -220,7 +224,6 @@ public class Controler{
 			}
 
 		});
-		//(new ControlerEgalisation(modele));
 	}
 	public void sourisEntre(int x, int y, int u, int v){
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
@@ -439,7 +442,7 @@ public class Controler{
 	}
 
 	public void addControlerBoutonFiltreUser(JMenuItem u)
-	{
+	{	
 		u.addActionListener(new ControlerBoutonFiltreUser(this.modele, this.it));
 	}
 
@@ -496,5 +499,10 @@ public class Controler{
 
 	public void addControlerRefaire(JMenuItem refaire){
 		refaire.addActionListener(new ControlerRefaire(this));
+	}
+
+	public void addControlerSepia(JMenuItem sepia) {
+		sepia.addActionListener(new ControlerSepia(this));
+		
 	}
 }

@@ -11,6 +11,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.TextArea;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -44,12 +46,12 @@ public class InterfaceGraphique implements Runnable{
 	private JFrame frame,frameHisto,frameRedim ;
 	private JPanel panelOption;
 	private JPanel panelInfo;
-	private JTextArea PixelCouleur ;
+	private JLabel PixelCouleur ;
 	private TextArea largeur, hauteur;
 	private JTabbedPane tabbedPane;
 	private Modele modele;
 	private Controler controler;
-	private JMenuItem sauvegarde, couleurPixel, fusion, imagris, moyen, egalisation, redimensionner, etalement, inverser, decouper, annuler, refaire ;
+	private JMenuItem sauvegarde, couleurPixel, fusion, imagris, moyen, egalisation, redimensionner, etalement, inverser, decouper, annuler, refaire, median, utilisateur, contours, contraste,sepia ;
 	private CheckboxGroup groupe;
 	private Checkbox box1, box2;
 	private JCheckBox rouge,vert,bleu, luminance, chrominanceU , chrominanceV;
@@ -179,7 +181,7 @@ public class InterfaceGraphique implements Runnable{
 		tab.setOpaque(false);    
 
 		//partie onglet nom
-		JLabel labelOnglet = new JLabel(image.getNomFichier()+(getTabbedPane().getTabCount()));
+		JLabel labelOnglet = new JLabel(image.getNomFichier()+" "+(getTabbedPane().getTabCount()));
 		//partie onglet fermerOnglet
 		
 		JButton boutonFermer = new JButton("X");
@@ -394,7 +396,14 @@ public class InterfaceGraphique implements Runnable{
 
 	//remplace l'image par une grille correspondant au filtre et affiche une image ï¿½ droite pour prï¿½visualiser
 	public void ajouterComponentFiltreUser()
-	{
+	{		
+		JPanel panelfusion = new JPanel();
+		JLayeredPane pane = new JLayeredPane();
+		panelfusion.setSize(new Dimension(200,200));
+		JLabel label= new JLabel(" Filtre :");
+		panelfusion.add(label);
+		panelfusion.setLayout(new BoxLayout(panelfusion, BoxLayout.PAGE_AXIS));
+		
 		JButton previsualiser = new JButton("Previsualiser");
 		JButton valider = new JButton("Valider");
 		JButton annuler = new JButton("Annuler");
@@ -410,15 +419,17 @@ public class InterfaceGraphique implements Runnable{
 		controler.addControlerFiltreUser(valider, annuler, previsualiser, boxChoixTailleFiltre, panelUser);
 
 		//modification du panelOption
-		panelOption.removeAll();
-		panelOption.add(previsualiser);
-		panelOption.add(valider);
-		panelOption.add(annuler);
-		panelOption.add(labelTaille);
-		panelOption.add(boxChoixTailleFiltre);
-
-		//affichage des modifs
-		panelOption.repaint();
+		
+		JPanel panel2 = new JPanel();
+		panel2.add(previsualiser);
+		panelfusion.add(panel2);
+		panelfusion.add(valider);
+		panelfusion.add(annuler);
+		panelfusion.add(labelTaille);
+		panelfusion.add(boxChoixTailleFiltre);
+		pane.add(panelfusion);
+		panelfusion.setBorder(BorderFactory.createLineBorder(Color.black));
+		panelOption.add(pane);
 		frame.validate();
 	}
 	
@@ -545,7 +556,13 @@ public class InterfaceGraphique implements Runnable{
 		getEtalement().setEnabled(enable);
 		getInverser().setEnabled(enable);
 		decouper.setEnabled(enable);
-		//moyen.setEnabled(enable);
+		moyen.setEnabled(enable);
+		contours.setEnabled(enable);
+		contraste.setEnabled(enable);
+		utilisateur.setEnabled(enable);
+		median.setEnabled(enable);
+		sepia.setEnabled(enable);
+	
 	}
 
 	public void run(){
@@ -559,36 +576,27 @@ public class InterfaceGraphique implements Runnable{
 
 		// Menu principal
 		JMenu principal = new JMenu("Fichier");
-
 		//Menu principal => Nouveau
-		//JMenuItem nouveau = new JMenuItem("Nouveau");       
-		//nouveau.addActionListener(controler);
-		//principal.add(nouveau);
 		//Menu principal => Sauvegarde
 		sauvegarde = new JMenuItem("Sauvegarde");
 		controler.addControlerSauvegarder(sauvegarde);
 		principal.add(sauvegarde);
-		//Menu principal => Imprimer00,panelOption.getParent().getHeight())
 		JMenuItem charger = new JMenuItem("Charger");
 		controler.addControlerCharger(charger);
 		principal.add(charger);
-		/*		//Menu principal => Charger
-		JMenuItem imprimer = new JMenuItem("Imprimer");
-		principal.add(imprimer);
 		//Menu principal => Quitter
 		JMenuItem quitter = new JMenuItem("Quitter");
-		//quitter.addActionListener(new QuitterApplication());
-		principal.add(quitter);*/
+		quitter.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);				
+			}
+		});
+		principal.add(quitter);
 
 
-				//Edition
+		//Edition
 		JMenu edition = new JMenu("Edition");
-		//Edition => copier
-		/*JMenuItem copier = new JMenuItem("Copier");
-		edition.add(copier);
-		//Edition => coller
-		JMenuItem coller = new JMenuItem("Coller");
-		edition.add(coller);*/
 		//Edition => annuler
 		annuler = new JMenuItem("Annuler");
 		edition.add(annuler);
@@ -624,60 +632,58 @@ public class InterfaceGraphique implements Runnable{
 		//Image => transformation => Gris
 		imagris = new JMenuItem("Image grise");
 		controler.addControlerImagris(imagris);
-		transformation.add(imagris);       
+		transformation.add(imagris);  		
+		sepia = new JMenuItem("Image Sepia");
+		sepia.setEnabled(false);
+		controler.addControlerSepia(sepia);
+		transformation.add(sepia);       
 		//Image => transformation => contraste
-		JMenuItem contraste = new JMenuItem("Rï¿½hausser les contrastes");
+		contraste = new JMenuItem("Réhausser les contrastes");
 		controler.addControlerContraste(contraste);
+		contraste.setEnabled(false);
 		transformation.add(contraste);       
 		image.add(transformation);
 		//Image => transformation => contours
-		JMenuItem contours = new JMenuItem("Accentuer les contours");
+		contours = new JMenuItem("Accentuer les contours");
+		contours.setEnabled(false);
 		controler.addControlerContours(contours);
 		transformation.add(contours);       
 		image.add(transformation);
 
-		//Filtre
-		//JMenu filtre = new JMenu("Filtre");
-		//filtre => Amelioration
-		//		JMenu amelioration = new JMenu("Amelioration");
-		//		//filtre => Amelioration => gradiant
-		//		JMenuItem gradiant = new JMenuItem("Gradiant");
-		//		amelioration.add(gradiant);       
-		//		filtre.add(amelioration);
-		//		//filtre => Traitement
+		//Traitement 
 		JMenu traitement = new JMenu("Traitement");
-		//filtre => Traitement => moyen
+		//Traitement => Amélioration
+		JMenu amelioration = new JMenu("Amelioration");
+		traitement.add(amelioration);
+		JMenu filtre = new JMenu("Filtre");
+		//Traitement => filtre 
+		traitement.add(filtre);
+
 		inverser = new JMenuItem("Inverser");
 		inverser.setEnabled(false);
 		controler.addControlerInverser(inverser);
-		traitement.add(inverser);
+		amelioration.add(inverser);
 		etalement = new JMenuItem("Etalement");
 		etalement.setEnabled(false);
 		controler.addControlerEtalement(etalement);
-		traitement.add(etalement);
+		amelioration.add(etalement);
 		egalisation = new JMenuItem("Egalisation");
 		egalisation.setEnabled(false);
 		controler.addControlerEgalisation(egalisation);
-		traitement.add(egalisation);
-		JMenuItem moyen = new JMenuItem("Flouter");
+		amelioration.add(egalisation);
+		moyen = new JMenuItem("Flouter");
+		moyen.setEnabled(false);
 		controler.addControlerMoyen(moyen);
-		//moyen.addActionListener(Fchoixfiltre);
-		traitement.add(moyen);
-		//filtre => Traitement => gaussien
-		//		JMenuItem gaussien = new JMenuItem("Gaussien");
-		//		traitement.add(gaussien);
-		//		//filtre => Traitement => median
-		JMenuItem median = new JMenuItem("Median");
+		filtre.add(moyen);
+		median = new JMenuItem("Median");
 		controler.addControlerMedian(median);
-		traitement.add(median);
-		//		//filtre => Traitement => utilisateur
-		JMenuItem utilisateur = new JMenuItem("Dï¿½finir un filtre");
+		median.setEnabled(false);
+		filtre.add(median);
+		utilisateur = new JMenuItem("Dï¿½finir un filtre");
 		controler.addControlerBoutonFiltreUser(utilisateur);
-		traitement.add(utilisateur);
-		//		//filtre => Traitement => flou
-		//		JMenuItem flou = new JMenuItem("Flou");
-		//		traitement.add(flou);
-		//		filtre.add(traitement);
+		utilisateur.setEnabled(false);
+		filtre.add(utilisateur);
+
 		// Barre de menu
 		JMenuBar barre = new JMenuBar();
 		//Ajout barre Principal Ã  barre
@@ -693,18 +699,6 @@ public class InterfaceGraphique implements Runnable{
 
 		frame.setLayout(new BorderLayout());
 
-	/*	//implementation de la toolbar
-        JPanel panel = new JPanel();
-        JToolBar toolBar = new JToolBar();
-        panel.add(toolBar);
-        toolBar.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        toolBar.setAlignmentX(Component.LEFT_ALIGNMENT);
-        toolBar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        toolBar.setBackground(Color.WHITE);
-        toolBar.setForeground(Color.BLACK);
-        /*ImageIcon imagecharger = new ImageIcon("Charger");
-         */
-         
 		//implementation de la toolbar
 		JPanel panel = new JPanel();
 		JToolBar toolBar = new JToolBar();
@@ -747,8 +741,6 @@ public class InterfaceGraphique implements Runnable{
 		frame.add(tabbedPane,BorderLayout.CENTER);
 		panelOption = new JPanel();	
 		panelOption.setLayout(new BoxLayout(panelOption, BoxLayout.Y_AXIS));
-		//JTextArea texte= new JTextArea("Zone d'option/bouton rapide");
-		//panelOption.add(texte);
 
 		frame.add(panelOption,BorderLayout.EAST);
 		panelOption.setPreferredSize(new Dimension(200,panelOption.getParent().getHeight()));
@@ -764,7 +756,7 @@ public class InterfaceGraphique implements Runnable{
 		controler.addControlerSegmentation(segmenter);
 		
 		panelInfo = new JPanel();
-		PixelCouleur= new JTextArea();
+		PixelCouleur= new JLabel();
 		panelInfo.add(PixelCouleur);
 		frame.add(panelInfo,BorderLayout.SOUTH);
 
@@ -772,6 +764,7 @@ public class InterfaceGraphique implements Runnable{
 		// Un clic sur le bouton de fermeture clos l'application
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// On fixe la taille et on demarre
+		frame.setTitle("ImageIllustrator");
 		frame.setSize(1000, 700);
 		frame.setVisible(true);
 		setEnable(false);
@@ -803,6 +796,14 @@ public class InterfaceGraphique implements Runnable{
 
 	public JCheckBox getVert() {
 		return vert;
+	}
+
+	public JMenuItem getMoyen() {
+		return moyen;
+	}
+
+	public void setMoyen(JMenuItem moyen) {
+		this.moyen = moyen;
 	}
 
 	public void setVert(JCheckBox vert) {
