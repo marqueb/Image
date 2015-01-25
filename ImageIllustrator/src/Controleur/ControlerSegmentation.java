@@ -43,6 +43,7 @@ public class ControlerSegmentation implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		controler.getModele().initAnnulerRefaire(controler.getModele().cadreImageCourant());
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
+
 		int[] selection = controler.getModele().selection();
 		int rows = controler.getModele().cadreImageCourant().getImage().getHeight();
 		int cols = controler.getModele().cadreImageCourant().getImage().getWidth();

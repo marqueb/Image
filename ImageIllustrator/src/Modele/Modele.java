@@ -273,6 +273,13 @@ public class Modele {
 		actualiserImageIcon();
 	}
 	
+	public void noirblanc(){
+		CadreImage cadreImage=cadreImageCourant();
+		initAnnulerRefaire(cadreImage);
+		outil.noirblanc(cadreImage.getImage(), existeSelection(), selection());
+		actualiserImageIcon();
+	}
+	
 	public void sepia() {
 		CadreImage cadreImage=cadreImageCourant();
 		initAnnulerRefaire(cadreImage);

@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 
+import org.opencv.core.Mat;
+
 import Modele.Modele;
 import Modele.TypeFiltre;
 import Vue.InterfaceGraphique;
@@ -22,8 +24,10 @@ import Vue.InterfaceGraphique;
 public class Controler{
 	private Modele modele;
 	private InterfaceGraphique it;
-	private boolean echantillonageActif=false,flouActive=false,utilisateurActive=false, fusionActive=false, selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
-
+	private boolean echantillonageActif=false,flouActive=false,utilisateurActive=false, fusionActive=false, 
+			selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
+	private Mat fg,bg;
+	private boolean segmentation=false;
 	public boolean selectionActive()
 	{
 		return selectionActive;
@@ -138,6 +142,12 @@ public class Controler{
 	public void foncer() {
 		init();
 		modele.foncer();
+		
+	}
+	
+	public void noirblanc() {
+		init();
+		modele.noirblanc();
 		
 	}
 	
@@ -266,23 +276,41 @@ public class Controler{
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
 		if(modele.estDansImage(x, y)){
-			//System.out.println("jambon1"+selectionActive);
-			if(selectionActive && modele.estDansSelection(x, y)){
-				init();
-				//System.out.println("jambon2");
-				ajustementSelection=true;
-				modele.setDelta(x, y);
-				modele.setDist(x, y);
-			}else{
-				init();
-				selectionActive=true;
-				it.getButtonSegmenter().setEnabled(true);
-				modele.setPrec(x, y);
-			}
+
+				//System.out.println("jambon1"+selectionActive);
+				if(selectionActive && modele.estDansSelection(x, y)){
+					init();
+					//System.out.println("jambon2");
+					ajustementSelection=true;
+					modele.setDelta(x, y);
+					modele.setDist(x, y);
+				}else{
+					init();
+					selectionActive=true;
+					it.getButtonSegmenter().setEnabled(true);
+					modele.setPrec(x, y);
+				}
+
 		}else{
 			init();
 			modele.actualiserImageIcon();
 		}
+	}
+//TODO SEGMENTATION
+	public Mat getFg() {
+		return fg;
+	}
+
+	public void setFg(Mat fg) {
+		this.fg = fg;
+	}
+
+	public boolean isSegmentation() {
+		return segmentation;
+	}
+
+	public void setSegmentation(boolean segmentation) {
+		this.segmentation = segmentation;
 	}
 
 	public void sourisRelache(int x, int y, int u, int v){
@@ -542,6 +570,11 @@ public class Controler{
 
 	public void setUtilisateurActive(boolean utilisateurActive) {
 		this.utilisateurActive = utilisateurActive;
+	}
+
+	public void addControlerNoirblanc(JMenuItem noirblanc) {
+		noirblanc.addActionListener(new ControlerNoirblanc(this));
+		
 	}
 
 }
