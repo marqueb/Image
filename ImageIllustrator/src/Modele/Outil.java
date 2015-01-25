@@ -58,7 +58,7 @@ public class Outil {
 		}
 		return null;
 	}
-	
+
 	public void histogrammeCumule(BufferedImage image, int[] histoCumule){
 		int rgb = 0;
 		int[] histo = new int[255];
@@ -70,7 +70,7 @@ public class Outil {
 			histoCumule[i]=histoCumule[i-1]+histo[i];
 		}
 	}
-	
+
 	public CadreImage initCadre(BufferedImage image, Controler controler){
 		CadreImage cadreImage=new CadreImage(image);
 		JLabel icon=new JLabel(cadreImage.getImageIcon());
@@ -102,8 +102,6 @@ public class Outil {
 		int r,g,b,gris;
 		int couleur;
 		int i_deb, i_fin, j_deb, j_fin;
-		//System.out.println(existeSelection);
-		//BufferedImage image=  new BufferedImage(cadreImage.getWidth(), cadreImage.getHeight(),BufferedImage.TYPE_INT_ARGB);
 		if(existeSelection){
 			i_deb=selection[0];
 			i_fin=selection[2];
@@ -115,10 +113,8 @@ public class Outil {
 			j_deb=0;
 			j_fin=cadreImage.getHeight();
 		}
-		
 		for (int i=i_deb;i<i_fin;i++){
 			for (int j=j_deb;j<j_fin;j++){
-				//couleur=cadreImage.getRGB(i,j);	
 				couleur=couleurPixel(cadreImage,i,j);
 				r=getR(couleur);
 				g=getG(couleur);
@@ -128,7 +124,148 @@ public class Outil {
 			}
 		}
 		return cadreImage;
-		
+
+	}
+
+	public BufferedImage sepia(BufferedImage cadreImage, boolean existeSelection, int[] selection){
+		int r,g,b,gris;
+		int couleur;
+		int i_deb, i_fin, j_deb, j_fin;
+		if(existeSelection){
+			i_deb=selection[0];
+			i_fin=selection[2];
+			j_deb=selection[1];
+			j_fin=selection[3];
+		}else{
+			i_deb=0;
+			i_fin=cadreImage.getWidth();
+			j_deb=0;
+			j_fin=cadreImage.getHeight();
+		}
+		int sepiaDepth =40;
+		for (int i=i_deb;i<i_fin;i++){
+			for (int j=j_deb;j<j_fin;j++){
+				couleur=couleurPixel(cadreImage,i,j);
+				r=getR(couleur);
+				g=getG(couleur);
+				b=getB(couleur);
+				gris=(r+b+g)/3;	
+				r = gris+(sepiaDepth * 2);
+				g = gris + sepiaDepth;
+				if (r>255) r=255;
+				if (g>255) g=255;
+				if (b>255) b=255;
+				if (b<50) b=+50;
+				else b-= 50;
+
+				cadreImage.setRGB(i, j,setR(r)+setB(b)+setG(g)+setAlpha(255));
+			}
+		}
+		return cadreImage;
+
+	}
+
+	public BufferedImage eclaircir(BufferedImage cadreImage, boolean existeSelection, int[] selection){
+		int r,g,b,gris;
+		int couleur;
+		int i_deb, i_fin, j_deb, j_fin;
+		if(existeSelection){
+			i_deb=selection[0];
+			i_fin=selection[2];
+			j_deb=selection[1];
+			j_fin=selection[3];
+		}else{
+			i_deb=0;
+			i_fin=cadreImage.getWidth();
+			j_deb=0;
+			j_fin=cadreImage.getHeight();
+		}
+		for (int i=i_deb;i<i_fin;i++){
+			for (int j=j_deb;j<j_fin;j++){
+				couleur=couleurPixel(cadreImage,i,j);
+				r=getR(couleur);
+				g=getG(couleur);
+				b=getB(couleur);
+				r=r+10;
+				g=g+10;
+				b=b+10;
+				if (r>255) r=255;				
+				if (g>255) g=255;
+				if (b>255) b=255;
+				cadreImage.setRGB(i, j,setR(r)+setB(b)+setG(g)+setAlpha(255));
+			}
+		}
+		return cadreImage;
+	}
+
+	public BufferedImage noirblanc(BufferedImage cadreImage, boolean existeSelection, int[] selection){
+		int r,g,b,gris;
+		int couleur;
+		int i_deb, i_fin, j_deb, j_fin;
+		if(existeSelection){
+			i_deb=selection[0];
+			i_fin=selection[2];
+			j_deb=selection[1];
+			j_fin=selection[3];
+		}else{
+			i_deb=0;
+			i_fin=cadreImage.getWidth();
+			j_deb=0;
+			j_fin=cadreImage.getHeight();
+		}
+		for (int i=i_deb;i<i_fin;i++){
+			for (int j=j_deb;j<j_fin;j++){
+				couleur=couleurPixel(cadreImage,i,j);
+				r=getR(couleur);
+				g=getG(couleur);
+				b=getB(couleur);
+				if((r+g+b/3)>200){
+					r=255;
+					b=255;
+					g=255;
+				}
+				else{
+					r=0;
+					b=0;
+					g=0;
+				}cadreImage.setRGB(i, j,setR(r)+setB(b)+setG(g)+setAlpha(255));
+			}
+		}
+		return cadreImage;
+	}
+
+
+	public BufferedImage foncer(BufferedImage cadreImage, boolean existeSelection, int[] selection){
+		int r,g,b,gris;
+		int couleur;
+		int i_deb, i_fin, j_deb, j_fin;
+		if(existeSelection){
+			i_deb=selection[0];
+			i_fin=selection[2];
+			j_deb=selection[1];
+			j_fin=selection[3];
+		}else{
+			i_deb=0;
+			i_fin=cadreImage.getWidth();
+			j_deb=0;
+			j_fin=cadreImage.getHeight();
+		}
+		for (int i=i_deb;i<i_fin;i++){
+			for (int j=j_deb;j<j_fin;j++){
+				couleur=couleurPixel(cadreImage,i,j);
+				r=getR(couleur);
+				g=getG(couleur);
+				b=getB(couleur);
+				r=r-10;
+				g=g-10;
+				b=b-10;
+				if (r<0) r=0;
+				if (g<0) g=0;
+				if (b<0) b=0;
+				cadreImage.setRGB(i, j,setR(r)+setB(b)+setG(g)+setAlpha(255));
+			}
+		}
+		return cadreImage;
 	}
 
 	//copier une buffered image
@@ -292,7 +429,7 @@ public class Outil {
 	public int getB(int rgb){
 		return rgb  & 0XFF;
 	}
-	
+
 	public int setAlpha(int rgb){
 		return (rgb & 0XFF) << 24;
 	}
@@ -325,12 +462,12 @@ public class Outil {
 	{ 
 		return image.getRGB(x,y);	
 	}
-	
+
 	public static int getValidValuePixel(int val)
 	{
 		return Math.max(0, Math.min(255, val));
 	}
-	
+
 	public BufferedImage decouper(BufferedImage cadreImage, int[] selection){
 		BufferedImage image = new BufferedImage(selection[2]-selection[0], selection[3]-selection[1],BufferedImage.TYPE_INT_ARGB);
 		for (int i=0; i<selection[2]-selection[0]; i++){
@@ -340,4 +477,5 @@ public class Outil {
 		}
 		return image;
 	}
+
 }
