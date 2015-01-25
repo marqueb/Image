@@ -249,6 +249,7 @@ public class TraiteurImage {
 			//			newchemins = calculerCheminsMoinsCouteuxEnHauteur(im_energie);
 			//
 			//			image = appliquerRedimensionnementIntelligentLargeur(image, newchemins, newlargeur);
+			
 			image = appliquerRedimensionnementIntelligentLargeurCroisePas(image, newlargeur);
 			System.out.println("done...");
 		}
@@ -871,8 +872,12 @@ public class TraiteurImage {
 	private BufferedImage appliquerRedimensionnementIntelligentLargeurCroisePas(BufferedImage image, int newlargeur)
 	{
 		BufferedImage newimage = new BufferedImage(newlargeur, image.getHeight(),BufferedImage.TYPE_INT_ARGB);
-
-		CheminsASupprimer cheminsASupprimer = calculerCheminsMoinsCouteuxEnHauteurQuiCroisePas(image, Math.abs(image.getWidth() - newlargeur));
+		
+		
+		int pas = 20;
+		int nbPix = Math.abs(image.getWidth() - newlargeur);
+		
+		CheminsASupprimer cheminsASupprimer = null;
 		//		int[] indicesCheminsASupprimer = trouverCheminsCroisePasPoidsMinEnHauteur(image, Math.abs(image.getWidth() - newlargeur));
 
 		//test intermédiaire
@@ -881,6 +886,13 @@ public class TraiteurImage {
 
 				if(image.getWidth() < newlargeur) //agrandir en largeur
 				{
+					while(nbPix>pas)
+					{
+					cheminsASupprimer = calculerCheminsMoinsCouteuxEnHauteurQuiCroisePas(image, pas);
+					image = agrandirImage("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
+					nbPix = nbPix - pas;
+					}
+					cheminsASupprimer = calculerCheminsMoinsCouteuxEnHauteurQuiCroisePas(image, nbPix);
 					newimage = agrandirImage("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 				}
 				else	//rétrécir en largeur
@@ -975,14 +987,14 @@ public class TraiteurImage {
 	private CaseTableauChemins[][] calculerPoidsCheminsCroisePasEnHauteur(BufferedImage image, CaseTableauChemins[][] chemins_in)
 	{
 		CaseTableauChemins[][] chemins = new CaseTableauChemins[image.getWidth()][image.getHeight()];
-		int i = 0, j = 0, min = outil.setR(255)+outil.setB(255)+outil.setG(255);
+		int i = 0, j = 0, min = Integer.MAX_VALUE;
 		Direction direction = Direction.MILIEU;
 
 		//on initialise les premieres valeurs
 		for(i=0; i<image.getWidth(); i++)
 		{
 			chemins[i][0] = new CaseTableauChemins(image.getRGB(0, j), Direction.INIT);
-			if(!chemins_in[i][0].estCheminLibre)  chemins[i][0].estCheminLibre = false;
+			chemins[i][0].estCheminLibre = chemins_in[i][0].estCheminLibre;
 		}
 
 		int valCurrent = 0;
@@ -993,7 +1005,6 @@ public class TraiteurImage {
 			for(i = 0; i<image.getWidth(); i++)
 			{
 				min = Integer.MAX_VALUE;
-				direction = Direction.OCCUPE;
 
 				if(i!=0 && chemins_in[i-1][j-1].value < min && chemins_in[i-1][j-1].estCheminLibre==true
 						&& chemins_in[i][j-1].estCheminLibre==true)
@@ -1016,7 +1027,7 @@ public class TraiteurImage {
 				}
 				if(min==Integer.MAX_VALUE) 
 				{
-					System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAYYYYYE");
+//					System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAYYYYYE");
 					min = chemins[i][j-1].value;
 					direction = Direction.MILIEU;
 				}
