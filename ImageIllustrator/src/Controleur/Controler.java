@@ -65,8 +65,8 @@ public class Controler{
 	{
 		modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
 		modele.actualiserImageIcon();
-		it.rafraichirComponentOption();
-		flouActive=false;
+		it.rafraichirComponentOption();		
+		flouActive=true;
 		init();
 	}
 
@@ -74,8 +74,7 @@ public class Controler{
 	{
 		modele.actualiserImageIcon();
 		it.rafraichirComponentOption();
-		it.retirerComponent();
-		flouActive=false;
+		flouActive=true;
 		init();
 	}
 
@@ -133,6 +132,12 @@ public class Controler{
 	public void eclaircir() {
 		init();
 		modele.eclaircir();
+		
+	}
+	
+	public void foncer() {
+		init();
+		modele.foncer();
 		
 	}
 	
@@ -200,13 +205,9 @@ public class Controler{
 					modele.setEstEgalisation(false);
 			}
 			@Override
-			public void windowActivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void windowActivated(WindowEvent e) {}
 			@Override
 			public void windowClosed(WindowEvent e) {
-				// TODO Auto-generated method stub
 				//if(!modele.isEstEgalisation()){
 				if(modele.isEstHistoCliquer()){
 					modele.fermetureHisto();
@@ -216,28 +217,16 @@ public class Controler{
 				modele.setEstEgalisation(false);
 			}
 			@Override
-			public void windowDeactivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void windowDeactivated(WindowEvent e) {	}
 			@Override
-			public void windowDeiconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void windowDeiconified(WindowEvent e) {}
 			@Override
-			public void windowIconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void windowIconified(WindowEvent e) {}
 			@Override
-			public void windowOpened(WindowEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
+			public void windowOpened(WindowEvent e) {}
 		});
 	}
+	
 	public void sourisEntre(int x, int y, int u, int v){
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
@@ -321,14 +310,7 @@ public class Controler{
 		}
 	}
 
-	public void sourisDragged(int x, int y){
-		/*if(ajustementSelection){
-			modele.ajustementSelection(x, y);
-		}
-		if(selectionActive){
-			modele.selectionne(x, y);
-		}*/
-	}
+	public void sourisDragged(int x, int y){}
 
 	public void boutonFusionClic()
 	{
@@ -539,6 +521,27 @@ public class Controler{
 		eclaircir.addActionListener(new ControlerEclaircir(this));
 		
 	}
-
 	
+	public void addControlerEclaircir(JButton btnEclaircir) {
+		btnEclaircir.addActionListener(new ControlerEclaircir(this));
+		
+	}
+	
+	public void addControlerFoncer(JMenuItem foncer) {
+		foncer.addActionListener(new ControlerFoncer(this));
+		
+	}
+	
+	public void addControlerFoncer(JButton btnFoncer) {
+		btnFoncer.addActionListener(new ControlerFoncer(this));		
+	}
+	
+	public boolean isUtilisateurActive() {
+		return utilisateurActive;
+	}
+
+	public void setUtilisateurActive(boolean utilisateurActive) {
+		this.utilisateurActive = utilisateurActive;
+	}
+
 }

@@ -266,6 +266,13 @@ public class Modele {
 		actualiserImageIcon();
 	}
 	
+	public void foncer(){
+		CadreImage cadreImage=cadreImageCourant();
+		initAnnulerRefaire(cadreImage);
+		outil.foncer(cadreImage.getImage(), existeSelection(), selection());
+		actualiserImageIcon();
+	}
+	
 	public void sepia() {
 		CadreImage cadreImage=cadreImageCourant();
 		initAnnulerRefaire(cadreImage);

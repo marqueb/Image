@@ -52,14 +52,15 @@ public class InterfaceGraphique implements Runnable{
 	private Modele modele;
 	private Controler controler;
 	private JMenuItem sauvegarde, couleurPixel, fusion, imagris, moyen, egalisation, redimensionner, etalement,
-	inverser, decouper, annuler, refaire, median, utilisateur, contours, contraste,sepia, eclaircir ;
+	inverser, decouper, annuler, refaire, median, utilisateur, contours, contraste,sepia, eclaircir, foncer ;
 	private CheckboxGroup groupe;
 	private Checkbox box1, box2;
 	private JCheckBox rouge,vert,bleu, luminance, chrominanceU , chrominanceV;
 	private Histogramme histo;
 	private JSlider sliderFusion = null, sliderChoixTailleFiltre = null;
 	private JComboBox choixRgbYuv;
-	private JButton afficherHisto, segmenter,btnAnnuler, btnRefaire,btnCouleur,btnDecouper,btnFusion,btnHisto,btnSauver;
+	private JButton afficherHisto, segmenter,btnAnnuler, btnRefaire,btnCouleur,
+	btnDecouper,btnFusion,btnHisto,btnSauver, btnEclaircir, btnFoncer;
 
 	public Image chargerImage(String bouton){
 		Image img=null;
@@ -111,7 +112,17 @@ public class InterfaceGraphique implements Runnable{
 				img = ImageIO.read(getClass().getResource("Image/histogramme.png"));
 			} catch (IOException ex) {
 			}
+		case "Eclaircir" :
+			try {
+				img = ImageIO.read(getClass().getResource("Image/eclaircir.png"));
+			} catch (IOException ex) {
+			}
 			break;
+		case "Foncer" :
+			try {
+				img = ImageIO.read(getClass().getResource("Image/foncer.png"));
+			} catch (IOException ex) {
+			}
 		}
 
 		return img;
@@ -341,8 +352,6 @@ public class InterfaceGraphique implements Runnable{
 		panelOption.remove(2);
 		panelOption.repaint();
 		frame.validate();
-
-
 	}
 
 
@@ -597,6 +606,9 @@ public class InterfaceGraphique implements Runnable{
 		btnHisto.setEnabled(enable);
 		btnSauver.setEnabled(enable);
 		eclaircir.setEnabled(enable);
+		foncer.setEnabled(enable);
+		btnEclaircir.setEnabled(enable);
+		btnFoncer.setEnabled(enable);
 	}
 
 	public void run(){
@@ -679,6 +691,10 @@ public class InterfaceGraphique implements Runnable{
 		eclaircir.setEnabled(false);
 		controler.addControlerEclaircir(eclaircir);
 		transformation.add(eclaircir);
+		foncer= new JMenuItem("Foncer");
+		foncer.setEnabled(false);
+		controler.addControlerFoncer(foncer);
+		transformation.add(foncer);
 		
 		image.add(transformation);
 		
@@ -819,6 +835,25 @@ public class InterfaceGraphique implements Runnable{
 		btnHisto.setEnabled(false);
 		controler.addControlerAfficherHisto(btnHisto);
 		toolBar.add(btnHisto);	
+		
+		JLabel vide3 = new JLabel("    ");
+		toolBar.add(vide3);	
+		
+		btnFoncer = new JButton();
+		btnFoncer.setIcon(new ImageIcon(chargerImage("Foncer")));
+		btnFoncer.setToolTipText("Foncer");
+		btnFoncer.setFocusable(false);
+		btnFoncer.setEnabled(false);
+		controler.addControlerFoncer(btnFoncer);
+		toolBar.add(btnFoncer);	
+		
+		btnEclaircir = new JButton();
+		btnEclaircir.setIcon(new ImageIcon(chargerImage("Eclaircir")));
+		btnEclaircir.setToolTipText("Eclaircir");
+		btnEclaircir.setFocusable(false);
+		btnEclaircir.setEnabled(false);
+		controler.addControlerEclaircir(btnEclaircir);
+		toolBar.add(btnEclaircir);	
 
 		frame.add(panel,BorderLayout.NORTH);
 		tabbedPane = new JTabbedPane();
