@@ -14,8 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 
-import org.opencv.core.Mat;
-
 import Modele.Modele;
 import Modele.TypeFiltre;
 import Vue.InterfaceGraphique;
@@ -26,7 +24,7 @@ public class Controler{
 	private InterfaceGraphique it;
 	private boolean echantillonageActif=false,flouActive=false,utilisateurActive=false, fusionActive=false, 
 			selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
-	private Mat fg,bg;
+//	private Mat fg,bg;
 	private boolean segmentation=false;
 	public boolean selectionActive()
 	{
@@ -297,13 +295,13 @@ public class Controler{
 		}
 	}
 //TODO SEGMENTATION
-	public Mat getFg() {
-		return fg;
-	}
-
-	public void setFg(Mat fg) {
-		this.fg = fg;
-	}
+//	public Mat getFg() {
+//		return fg;
+//	}
+//
+//	public void setFg(Mat fg) {
+//		this.fg = fg;
+//	}
 
 	public boolean isSegmentation() {
 		return segmentation;
