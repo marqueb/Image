@@ -90,7 +90,18 @@ public class Modele {
 		CadreImage  cadre = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
 		int largeur=cadre.getImage().getWidth();
 		int hauteur=cadre.getImage().getHeight();
-		cadre.setImage(traiteurImage.redimenssioner(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
+		cadre.setImage(traiteurImage.redimensionner(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
+		actualiserImageIcon();
+		cadre.setVisible(true);
+		interfaceGraphique.getFrame().repaint();
+		interfaceGraphique.getFrame().validate();
+	}
+	
+	public void redimensionnerIntelligement( int newlargeur,int newhauteur) {
+		CadreImage  cadre = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
+		int largeur=cadre.getImage().getWidth();
+		int hauteur=cadre.getImage().getHeight();
+		cadre.setImage(traiteurImage.redimensionnerIntelligement(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
 		actualiserImageIcon();
 		cadre.setVisible(true);
 		interfaceGraphique.getFrame().repaint();

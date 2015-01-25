@@ -26,7 +26,8 @@ public class ControlerRedimensionnerValider implements ActionListener {
 		}
 		else//redimensionnement intélligent
 		{
-			
+			modele.redimensionnerIntelligement(Integer.parseInt(modele.getInterfaceGraphique().getLargeur().getText()),Integer.parseInt(modele.getInterfaceGraphique().getHauteur().getText()));
+			modele.getInterfaceGraphique().getFrameRedim().dispose();
 		}
 	}
 
