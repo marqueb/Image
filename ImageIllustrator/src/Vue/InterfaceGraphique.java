@@ -150,7 +150,7 @@ public class InterfaceGraphique implements Runnable{
 		text.add(panelLargeur,BorderLayout.EAST);
 		text.add(panelHauteur,BorderLayout.WEST);
 		JButton valider = new JButton("Valider");
-		String[] typeRedimension = {"Normal", "Int�lligent"};
+		String[] typeRedimension = {"Normal", "Intelligent"};
 		JComboBox<String> boxTypeRedim = new JComboBox<String>(typeRedimension);
 		text.add(boxTypeRedim,BorderLayout.NORTH);
 		controler.addRedimensionnerValider(valider, boxTypeRedim);

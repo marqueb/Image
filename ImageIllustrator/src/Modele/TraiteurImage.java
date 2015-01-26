@@ -326,7 +326,7 @@ public class TraiteurImage {
 			//			image = appliquerRedimensionnementIntelligentLargeur(image, newchemins, newlargeur);
 
 			image = appliquerRedimensionnementIntelligentLargeurCroisePas(image, newlargeur);
-			System.out.println("done...");
+//			System.out.println("done...");
 		}
 
 		return image;
@@ -1125,6 +1125,8 @@ public class TraiteurImage {
 		}
 		else
 		{
+			System.out.println("toComplete.getWidth() = "+toComplete.getWidth()+"; toComplete.getHeight()"+toComplete.getHeight());
+			System.out.println("chemins.length = "+chemins.length+"; chemins[0].length = "+chemins[0].length);
 			for(int j = 0; j<toComplete.getHeight(); j++)
 			{
 				decalage = 0;
@@ -1132,13 +1134,13 @@ public class TraiteurImage {
 				{
 					//si la valeur est déjà rempli alors on se décale
 
-					while(i+decalage<chemins.length && !chemins[i+decalage][j].estCheminLibre)
+					while(!chemins[i+decalage][j].estCheminLibre)
 					{
 						decalage++;
 					}
 
 					//on rempli la valeur à partir de l'initiale sans le décalage
-					if(i+decalage<image.getWidth()) toComplete.setRGB(i,  j, image.getRGB(i+decalage,  j));
+					toComplete.setRGB(i,  j, image.getRGB(i+decalage,  j));
 				}
 			}
 		}
@@ -1196,7 +1198,7 @@ public class TraiteurImage {
 			cheminsASupprimer = calculerCheminsMoinsCouteuxEnLargeurQuiCroisePas(image, nbPix);
 			newimage = agrandirImage("HAUTEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 		}
-		else	//rétrécir en largeur
+		else	//rétrécir en hauteur
 		{
 			while(nbPix>pas)
 			{
@@ -1246,13 +1248,13 @@ public class TraiteurImage {
 		{
 			while(nbPix>pas)
 			{
-				cheminsASupprimer = calculerCheminsMoinsCouteuxEnLargeurQuiCroisePas(image, pas);
+				cheminsASupprimer = calculerCheminsMoinsCouteuxEnHauteurQuiCroisePas(image, pas);
 				image = retrecirImage("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 				nbPix = nbPix - pas;
 			}
 //			System.out.println(image.toString());
 //			System.out.flush();
-			cheminsASupprimer = calculerCheminsMoinsCouteuxEnLargeurQuiCroisePas(image, nbPix);
+			cheminsASupprimer = calculerCheminsMoinsCouteuxEnHauteurQuiCroisePas(image, nbPix);
 			newimage = retrecirImage("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 		}
 //		System.out.println(outil.getR(outil.setR(255)+outil.setR(255)));
