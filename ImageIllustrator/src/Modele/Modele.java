@@ -84,17 +84,13 @@ public class Modele {
 		return (x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight());
 	}	
 
-
-
-	public void redimensionner( int newlargeur,int newhauteur) {
-		CadreImage  cadre = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
-		int largeur=cadre.getImage().getWidth();
-		int hauteur=cadre.getImage().getHeight();
-		cadre.setImage(traiteurImage.redimensionner(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
+	public void redimensionner( int newLargeur,int newHauteur) {
+		CadreImage  cadre = cadreImageCourant();
+		BufferedImage intermediaire =traiteurImage.redimenssionerLargeur(cadre.getImage(), newLargeur);
+		cadre.setImage(traiteurImage.redimenssionerHauteur(intermediaire, newHauteur));
 		actualiserImageIcon();
-		cadre.setVisible(true);
-		interfaceGraphique.getFrame().repaint();
-		interfaceGraphique.getFrame().validate();
+		//traiteurImage.redimenssionerHauteur(cadre.getImage(), newHauteur);
+		//cadre.setImage(traiteurImage.redimenssioner(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
 	}
 	
 	public void redimensionnerIntelligement( int newlargeur,int newhauteur) {
@@ -103,9 +99,9 @@ public class Modele {
 		int hauteur=cadre.getImage().getHeight();
 		cadre.setImage(traiteurImage.redimensionnerIntelligement(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
 		actualiserImageIcon();
-		cadre.setVisible(true);
+		/*cadre.setVisible(true);
 		interfaceGraphique.getFrame().repaint();
-		interfaceGraphique.getFrame().validate();
+		interfaceGraphique.getFrame().validate();*/
 	}
 	
 	private JPanel createPanelCadreImage(CadreImage cadre)

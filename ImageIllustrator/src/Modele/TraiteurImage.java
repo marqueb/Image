@@ -196,14 +196,86 @@ public class TraiteurImage {
 		return im_out;
 	}
 
-	public BufferedImage  redimensionner(int largeur, int hauteur,	int newlargeur, int newhauteur, BufferedImage image) {
+	public BufferedImage redimenssionerLargeur(BufferedImage image, int newLargeur){
+		BufferedImage nouvelle=new BufferedImage(newLargeur,image.getHeight(), image.getType());
+		int a, b, c, d;
+		double ratio = ((double)newLargeur)/((double)image.getWidth());
+		double k, reste, ratioCourant;
+		for(int j=0; j<image.getHeight();j++){
+			a=0;
+			b=0;
+			c=0;
+			d=0;
+			k=0;
+			for(int i=0; i<image.getWidth();i++){
+				k=((double)i)*ratio;
+				reste=k;
+				while(reste>1){
+					reste--;
+				}
+				ratioCourant=ratio-(1-reste);
+				k=k-reste;
+				a=a+((int)(((double)outil.getAlpha(nouvelle.getRGB(((int)k), j)))+((double)1-reste)*((double)outil.getAlpha(image.getRGB(i, j)))));
+				b=b+((int)(((double)outil.getR(nouvelle.getRGB(((int)k), j)))+((double)1-reste)*((double)outil.getR(image.getRGB(i, j)))));
+				c=c+((int)(((double)outil.getG(nouvelle.getRGB(((int)k), j)))+((double)1-reste)*((double)outil.getG(image.getRGB(i, j)))));
+				d=d+((int)(((double)outil.getB(nouvelle.getRGB(((int)k), j)))+((double)1-reste)*((double)outil.getB(image.getRGB(i, j)))));
+				nouvelle.setRGB(((int)k), j,outil.setAlpha(a)+outil.setR(b)+outil.setG(c)+outil.setB(d));
+				k++;
+				while(ratioCourant>1){
+					nouvelle.setRGB(((int)k), j, image.getRGB(i, j));
+					k++;
+					ratioCourant--;
+				}
+				a=((int)((ratioCourant)*((double)outil.getAlpha(image.getRGB(i, j)))));
+				b=((int)((ratioCourant)*((double)outil.getR(image.getRGB(i, j)))));
+				c=((int)((ratioCourant)*((double)outil.getG(image.getRGB(i, j)))));
+				d=((int)((ratioCourant)*((double)outil.getB(image.getRGB(i, j)))));
+			}
+			if(k<nouvelle.getWidth())
+				nouvelle.setRGB(((int)k), j,outil.setAlpha(a)+outil.setR(b)+outil.setG(c)+outil.setB(d));
+		}
+		return nouvelle;
+	}
 
-		Outil outil = new Outil();
-		int pixel;
-		BufferedImage newimage= new BufferedImage(newlargeur, newhauteur,BufferedImage.TYPE_INT_ARGB);
-
-
-		return newimage;
+	public BufferedImage redimenssionerHauteur(BufferedImage image, int newHauteur){
+		BufferedImage nouvelle=new BufferedImage(image.getWidth(), newHauteur, image.getType());
+		int a, b, c, d;
+		double ratio = ((double)newHauteur)/((double)image.getHeight());
+		double k, reste, ratioCourant;
+		for(int j=0; j<image.getWidth();j++){
+			a=0;
+			b=0;
+			c=0;
+			d=0;
+			k=0;
+			for(int i=0; i<image.getHeight();i++){
+				k=((double)i)*ratio;
+				reste=k;
+				while(reste>1){
+					reste--;
+				}
+				ratioCourant=ratio-(1-reste);
+				k=k-reste;
+				a=a+((int)(((double)outil.getAlpha(nouvelle.getRGB(j,((int)k))))+((double)1-reste)*((double)outil.getAlpha(image.getRGB(j,i)))));
+				b=b+((int)(((double)outil.getR(nouvelle.getRGB(j,((int)k))))+((double)1-reste)*((double)outil.getR(image.getRGB(j,i)))));
+				c=c+((int)(((double)outil.getG(nouvelle.getRGB(j,((int)k))))+((double)1-reste)*((double)outil.getG(image.getRGB(j,i)))));
+				d=d+((int)(((double)outil.getB(nouvelle.getRGB(j,((int)k))))+((double)1-reste)*((double)outil.getB(image.getRGB(j,i)))));
+				nouvelle.setRGB( j,((int)k),outil.setAlpha(a)+outil.setR(b)+outil.setG(c)+outil.setB(d));
+				k++;
+				while(ratioCourant>1){
+					nouvelle.setRGB(j,((int)k),  image.getRGB(j,i));
+					k++;
+					ratioCourant--;
+				}
+				a=((int)((ratioCourant)*((double)outil.getAlpha(image.getRGB(j,i)))));
+				b=((int)((ratioCourant)*((double)outil.getR(image.getRGB(j,i)))));
+				c=((int)((ratioCourant)*((double)outil.getG(image.getRGB(j,i)))));
+				d=((int)((ratioCourant)*((double)outil.getB(image.getRGB(j,i)))));
+			}
+			if(k<nouvelle.getHeight())
+				nouvelle.setRGB(j,((int)k),outil.setAlpha(a)+outil.setR(b)+outil.setG(c)+outil.setB(d));
+		}
+		return nouvelle;
 	}
 
 	public BufferedImage redimensionnerIntelligement(int largeur, int hauteur,	int newlargeur, int newhauteur, BufferedImage image) 
@@ -438,7 +510,6 @@ public class TraiteurImage {
 	//		return newimage;
 	//	}
 
-
 	//pour redimensionnement en largeur
 	private int[] trouverCheminsPoidsMinEnLargeur(CaseTableauChemins[][] chemins, int nbCheminsATrouver)
 	{
@@ -478,7 +549,7 @@ public class TraiteurImage {
 		ArrayList<Integer> dernieresCase = new ArrayList<Integer>();
 		int[] indiceCheminOrdreCroissant = new int[chemins.length];
 
-		//on récupere les valeurs des différents chemins
+		//on rï¿½cupere les valeurs des diffï¿½rents chemins
 		for(int i = 0; i < chemins.length; i++)
 		{
 			dernieresCase.add(new Integer(chemins[i][chemins[0].length-1].value));
@@ -489,7 +560,7 @@ public class TraiteurImage {
 		//on tri les valeurs des chemins
 		//Collections.sort(dernieresCase);
 
-		//on récupere les indices des chemins dans l'ordre des poids des chemins croissants
+		//on rï¿½cupere les indices des chemins dans l'ordre des poids des chemins croissants
 		int tmp = 0;
 		for(int k=0; k<chemins.length; k++)
 		{
@@ -497,11 +568,11 @@ public class TraiteurImage {
 			{
 				if(derniereLigne[k]>derniereLigne[i])
 				{
-					//on échange les valeurs
+					//on ï¿½change les valeurs
 					tmp = derniereLigne[k];
 					derniereLigne[k] = derniereLigne[i];
 					derniereLigne[i] = tmp;
-					//on échange l'ordre des indices
+					//on ï¿½change l'ordre des indices
 					tmp = indiceCheminOrdreCroissant[k];
 					indiceCheminOrdreCroissant[k] = indiceCheminOrdreCroissant[i];
 					indiceCheminOrdreCroissant[i] = tmp;
@@ -514,7 +585,7 @@ public class TraiteurImage {
 			indices[i]=-1;
 		}
 
-		//on trouve les chemins de poids minimum qui ne se croise pas (méthode non optimale)
+		//on trouve les chemins de poids minimum qui ne se croise pas (mï¿½thode non optimale)
 		int cpt = 0, i = 0, indice = 0;;
 		while(cpt<nbCheminsATrouver && i < chemins.length)
 		{//si la valeur de chemins est dans la liste des valeurs minimales alors c'est l'indice d'un chemin de poids min
@@ -524,7 +595,7 @@ public class TraiteurImage {
 			//				cpt++;
 			//			}
 			//			i++;
-			//on récupere les indice des chemins de poids min
+			//on rï¿½cupere les indice des chemins de poids min
 			indice = indiceCheminOrdreCroissant[i];
 			if(cheminLibre(indice, chemins, "HAUTEUR"))
 			{
@@ -652,7 +723,7 @@ public class TraiteurImage {
 
 		if(orientation.equals("LARGEUR"))
 		{
-			//on initialise les chemins à ajouter
+			//on initialise les chemins ï¿½ ajouter
 			res = recopierChemins("LARGEUR", image, chemins, indicesChemins);
 			//on complete le reste de l'image
 			res = completerImageRedimEnLargeur(res, image, chemins, "AGRANDIR");
@@ -736,14 +807,14 @@ public class TraiteurImage {
 		}
 
 		tmp = 0;
-		//on tri le tableau des indices des chemins pour les parcourir de gauche à droite
-		for( i=0; i<indicesChemins.length-1; i++)	//pour tout les chemins à dupliquer
+		//on tri le tableau des indices des chemins pour les parcourir de gauche ï¿½ droite
+		for( i=0; i<indicesChemins.length-1; i++)	//pour tout les chemins ï¿½ dupliquer
 		{
-			for( j=i+1; j<indicesChemins.length; j++)	//pour tout les chemins à dupliquer
+			for( j=i+1; j<indicesChemins.length; j++)	//pour tout les chemins ï¿½ dupliquer
 			{
 				if(indicesChemins[i]>indicesChemins[j])
 				{
-					//on échange les valeurs
+					//on ï¿½change les valeurs
 					tmp = indicesChemins[i];
 					indicesChemins[i] = indicesChemins[j];
 					indicesChemins[j] = tmp;
@@ -756,7 +827,7 @@ public class TraiteurImage {
 			res = new BufferedImage(image.getWidth()+indicesChemins.length, image.getHeight(),BufferedImage.TYPE_INT_ARGB);
 
 			//System.out.println(res.getRGB(0, 0));
-			for( int k=0; k<indicesChemins.length; k++)	//pour tout les chemins à dupliquer
+			for( int k=0; k<indicesChemins.length; k++)	//pour tout les chemins ï¿½ dupliquer
 			{
 				//trouver indice depart
 				indice = indicesChemins[k];
@@ -777,12 +848,12 @@ public class TraiteurImage {
 					//					//sinon 
 					//					else
 					//					{
-					//						System.out.println("Je dois pas passer là...");
-					//						//tant que valeur à coté deja rempli
+					//						System.out.println("Je dois pas passer lï¿½...");
+					//						//tant que valeur ï¿½ cotï¿½ deja rempli
 					//						tmp=1;
 					//						while(indice+tmp+k<res.getWidth() && !chemins[indice+tmp+k][j].estCheminLibre)
 					//						{
-					//							//décaler
+					//							//dï¿½caler
 					//							tmp++;
 					//						}
 					//						//si on est pas sortie de l'image
@@ -794,11 +865,11 @@ public class TraiteurImage {
 					//						//sinon
 					//						else
 					//						{
-					//							//décaler dans l'autre sens
+					//							//dï¿½caler dans l'autre sens
 					//							tmp = 1;
 					//							while(indice-tmp>=0 && !chemins[indice-tmp+k][j].estCheminLibre)
 					//							{
-					//								//décaler
+					//								//dï¿½caler
 					//								tmp++;
 					//							}
 					//							//inserer la valeur
@@ -865,7 +936,7 @@ public class TraiteurImage {
 			res = new BufferedImage(image.getWidth()+indicesChemins.length, image.getHeight(),BufferedImage.TYPE_INT_ARGB);
 
 			//System.out.println(res.getRGB(0, 0));
-			for( int k=0; k<indicesChemins.length; k++)	//pour tout les chemins à dupliquer
+			for( int k=0; k<indicesChemins.length; k++)	//pour tout les chemins ï¿½ dupliquer
 			{
 				//trouver indice depart
 				indice = indicesChemins[k];
@@ -885,12 +956,12 @@ public class TraiteurImage {
 					//					//sinon 
 					//					else
 					//					{
-					//						System.out.println("Je dois pas passer là...");
-					//						//tant que valeur à coté deja rempli
+					//						System.out.println("Je dois pas passer lï¿½...");
+					//						//tant que valeur ï¿½ cotï¿½ deja rempli
 					//						tmp=1;
 					//						while(indice+tmp+k<res.getWidth() && res.getRGB(indice+tmp+k, j)==-1)
 					//						{
-					//							//décaler
+					//							//dï¿½caler
 					//							tmp++;
 					//						}
 					//						//si on est pas sortie de l'image
@@ -903,11 +974,11 @@ public class TraiteurImage {
 					//						//sinon
 					//						else
 					//						{
-					//							//décaler dans l'autre sens
+					//							//dï¿½caler dans l'autre sens
 					//							tmp = 1;
 					//							while(indice-tmp>=0 && res.getRGB(indice+k-tmp, j)==-1)
 					//							{
-					//								//décaler
+					//								//dï¿½caler
 					//								tmp++;
 					//							}
 					//							//inserer la valeur
@@ -1108,7 +1179,7 @@ public class TraiteurImage {
 		CheminsASupprimer cheminsASupprimer = null;
 		//		int[] indicesCheminsASupprimer = trouverCheminsCroisePasPoidsMinEnHauteur(image, Math.abs(image.getWidth() - newlargeur));
 
-		//test intermédiaire
+		//test intermï¿½diaire
 		//newimage = marquerChemins("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 
 
@@ -1233,12 +1304,12 @@ public class TraiteurImage {
 		BufferedImage im_poids = this.calculerImageEnergie(image);
 
 		chemins = this.calculerCheminsMoinsCouteuxEnHauteur(im_poids);
-		//pour le nombre de chemin à trouver
+		//pour le nombre de chemin ï¿½ trouver
 		for(int cpt = 0; cpt < nbCheminATrouver; cpt++)
 		{
 			//			-calcul des poids des chemins qui n'en traverse pas d'autre
 			chemins = calculerPoidsCheminsCroisePasEnHauteur(im_poids, chemins);
-			//			-mémorer indice chemin poids min
+			//			-mï¿½morer indice chemin poids min
 			indicesChemins[cpt] = trouverCheminCroisePasPoidsMinEnHauteur(chemins, indicesChemins, cpt);
 			//			-marquerChemin(indice chemin poids min)
 			//			System.out.println(indicesChemins.toString());
@@ -1463,5 +1534,5 @@ public class TraiteurImage {
 			lesIndices = indices;
 		}
 	}
-
 }
+

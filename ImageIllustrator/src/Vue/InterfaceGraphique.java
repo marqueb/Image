@@ -52,7 +52,7 @@ public class InterfaceGraphique implements Runnable{
 	private Modele modele;
 	private Controler controler;
 	private JMenuItem sauvegarde, couleurPixel, fusion, imagris, moyen, egalisation, redimensionner, etalement,
-	inverser, decouper, annuler, refaire, median, utilisateur, contours, contraste,sepia, eclaircir, foncer, noirblanc ;
+	inverser, decouper, annuler, refaire, median, utilisateur, contours, contraste,sepia, eclaircir, foncer, noirblanc, normal, intelligent;
 	private CheckboxGroup groupe;
 	private Checkbox box1, box2;
 	private JCheckBox rouge,vert,bleu, luminance, chrominanceU , chrominanceV;
@@ -150,7 +150,7 @@ public class InterfaceGraphique implements Runnable{
 		text.add(panelLargeur,BorderLayout.EAST);
 		text.add(panelHauteur,BorderLayout.WEST);
 		JButton valider = new JButton("Valider");
-		String[] typeRedimension = {"Normal", "Intélligent"};
+		String[] typeRedimension = {"Normal", "Intï¿½lligent"};
 		JComboBox<String> boxTypeRedim = new JComboBox<String>(typeRedimension);
 		text.add(boxTypeRedim,BorderLayout.NORTH);
 		controler.addRedimensionnerValider(valider, boxTypeRedim);
@@ -626,7 +626,7 @@ public class InterfaceGraphique implements Runnable{
 		sepia.setEnabled(false);
 		controler.addControlerSepia(sepia);
 		transformation.add(sepia);    
-		inverser = new JMenuItem("Négatif");
+		inverser = new JMenuItem("Nï¿½gatif");
 		inverser.setEnabled(false);
 		controler.addControlerInverser(inverser);
 		transformation.add(inverser);
@@ -647,7 +647,7 @@ public class InterfaceGraphique implements Runnable{
 		
 		//Traitement 
 		JMenu traitement = new JMenu("Traitement");
-		//Traitement => Amélioration
+		//Traitement => Amï¿½lioration
 		JMenu amelioration = new JMenu("Amelioration");
 		traitement.add(amelioration);
 		JMenu filtre = new JMenu("Filtre");
@@ -664,7 +664,7 @@ public class InterfaceGraphique implements Runnable{
 		controler.addControlerEgalisation(egalisation);
 		amelioration.add(egalisation);
 		//filtre => contraste
-		contraste = new JMenuItem("Réhausser les contrastes");
+		contraste = new JMenuItem("Rï¿½hausser les contrastes");
 		controler.addControlerContraste(contraste);
 		contraste.setEnabled(false);
 		filtre.add(contraste);  
