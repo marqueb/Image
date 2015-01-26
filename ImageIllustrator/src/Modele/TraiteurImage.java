@@ -511,103 +511,103 @@ public class TraiteurImage {
 	//	}
 
 	//pour redimensionnement en largeur
-	private int[] trouverCheminsPoidsMinEnLargeur(CaseTableauChemins[][] chemins, int nbCheminsATrouver)
-	{
-		int[] indices = new int[nbCheminsATrouver];
-		ArrayList<Integer> dernieresCase = new ArrayList<Integer>();
-
-		for(int j = 0; j < chemins[0].length; j++)
-		{
-			dernieresCase.add(new Integer(chemins[chemins.length-1][j].value));
-		}
-
-		Collections.sort(dernieresCase);
-
-		int cpt = 0, j = 0;
-		while(cpt < nbCheminsATrouver && j < chemins[0].length)
-		{//si la valeur de chemins est dans la list des valeurs minimales alors c'est l'indice d'un chemin de poids min
-			if(dernieresCase.contains(chemins[chemins.length-1][j])) 
-			{
-				indices[cpt] = j;
-				cpt++;
-			}
-			j++;
-		}
-
-
-		//		System.out.println(indices.toString());
-		//		System.out.flush();
-		return indices;
-	}
+//	private int[] trouverCheminsPoidsMinEnLargeur(CaseTableauChemins[][] chemins, int nbCheminsATrouver)
+//	{
+//		int[] indices = new int[nbCheminsATrouver];
+//		ArrayList<Integer> dernieresCase = new ArrayList<Integer>();
+//
+//		for(int j = 0; j < chemins[0].length; j++)
+//		{
+//			dernieresCase.add(new Integer(chemins[chemins.length-1][j].value));
+//		}
+//
+//		Collections.sort(dernieresCase);
+//
+//		int cpt = 0, j = 0;
+//		while(cpt < nbCheminsATrouver && j < chemins[0].length)
+//		{//si la valeur de chemins est dans la list des valeurs minimales alors c'est l'indice d'un chemin de poids min
+//			if(dernieresCase.contains(chemins[chemins.length-1][j])) 
+//			{
+//				indices[cpt] = j;
+//				cpt++;
+//			}
+//			j++;
+//		}
+//
+//
+//		//		System.out.println(indices.toString());
+//		//		System.out.flush();
+//		return indices;
+//	}
 
 
 	//1ere calcul des poids des chemins (utilisé une autre fonctions pour choisir les chemins suivants afin de ne pas
 	//croisé de chemin déjà choisi)
-	private int[] trouverCheminsPoidsMinEnHauteur(CaseTableauChemins[][] chemins, int nbCheminsATrouver)
-	{
-		int[] indices = new int[nbCheminsATrouver];
-		ArrayList<Integer> dernieresCase = new ArrayList<Integer>();
-		int[] indiceCheminOrdreCroissant = new int[chemins.length];
-
-		//on rï¿½cupere les valeurs des diffï¿½rents chemins
-		for(int i = 0; i < chemins.length; i++)
-		{
-			dernieresCase.add(new Integer(chemins[i][chemins[0].length-1].value));
-			indiceCheminOrdreCroissant[i] = i;
-		}
-
-		Integer[] derniereLigne = dernieresCase.toArray(new Integer[dernieresCase.size()]);
-		//on tri les valeurs des chemins
-		//Collections.sort(dernieresCase);
-
-		//on rï¿½cupere les indices des chemins dans l'ordre des poids des chemins croissants
-		int tmp = 0;
-		for(int k=0; k<chemins.length; k++)
-		{
-			for(int i=k+1; i<chemins.length; i++)
-			{
-				if(derniereLigne[k]>derniereLigne[i])
-				{
-					//on ï¿½change les valeurs
-					tmp = derniereLigne[k];
-					derniereLigne[k] = derniereLigne[i];
-					derniereLigne[i] = tmp;
-					//on ï¿½change l'ordre des indices
-					tmp = indiceCheminOrdreCroissant[k];
-					indiceCheminOrdreCroissant[k] = indiceCheminOrdreCroissant[i];
-					indiceCheminOrdreCroissant[i] = tmp;
-				}
-			}
-		}
-
-		for(int i = 0; i<nbCheminsATrouver; i++)
-		{
-			indices[i]=-1;
-		}
-
-		//on trouve les chemins de poids minimum qui ne se croise pas (mï¿½thode non optimale)
-		int cpt = 0, i = 0, indice = 0;;
-		while(cpt<nbCheminsATrouver && i < chemins.length)
-		{//si la valeur de chemins est dans la liste des valeurs minimales alors c'est l'indice d'un chemin de poids min
-			//			if(dernieresCase.contains(chemins[i][chemins[0].length-1])) 
-			//			{
-			//				indices[cpt] = i;
-			//				cpt++;
-			//			}
-			//			i++;
-			//on rï¿½cupere les indice des chemins de poids min
-			indice = indiceCheminOrdreCroissant[i];
-			if(cheminLibre(indice, chemins, "HAUTEUR"))
-			{
-				indices[cpt] = indice;
-				cpt++;
-				chemins = marquerChemin(indice, chemins, "HAUTEUR");
-			}
-			i++;
-		}
-
-		return indices;
-	}
+//	private int[] trouverCheminsPoidsMinEnHauteur(CaseTableauChemins[][] chemins, int nbCheminsATrouver)
+//	{
+//		int[] indices = new int[nbCheminsATrouver];
+//		ArrayList<Integer> dernieresCase = new ArrayList<Integer>();
+//		int[] indiceCheminOrdreCroissant = new int[chemins.length];
+//
+//		//on rï¿½cupere les valeurs des diffï¿½rents chemins
+//		for(int i = 0; i < chemins.length; i++)
+//		{
+//			dernieresCase.add(new Integer(chemins[i][chemins[0].length-1].value));
+//			indiceCheminOrdreCroissant[i] = i;
+//		}
+//
+//		Integer[] derniereLigne = dernieresCase.toArray(new Integer[dernieresCase.size()]);
+//		//on tri les valeurs des chemins
+//		//Collections.sort(dernieresCase);
+//
+//		//on rï¿½cupere les indices des chemins dans l'ordre des poids des chemins croissants
+//		int tmp = 0;
+//		for(int k=0; k<chemins.length; k++)
+//		{
+//			for(int i=k+1; i<chemins.length; i++)
+//			{
+//				if(derniereLigne[k]>derniereLigne[i])
+//				{
+//					//on ï¿½change les valeurs
+//					tmp = derniereLigne[k];
+//					derniereLigne[k] = derniereLigne[i];
+//					derniereLigne[i] = tmp;
+//					//on ï¿½change l'ordre des indices
+//					tmp = indiceCheminOrdreCroissant[k];
+//					indiceCheminOrdreCroissant[k] = indiceCheminOrdreCroissant[i];
+//					indiceCheminOrdreCroissant[i] = tmp;
+//				}
+//			}
+//		}
+//
+//		for(int i = 0; i<nbCheminsATrouver; i++)
+//		{
+//			indices[i]=-1;
+//		}
+//
+//		//on trouve les chemins de poids minimum qui ne se croise pas (mï¿½thode non optimale)
+//		int cpt = 0, i = 0, indice = 0;;
+//		while(cpt<nbCheminsATrouver && i < chemins.length)
+//		{//si la valeur de chemins est dans la liste des valeurs minimales alors c'est l'indice d'un chemin de poids min
+//			//			if(dernieresCase.contains(chemins[i][chemins[0].length-1])) 
+//			//			{
+//			//				indices[cpt] = i;
+//			//				cpt++;
+//			//			}
+//			//			i++;
+//			//on rï¿½cupere les indice des chemins de poids min
+//			indice = indiceCheminOrdreCroissant[i];
+//			if(cheminLibre(indice, chemins, "HAUTEUR"))
+//			{
+//				indices[cpt] = indice;
+//				cpt++;
+//				chemins = marquerChemin(indice, chemins, "HAUTEUR");
+//			}
+//			i++;
+//		}
+//
+//		return indices;
+//	}
 
 
 
@@ -663,14 +663,14 @@ public class TraiteurImage {
 		return estLibre;
 	}
 
-	private CaseTableauChemins[][] marquerToutLesChemins(int[] indices, CaseTableauChemins[][] chemins, String orientation)
-	{
-		for(int i = 0; i<indices.length; i++)
-		{
-			chemins = marquerChemin(indices[i], chemins, orientation);
-		}
-		return chemins;
-	}
+//	private CaseTableauChemins[][] marquerToutLesChemins(int[] indices, CaseTableauChemins[][] chemins, String orientation)
+//	{
+//		for(int i = 0; i<indices.length; i++)
+//		{
+//			chemins = marquerChemin(indices[i], chemins, orientation);
+//		}
+//		return chemins;
+//	}
 
 	//retourne un CaseTableauChemin[][] avec les chemins occupé marqué (boolean estCheminLibre = false)
 	private CaseTableauChemins[][] marquerChemin(int indice, CaseTableauChemins[][] chemins, String orientation)
@@ -727,7 +727,7 @@ public class TraiteurImage {
 			res = recopierChemins("LARGEUR", image, chemins, indicesChemins);
 			//on complete le reste de l'image
 			res = completerImageRedimEnLargeur(res, image, chemins, "AGRANDIR");
-			System.out.println("Image agrandie!");
+//			System.out.println("Image agrandie!");
 		}
 		else//TODO hauteur
 		{
@@ -736,7 +736,7 @@ public class TraiteurImage {
 			res = recopierChemins("HAUTEUR", image, chemins, indicesChemins);
 			//on complete le reste de l'image
 			res = completerImageRedimEnHauteur(res, image, chemins, "AGRANDIR");
-			System.out.println("Image agrandie!");
+//			System.out.println("Image agrandie!");
 		}
 
 		return res;
@@ -763,7 +763,7 @@ public class TraiteurImage {
 			//chemins = marquerToutLesChemins(indicesChemins, chemins, "HAUTEUR");
 			//on complete le reste de l'image
 			res = completerImageRedimEnHauteur(res, image, chemins, "RETRECIR");
-			System.out.println("Image retrecie!");
+//			System.out.println("Image retrecie!");
 		}
 
 		return res;
@@ -1175,8 +1175,8 @@ public class TraiteurImage {
 		BufferedImage newimage = new BufferedImage(image.getWidth(), newhauteur,BufferedImage.TYPE_INT_ARGB);
 
 
-		int pas = 20;
-		int nbPix = Math.abs(image.getWidth() - newhauteur);
+		int pas = 15;
+		int nbPix = Math.abs(image.getHeight() - newhauteur);
 
 		CheminsASupprimer cheminsASupprimer = null;
 		//		int[] indicesCheminsASupprimer = trouverCheminsCroisePasPoidsMinEnHauteur(image, Math.abs(image.getWidth() - newlargeur));
@@ -1223,7 +1223,7 @@ public class TraiteurImage {
 		BufferedImage newimage = new BufferedImage(newlargeur, image.getHeight(),BufferedImage.TYPE_INT_ARGB);
 
 
-		int pas = 20;
+		int pas = 15;
 		int nbPix = Math.abs(image.getWidth() - newlargeur);
 
 		CheminsASupprimer cheminsASupprimer = null;
@@ -1321,11 +1321,11 @@ public class TraiteurImage {
 			//			System.out.flush();
 		}
 
-		for(int i = 0; i<indicesChemins.length; i++)
-		{
-			System.out.println("tab["+i+"] = "+indicesChemins[i]);
-		}
-		System.out.flush();
+//		for(int i = 0; i<indicesChemins.length; i++)
+//		{
+//			System.out.println("tab["+i+"] = "+indicesChemins[i]);
+//		}
+//		System.out.flush();
 
 		cheminsASupprimer = new CheminsASupprimer(chemins, indicesChemins);
 		return cheminsASupprimer;
