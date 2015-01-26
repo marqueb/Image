@@ -21,10 +21,10 @@ public class ControlerRedimensionnerValider implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		if(boxTypeRedim.getSelectedItem().equals("Normal"))
 		{
-			modele.redimensionner(Integer.parseInt(modele.getInterfaceGraphique().getLargeur().getText()),Integer.parseInt(modele.getInterfaceGraphique().getHauteur().getText()));
+			modele.redimensionner(Integer.parseInt(modele.getInterfaceGraphique().getHauteur().getText()),Integer.parseInt(modele.getInterfaceGraphique().getLargeur().getText()));
 			modele.getInterfaceGraphique().getFrameRedim().dispose();
 		}
-		else//redimensionnement intélligent
+		else//redimensionnement intï¿½lligent
 		{
 			modele.redimensionnerIntelligement(Integer.parseInt(modele.getInterfaceGraphique().getLargeur().getText()),Integer.parseInt(modele.getInterfaceGraphique().getHauteur().getText()));
 			modele.getInterfaceGraphique().getFrameRedim().dispose();

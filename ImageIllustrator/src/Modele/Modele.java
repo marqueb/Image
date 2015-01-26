@@ -86,7 +86,9 @@ public class Modele {
 
 	public void redimensionner( int newLargeur,int newHauteur) {
 		CadreImage  cadre = cadreImageCourant();
-		cadre.setImage(traiteurImage.redimenssionerLargeur(cadre.getImage(), 400));
+		BufferedImage intermediaire =traiteurImage.redimenssionerLargeur(cadre.getImage(), newLargeur);
+		cadre.setImage(traiteurImage.redimenssionerHauteur(intermediaire, newHauteur));
+		actualiserImageIcon();
 		//traiteurImage.redimenssionerHauteur(cadre.getImage(), newHauteur);
 		//cadre.setImage(traiteurImage.redimenssioner(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
 	}

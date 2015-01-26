@@ -196,47 +196,86 @@ public class TraiteurImage {
 		return im_out;
 	}
 
-
-
 	public BufferedImage redimenssionerLargeur(BufferedImage image, int newLargeur){
 		BufferedImage nouvelle=new BufferedImage(newLargeur,image.getHeight(), image.getType());
-		for(int j=0; j<nouvelle.getHeight();j++){
-			for(int i=0; i<nouvelle.getWidth();i++){
-				nouvelle.setRGB(i,  j, outil.setAlpha(255)+outil.setB(255)+outil.setG(255)+outil.setR(255));
-			}
-		}
+		int a, b, c, d;
 		double ratio = ((double)newLargeur)/((double)image.getWidth());
-		System.out.println("largeur "+image.getWidth()+", new "+newLargeur+", ratio courant "+ratio);
 		double k, reste, ratioCourant;
 		for(int j=0; j<image.getHeight();j++){
+			a=0;
+			b=0;
+			c=0;
+			d=0;
+			k=0;
 			for(int i=0; i<image.getWidth();i++){
 				k=((double)i)*ratio;
-				//System.out.println("ratio "+ratio+", k "+k+", i "+i);
 				reste=k;
 				while(reste>1){
 					reste--;
 				}
 				ratioCourant=ratio-(1-reste);
 				k=k-reste;
-				nouvelle.setRGB(((int)k), j,((int) (nouvelle.getRGB(((int)k), j)+(1-reste)*image.getRGB(i, j))));
-				System.out.println("k "+k+", j "+j);
+				a=a+((int)(((double)outil.getAlpha(nouvelle.getRGB(((int)k), j)))+((double)1-reste)*((double)outil.getAlpha(image.getRGB(i, j)))));
+				b=b+((int)(((double)outil.getR(nouvelle.getRGB(((int)k), j)))+((double)1-reste)*((double)outil.getR(image.getRGB(i, j)))));
+				c=c+((int)(((double)outil.getG(nouvelle.getRGB(((int)k), j)))+((double)1-reste)*((double)outil.getG(image.getRGB(i, j)))));
+				d=d+((int)(((double)outil.getB(nouvelle.getRGB(((int)k), j)))+((double)1-reste)*((double)outil.getB(image.getRGB(i, j)))));
+				nouvelle.setRGB(((int)k), j,outil.setAlpha(a)+outil.setR(b)+outil.setG(c)+outil.setB(d));
 				k++;
-				//System.out.println("ratio "+ratio+", k "+k+", reste "+reste+", ratio courant "+ratioCourant);
 				while(ratioCourant>1){
-					nouvelle.setRGB(((int)k),  j, image.getRGB(i, j));
-					System.out.println("k "+k+", j "+j);
+					nouvelle.setRGB(((int)k), j, image.getRGB(i, j));
 					k++;
 					ratioCourant--;
 				}
-				System.out.println("kratioCourant "+ratioCourant+", j "+j);
-				nouvelle.setRGB(((int)k), j,((int) (ratioCourant)*image.getRGB(i, j)));				
+				a=((int)((ratioCourant)*((double)outil.getAlpha(image.getRGB(i, j)))));
+				b=((int)((ratioCourant)*((double)outil.getR(image.getRGB(i, j)))));
+				c=((int)((ratioCourant)*((double)outil.getG(image.getRGB(i, j)))));
+				d=((int)((ratioCourant)*((double)outil.getB(image.getRGB(i, j)))));
 			}
+			if(k<nouvelle.getWidth())
+				nouvelle.setRGB(((int)k), j,outil.setAlpha(a)+outil.setR(b)+outil.setG(c)+outil.setB(d));
 		}
 		return nouvelle;
 	}
 
-	public void redimenssionerHauteur(BufferedImage image, int newHauteur){
-		//cadreImage.setImage(outil.resize(cadreImage.getImage(), newW, newH));
+	public BufferedImage redimenssionerHauteur(BufferedImage image, int newHauteur){
+		BufferedImage nouvelle=new BufferedImage(image.getWidth(), newHauteur, image.getType());
+		int a, b, c, d;
+		double ratio = ((double)newHauteur)/((double)image.getHeight());
+		double k, reste, ratioCourant;
+		for(int j=0; j<image.getWidth();j++){
+			a=0;
+			b=0;
+			c=0;
+			d=0;
+			k=0;
+			for(int i=0; i<image.getHeight();i++){
+				k=((double)i)*ratio;
+				reste=k;
+				while(reste>1){
+					reste--;
+				}
+				ratioCourant=ratio-(1-reste);
+				k=k-reste;
+				a=a+((int)(((double)outil.getAlpha(nouvelle.getRGB(j,((int)k))))+((double)1-reste)*((double)outil.getAlpha(image.getRGB(j,i)))));
+				b=b+((int)(((double)outil.getR(nouvelle.getRGB(j,((int)k))))+((double)1-reste)*((double)outil.getR(image.getRGB(j,i)))));
+				c=c+((int)(((double)outil.getG(nouvelle.getRGB(j,((int)k))))+((double)1-reste)*((double)outil.getG(image.getRGB(j,i)))));
+				d=d+((int)(((double)outil.getB(nouvelle.getRGB(j,((int)k))))+((double)1-reste)*((double)outil.getB(image.getRGB(j,i)))));
+				nouvelle.setRGB( j,((int)k),outil.setAlpha(a)+outil.setR(b)+outil.setG(c)+outil.setB(d));
+				k++;
+				while(ratioCourant>1){
+					nouvelle.setRGB(j,((int)k),  image.getRGB(j,i));
+					k++;
+					ratioCourant--;
+				}
+				a=((int)((ratioCourant)*((double)outil.getAlpha(image.getRGB(j,i)))));
+				b=((int)((ratioCourant)*((double)outil.getR(image.getRGB(j,i)))));
+				c=((int)((ratioCourant)*((double)outil.getG(image.getRGB(j,i)))));
+				d=((int)((ratioCourant)*((double)outil.getB(image.getRGB(j,i)))));
+			}
+			if(k<nouvelle.getHeight())
+				nouvelle.setRGB(j,((int)k),outil.setAlpha(a)+outil.setR(b)+outil.setG(c)+outil.setB(d));
+		}
+		return nouvelle;
 	}
 
 	public BufferedImage redimensionnerIntelligement(int largeur, int hauteur,	int newlargeur, int newhauteur, BufferedImage image) 
@@ -282,7 +321,7 @@ public class TraiteurImage {
 			//			newchemins = calculerCheminsMoinsCouteuxEnHauteur(im_energie);
 			//
 			//			image = appliquerRedimensionnementIntelligentLargeur(image, newchemins, newlargeur);
-			
+
 			image = appliquerRedimensionnementIntelligentLargeurCroisePas(image, newlargeur);
 			System.out.println("done...");
 		}
@@ -905,11 +944,11 @@ public class TraiteurImage {
 	private BufferedImage appliquerRedimensionnementIntelligentLargeurCroisePas(BufferedImage image, int newlargeur)
 	{
 		BufferedImage newimage = new BufferedImage(newlargeur, image.getHeight(),BufferedImage.TYPE_INT_ARGB);
-		
-		
+
+
 		int pas = 20;
 		int nbPix = Math.abs(image.getWidth() - newlargeur);
-		
+
 		CheminsASupprimer cheminsASupprimer = null;
 		//		int[] indicesCheminsASupprimer = trouverCheminsCroisePasPoidsMinEnHauteur(image, Math.abs(image.getWidth() - newlargeur));
 
@@ -917,22 +956,22 @@ public class TraiteurImage {
 		//newimage = marquerChemins("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 
 
-				if(image.getWidth() < newlargeur) //agrandir en largeur
-				{
-					while(nbPix>pas)
-					{
-					cheminsASupprimer = calculerCheminsMoinsCouteuxEnHauteurQuiCroisePas(image, pas);
-					image = agrandirImage("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
-					nbPix = nbPix - pas;
-					}
-					cheminsASupprimer = calculerCheminsMoinsCouteuxEnHauteurQuiCroisePas(image, nbPix);
-					newimage = agrandirImage("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
-				}
-				else	//r�tr�cir en largeur
-				{
-		
-				}
-				System.out.println(outil.getR(outil.setR(255)+outil.setR(255)));
+		if(image.getWidth() < newlargeur) //agrandir en largeur
+		{
+			while(nbPix>pas)
+			{
+				cheminsASupprimer = calculerCheminsMoinsCouteuxEnHauteurQuiCroisePas(image, pas);
+				image = agrandirImage("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
+				nbPix = nbPix - pas;
+			}
+			cheminsASupprimer = calculerCheminsMoinsCouteuxEnHauteurQuiCroisePas(image, nbPix);
+			newimage = agrandirImage("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
+		}
+		else	//r�tr�cir en largeur
+		{
+
+		}
+		System.out.println(outil.getR(outil.setR(255)+outil.setR(255)));
 
 		return newimage;
 	}
@@ -1060,7 +1099,7 @@ public class TraiteurImage {
 				}
 				if(min==Integer.MAX_VALUE) 
 				{
-//					System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAYYYYYE");
+					//					System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAYYYYYE");
 					min = chemins[i][j-1].value;
 					direction = Direction.MILIEU;
 				}
