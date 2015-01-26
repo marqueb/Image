@@ -246,25 +246,36 @@ public class TraiteurImage {
 
 
 	public BufferedImage redimenssionerLargeur(BufferedImage image, int newLargeur){
-		BufferedImage nouvelle=outil.resize(image, newLargeur, image.getHeight());
+		BufferedImage nouvelle=new BufferedImage(newLargeur,image.getHeight(), image.getType());
+		for(int j=0; j<nouvelle.getHeight();j++){
+			for(int i=0; i<nouvelle.getWidth();i++){
+				nouvelle.setRGB(i,  j, outil.setAlpha(255)+outil.setB(255)+outil.setG(255)+outil.setR(255));
+			}
+		}
 		double ratio = ((double)newLargeur)/((double)image.getWidth());
+		System.out.println("largeur "+image.getWidth()+", new "+newLargeur+", ratio courant "+ratio);
 		double k, reste, ratioCourant;
 		for(int j=0; j<image.getHeight();j++){
 			for(int i=0; i<image.getWidth();i++){
-				k=i*ratio;
+				k=((double)i)*ratio;
+				//System.out.println("ratio "+ratio+", k "+k+", i "+i);
 				reste=k;
 				while(reste>1){
 					reste--;
 				}
-				ratioCourant=k-(1-reste);
+				ratioCourant=ratio-(1-reste);
 				k=k-reste;
 				nouvelle.setRGB(((int)k), j,((int) (nouvelle.getRGB(((int)k), j)+(1-reste)*image.getRGB(i, j))));
+				System.out.println("k "+k+", j "+j);
 				k++;
+				//System.out.println("ratio "+ratio+", k "+k+", reste "+reste+", ratio courant "+ratioCourant);
 				while(ratioCourant>1){
 					nouvelle.setRGB(((int)k),  j, image.getRGB(i, j));
+					System.out.println("k "+k+", j "+j);
 					k++;
 					ratioCourant--;
 				}
+				System.out.println("kratioCourant "+ratioCourant+", j "+j);
 				nouvelle.setRGB(((int)k), j,((int) (ratioCourant)*image.getRGB(i, j)));				
 			}
 		}
