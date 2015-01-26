@@ -45,13 +45,18 @@ public class ControlerFiltreUser implements ActionListener{
 				modele.appliquerFiltre(filtre);
 				//et rafraichir l'imageIcon
 				modele.actualiserImageIcon();
-				it.rafraichirComponentOption();
+				modele.getControler().setUtilisateurActive(true);
+				modele.getControler().init();
 			}
+			it.rafraichirComponentOption();
 		}
 		else if(e.getActionCommand().equals("Annuler"))
 		{
 			modele.actualiserImageIcon();
+			modele.getControler().setUtilisateurActive(true);
+			modele.getControler().init();
 			it.rafraichirComponentOption();
+			
 		}
 		else if(e.getActionCommand().equals("Previsualiser"))
 		{//ouvrir une nouvelle fenetre avec l'ancienne image et la nouvelle
@@ -63,6 +68,7 @@ public class ControlerFiltreUser implements ActionListener{
 				im_modif = modele.calculerConvolution(filtre, im_no_modif);
 				it.previsualiserApplicationFiltreUser(im_no_modif, im_modif);
 			}
+			it.rafraichirComponentOption();
 		}
 		else//changer la grille du filtre
 		{

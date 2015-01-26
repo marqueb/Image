@@ -22,8 +22,10 @@ import Vue.InterfaceGraphique;
 public class Controler{
 	private Modele modele;
 	private InterfaceGraphique it;
-	private boolean echantillonageActif=false,flouActive=false, fusionActive=false, selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
-
+	private boolean echantillonageActif=false,flouActive=false,utilisateurActive=false, fusionActive=false, 
+			selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
+//	private Mat fg,bg;
+	private boolean segmentation=false;
 	public boolean selectionActive()
 	{
 		return selectionActive;
@@ -48,6 +50,10 @@ public class Controler{
 			modele.actualiserImageIcon();
 			flouActive=false;
 		}
+		if(utilisateurActive){
+			it.retirerComponent();
+			utilisateurActive=false;
+		}
 		if(fusionActive){
 			it.retirerComponent();
 			fusionActive=false;
@@ -61,7 +67,8 @@ public class Controler{
 	{
 		modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
 		modele.actualiserImageIcon();
-		it.rafraichirComponentOption();
+		it.rafraichirComponentOption();		
+		flouActive=true;
 		init();
 	}
 
@@ -69,8 +76,7 @@ public class Controler{
 	{
 		modele.actualiserImageIcon();
 		it.rafraichirComponentOption();
-		it.retirerComponent();
-		flouActive=false;
+		flouActive=true;
 		init();
 	}
 
@@ -125,6 +131,24 @@ public class Controler{
 		modele.imagris();
 	}	
 
+	public void eclaircir() {
+		init();
+		modele.eclaircir();
+		
+	}
+	
+	public void foncer() {
+		init();
+		modele.foncer();
+		
+	}
+	
+	public void noirblanc() {
+		init();
+		modele.noirblanc();
+		
+	}
+	
 	public void changerOnglet(){
 		init();
 		if(modele.existeSelection()){
@@ -134,17 +158,23 @@ public class Controler{
 		if(!modele.getListImage().isEmpty()){
 			if(modele.cadreImageCourant().getAnnuler().isEmpty()){
 				it.getAnnuler().setEnabled(false);
+				it.getBtnAnnuler().setEnabled(false);
 			}else{
 				it.getAnnuler().setEnabled(true);
+				it.getBtnAnnuler().setEnabled(true);
 			}
 			if(modele.cadreImageCourant().getRefaire().isEmpty()){
 				it.getRefaire().setEnabled(false);
+				it.getBtnRefaire().setEnabled(false);
 			}else{
 				it.getRefaire().setEnabled(true);
+				it.getBtnRefaire().setEnabled(true);
 			}
 		}else{
 			it.getAnnuler().setEnabled(false);
+			it.getBtnAnnuler().setEnabled(false);
 			it.getRefaire().setEnabled(false);
+			it.getBtnRefaire().setEnabled(false);
 		}
 	}
 
@@ -183,13 +213,9 @@ public class Controler{
 					modele.setEstEgalisation(false);
 			}
 			@Override
-			public void windowActivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void windowActivated(WindowEvent e) {}
 			@Override
 			public void windowClosed(WindowEvent e) {
-				// TODO Auto-generated method stub
 				//if(!modele.isEstEgalisation()){
 				if(modele.isEstHistoCliquer()){
 					modele.fermetureHisto();
@@ -199,29 +225,16 @@ public class Controler{
 				modele.setEstEgalisation(false);
 			}
 			@Override
-			public void windowDeactivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void windowDeactivated(WindowEvent e) {	}
 			@Override
-			public void windowDeiconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void windowDeiconified(WindowEvent e) {}
 			@Override
-			public void windowIconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void windowIconified(WindowEvent e) {}
 			@Override
-			public void windowOpened(WindowEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
+			public void windowOpened(WindowEvent e) {}
 		});
-		//(new ControlerEgalisation(modele));
 	}
+	
 	public void sourisEntre(int x, int y, int u, int v){
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
@@ -261,23 +274,41 @@ public class Controler{
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
 		if(modele.estDansImage(x, y)){
-			//System.out.println("jambon1"+selectionActive);
-			if(selectionActive && modele.estDansSelection(x, y)){
-				init();
-				//System.out.println("jambon2");
-				ajustementSelection=true;
-				modele.setDelta(x, y);
-				modele.setDist(x, y);
-			}else{
-				init();
-				selectionActive=true;
-				it.getButtonSegmenter().setEnabled(true);
-				modele.setPrec(x, y);
-			}
+
+				//System.out.println("jambon1"+selectionActive);
+				if(selectionActive && modele.estDansSelection(x, y)){
+					init();
+					//System.out.println("jambon2");
+					ajustementSelection=true;
+					modele.setDelta(x, y);
+					modele.setDist(x, y);
+				}else{
+					init();
+					selectionActive=true;
+					it.getButtonSegmenter().setEnabled(true);
+					modele.setPrec(x, y);
+				}
+
 		}else{
 			init();
 			modele.actualiserImageIcon();
 		}
+	}
+//TODO SEGMENTATION
+//	public Mat getFg() {
+//		return fg;
+//	}
+//
+//	public void setFg(Mat fg) {
+//		this.fg = fg;
+//	}
+
+	public boolean isSegmentation() {
+		return segmentation;
+	}
+
+	public void setSegmentation(boolean segmentation) {
+		this.segmentation = segmentation;
 	}
 
 	public void sourisRelache(int x, int y, int u, int v){
@@ -305,14 +336,7 @@ public class Controler{
 		}
 	}
 
-	public void sourisDragged(int x, int y){
-		/*if(ajustementSelection){
-			modele.ajustementSelection(x, y);
-		}
-		if(selectionActive){
-			modele.selectionne(x, y);
-		}*/
-	}
+	public void sourisDragged(int x, int y){}
 
 	public void boutonFusionClic()
 	{
@@ -329,8 +353,6 @@ public class Controler{
 	public void boutonAppliquerFusionClic()
 	{
 		init();
-		//this.it.retirerComponentFusion();
-		//modele.calculerHistogrammeRGB();
 	}
 
 	public void boutonAppliquerFiltre()
@@ -439,7 +461,7 @@ public class Controler{
 	}
 
 	public void addControlerBoutonFiltreUser(JMenuItem u)
-	{
+	{	
 		u.addActionListener(new ControlerBoutonFiltreUser(this.modele, this.it));
 	}
 
@@ -466,8 +488,8 @@ public class Controler{
 		afficherHisto.addActionListener(new ControlerAfficherHisto(this.modele));
 	}
 
-	public void addRedimensionnerValider(JButton valider) {
-		valider.addActionListener(new ControlerRedimensionnerValider(modele));	
+	public void addRedimensionnerValider(JButton valider, JComboBox<String> boxTypeRedim) {
+		valider.addActionListener(new ControlerRedimensionnerValider(modele, boxTypeRedim));	
 	}
 
 	public void addControlerEtalement(JMenuItem etalement) {
@@ -493,8 +515,64 @@ public class Controler{
 	public void addControlerAnnuler(JMenuItem annuler){
 		annuler.addActionListener(new ControlerAnnuler(this));
 	}
-
+	
+	public void addControlerAnnuler(JButton annuler){
+		annuler.addActionListener(new ControlerAnnuler(this));
+	}
+	
 	public void addControlerRefaire(JMenuItem refaire){
 		refaire.addActionListener(new ControlerRefaire(this));
 	}
+
+	public void addControlerSepia(JMenuItem sepia) {
+		sepia.addActionListener(new ControlerSepia(this));
+		
+	}
+
+	public void addControlerRefaire(JButton btnRefaire) {
+		btnRefaire.addActionListener(new ControlerRefaire(this));		
+	}
+
+	public void addControlerCouleurPixel(JButton btnCouleur) {
+		btnCouleur.addActionListener(new ControlerCouleurPixel(this));
+		
+	}
+
+	public void addControlerDecouper(JButton btnDecouper) {
+		btnDecouper.addActionListener(new ControlerDecouper(this));
+		
+	}
+
+	public void addControlerEclaircir(JMenuItem eclaircir) {
+		eclaircir.addActionListener(new ControlerEclaircir(this));
+		
+	}
+	
+	public void addControlerEclaircir(JButton btnEclaircir) {
+		btnEclaircir.addActionListener(new ControlerEclaircir(this));
+		
+	}
+	
+	public void addControlerFoncer(JMenuItem foncer) {
+		foncer.addActionListener(new ControlerFoncer(this));
+		
+	}
+	
+	public void addControlerFoncer(JButton btnFoncer) {
+		btnFoncer.addActionListener(new ControlerFoncer(this));		
+	}
+	
+	public boolean isUtilisateurActive() {
+		return utilisateurActive;
+	}
+
+	public void setUtilisateurActive(boolean utilisateurActive) {
+		this.utilisateurActive = utilisateurActive;
+	}
+
+	public void addControlerNoirblanc(JMenuItem noirblanc) {
+		noirblanc.addActionListener(new ControlerNoirblanc(this));
+		
+	}
+
 }
