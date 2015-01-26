@@ -208,6 +208,7 @@ public class TraiteurImage {
 
 	public BufferedImage redimensionnerIntelligement(int largeur, int hauteur,	int newlargeur, int newhauteur, BufferedImage image) 
 	{
+		System.out.println("(largeur, hauteur) = ("+largeur+", "+hauteur+"); (newLargeur, newHauteur) = ("+newlargeur+", "+newhauteur+")");
 		//si pas de redimensionnement
 		if(largeur == newlargeur && hauteur == newhauteur)	return image;
 
@@ -591,6 +592,15 @@ public class TraiteurImage {
 		return estLibre;
 	}
 
+	private CaseTableauChemins[][] marquerToutLesChemins(int[] indices, CaseTableauChemins[][] chemins, String orientation)
+	{
+		for(int i = 0; i<indices.length; i++)
+		{
+			chemins = marquerChemin(indices[i], chemins, orientation);
+		}
+		return chemins;
+	}
+
 	//retourne un CaseTableauChemin[][] avec les chemins occupé marqué (boolean estCheminLibre = false)
 	private CaseTableauChemins[][] marquerChemin(int indice, CaseTableauChemins[][] chemins, String orientation)
 	{
@@ -645,7 +655,7 @@ public class TraiteurImage {
 			//on initialise les chemins à ajouter
 			res = recopierChemins("LARGEUR", image, chemins, indicesChemins);
 			//on complete le reste de l'image
-			res = completerImageRedimEnLargeur(res, image, chemins);
+			res = completerImageRedimEnLargeur(res, image, chemins, "AGRANDIR");
 			System.out.println("Image agrandie!");
 		}
 		else//TODO hauteur
@@ -654,7 +664,7 @@ public class TraiteurImage {
 			//on initialise les chemins à ajouter
 			res = recopierChemins("HAUTEUR", image, chemins, indicesChemins);
 			//on complete le reste de l'image
-			res = completerImageRedimEnHauteur(res, image, chemins);
+			res = completerImageRedimEnHauteur(res, image, chemins, "AGRANDIR");
 			System.out.println("Image agrandie!");
 		}
 
@@ -664,25 +674,29 @@ public class TraiteurImage {
 
 
 	//TODO
-	private BufferedImage retrecirImage(String orientation, BufferedImage image, CaseTableauChemins[][] chemins, int[] indicesCheminsASupprimer)
+	private BufferedImage retrecirImage(String orientation, BufferedImage image, CaseTableauChemins[][] chemins, int[] indicesChemins)
 	{
-		BufferedImage tmp = null, res = null;
+		BufferedImage res = null;
 
 		if(orientation.equals("LARGEUR"))
 		{
-			//			//on met un marqueur sur les chemins à supprimer
-			//			tmp = marquerChemins(image, chemins, indicesCheminsASupprimer);
-			//			//on supprime les chemins marqués
-			//			res = supprimerMarqueur(tmp, image);
+			res = new BufferedImage(image.getWidth()-indicesChemins.length, image.getHeight(),BufferedImage.TYPE_INT_ARGB);
+			//on marque les chemins à supprimer (estCheminLibre = false)
+			//chemins = marquerToutLesChemins(indicesChemins, chemins, "LARGEUR");
+			//on complete le reste de l'image
+			res = completerImageRedimEnLargeur(res, image, chemins, "RETRECIR");
 		}
 		else//TODO hauteur
 		{
-			System.out.println("pas implémenté 4");
+			res = new BufferedImage(image.getWidth(), image.getHeight()-indicesChemins.length,BufferedImage.TYPE_INT_ARGB);
+			//chemins = marquerToutLesChemins(indicesChemins, chemins, "HAUTEUR");
+			//on complete le reste de l'image
+			res = completerImageRedimEnHauteur(res, image, chemins, "RETRECIR");
+			System.out.println("Image retrecie!");
 		}
 
 		return res;
 	}
-
 
 
 	//recopie les chemins pour un agrandissement
@@ -955,27 +969,55 @@ public class TraiteurImage {
 
 
 	//complete le reste de l'image (apres ajout ou suppression des chemins de poids minimum)
-	private BufferedImage completerImageRedimEnHauteur(BufferedImage toComplete, BufferedImage image, CaseTableauChemins[][] chemins)
+	private BufferedImage completerImageRedimEnHauteur(BufferedImage toComplete, BufferedImage image,
+			CaseTableauChemins[][] chemins, String typeRedim)
 	{
 		//		System.out.println("toComplete  "+toComplete.getWidth()+"   "+toComplete.getHeight());
 		//		System.out.println("Image avant modif    "+image.getWidth()+"   "+image.getHeight());
 
 
 		int decalage = 0;
-		for(int i = 0; i<image.getWidth(); i++)
+		if(typeRedim.equals("AGRANDIR"))
 		{
-			decalage = 0;
-			for(int j = 0; j<image.getHeight(); j++)
+			for(int i = 0; i<image.getWidth(); i++)
 			{
-				//si la valeur est déjà rempli alors on se décale
-				while( !cheminsRecopie[i][j+decalage].estCheminLibre)
+				decalage = 0;
+				for(int j = 0; j<image.getHeight(); j++)
 				{
-					decalage++;
-					//					System.out.println(i+"    "+(j+decalage));
-					//					System.out.flush();
+
+					//si la valeur est déjà rempli alors on se décale
+					while( !cheminsRecopie[i][j+decalage].estCheminLibre)
+					{
+						decalage++;
+						//					System.out.println(i+"    "+(j+decalage));
+						//					System.out.flush();
+					}
+					//on rempli la valeur à partir de l'initiale sans le décalage
+					toComplete.setRGB(i,  j+decalage, image.getRGB(i,  j));
+
+
 				}
-				//on rempli la valeur à partir de l'initiale sans le décalage
-				toComplete.setRGB(i,  j+decalage, image.getRGB(i,  j));
+			}
+		}
+		else
+		{
+			for(int i = 0; i<toComplete.getWidth(); i++)
+			{
+				decalage = 0;
+				for(int j = 0; j<toComplete.getHeight(); j++)
+				{
+
+					//si la valeur est déjà rempli alors on se décale
+					while(!chemins[i][j+decalage].estCheminLibre)
+					{
+						decalage++;
+						//					System.out.println(i+"    "+(j+decalage));
+						//					System.out.flush();
+					}
+					//on rempli la valeur à partir de l'initiale sans le décalage
+					toComplete.setRGB(i,  j, image.getRGB(i,  j+decalage));
+
+				}
 			}
 		}
 		//		System.out.println(toComplete.getHeight()+"  "+toComplete.getWidth());
@@ -984,27 +1026,49 @@ public class TraiteurImage {
 
 
 	//complete le reste de l'image (apres ajout ou suppression des chemins de poids minimum)
-	private BufferedImage completerImageRedimEnLargeur(BufferedImage toComplete, BufferedImage image, CaseTableauChemins[][] chemins)
+	private BufferedImage completerImageRedimEnLargeur(BufferedImage toComplete, BufferedImage image,
+			CaseTableauChemins[][] chemins, String typeRedim)
 	{
 		//		System.out.println("toComplete  "+toComplete.getWidth()+"   "+toComplete.getHeight());
 		//		System.out.println("Image avant modif    "+image.getWidth()+"   "+image.getHeight());
 
 
 		int decalage = 0;
-		for(int j = 0; j<image.getHeight(); j++)
+		if(typeRedim.equals("AGRANDIR"))
 		{
-			decalage = 0;
-			for(int i = 0; i<image.getWidth(); i++)
+			for(int j = 0; j<image.getHeight(); j++)
 			{
-				//si la valeur est déjà rempli alors on se décale
-				while( !cheminsRecopie[i+decalage][j].estCheminLibre)
+				decalage = 0;
+				for(int i = 0; i<image.getWidth(); i++)
 				{
-					decalage++;
-					//					System.out.println(i+"    "+(j+decalage));
-					//					System.out.flush();
+					//si la valeur est déjà rempli alors on se décale
+
+					while( !cheminsRecopie[i+decalage][j].estCheminLibre)
+					{
+						decalage++;
+					}
+					//on rempli la valeur à partir de l'initiale sans le décalage
+					toComplete.setRGB(i+decalage,  j, image.getRGB(i,  j));
 				}
-				//on rempli la valeur à partir de l'initiale sans le décalage
-				toComplete.setRGB(i+decalage,  j, image.getRGB(i,  j));
+			}
+		}
+		else
+		{
+			for(int j = 0; j<toComplete.getHeight(); j++)
+			{
+				decalage = 0;
+				for(int i = 0; i<toComplete.getWidth(); i++)
+				{
+					//si la valeur est déjà rempli alors on se décale
+
+					while(i+decalage<chemins.length && !chemins[i+decalage][j].estCheminLibre)
+					{
+						decalage++;
+					}
+
+					//on rempli la valeur à partir de l'initiale sans le décalage
+					if(i+decalage<image.getWidth()) toComplete.setRGB(i,  j, image.getRGB(i+decalage,  j));
+				}
 			}
 		}
 		//		System.out.println(toComplete.getHeight()+"  "+toComplete.getWidth());
@@ -1056,16 +1120,26 @@ public class TraiteurImage {
 				image = agrandirImage("HAUTEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 				nbPix = nbPix - pas;
 			}
-			System.out.println(image.toString());
-			System.out.flush();
+//			System.out.println(image.toString());
+//			System.out.flush();
 			cheminsASupprimer = calculerCheminsMoinsCouteuxEnLargeurQuiCroisePas(image, nbPix);
 			newimage = agrandirImage("HAUTEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 		}
 		else	//rétrécir en largeur
 		{
+			while(nbPix>pas)
+			{
+				cheminsASupprimer = calculerCheminsMoinsCouteuxEnLargeurQuiCroisePas(image, pas);
+				image = retrecirImage("HAUTEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
+				nbPix = nbPix - pas;
+			}
+//			System.out.println(image.toString());
+//			System.out.flush();
+			cheminsASupprimer = calculerCheminsMoinsCouteuxEnLargeurQuiCroisePas(image, nbPix);
+			newimage = retrecirImage("HAUTEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 
 		}
-		System.out.println(outil.getR(outil.setR(255)+outil.setR(255)));
+//		System.out.println(outil.getR(outil.setR(255)+outil.setR(255)));
 
 		return newimage;
 	}
@@ -1099,9 +1173,18 @@ public class TraiteurImage {
 		}
 		else	//rétrécir en largeur
 		{
-
+			while(nbPix>pas)
+			{
+				cheminsASupprimer = calculerCheminsMoinsCouteuxEnLargeurQuiCroisePas(image, pas);
+				image = retrecirImage("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
+				nbPix = nbPix - pas;
+			}
+//			System.out.println(image.toString());
+//			System.out.flush();
+			cheminsASupprimer = calculerCheminsMoinsCouteuxEnLargeurQuiCroisePas(image, nbPix);
+			newimage = retrecirImage("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 		}
-		System.out.println(outil.getR(outil.setR(255)+outil.setR(255)));
+//		System.out.println(outil.getR(outil.setR(255)+outil.setR(255)));
 
 		return newimage;
 	}
@@ -1132,11 +1215,11 @@ public class TraiteurImage {
 			//			System.out.flush();
 		}
 
-		for(int i = 0; i<indicesChemins.length; i++)
-		{
-			System.out.println("tab["+i+"] = "+indicesChemins[i]);
-		}
-		System.out.flush();
+//		for(int i = 0; i<indicesChemins.length; i++)
+//		{
+//			System.out.println("tab["+i+"] = "+indicesChemins[i]);
+//		}
+//		System.out.flush();
 
 		cheminsASupprimer = new CheminsASupprimer(chemins, indicesChemins);
 		return cheminsASupprimer;
@@ -1290,7 +1373,7 @@ public class TraiteurImage {
 					direction = Direction.MILIEU;
 				}
 
-				if(i<image.getWidth()-1 && j>0 && chemins_in[i-1][j-1].value< min
+				if(j<image.getHeight()-1 && j>0 && chemins_in[i-1][j-1].value< min
 						&& chemins_in[i-1][j+1].estCheminLibre==true)
 				{
 					min = chemins[i-1][j+1].value;
