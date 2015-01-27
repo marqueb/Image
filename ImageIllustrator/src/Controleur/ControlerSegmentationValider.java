@@ -47,15 +47,15 @@ public class ControlerSegmentationValider implements ActionListener {
 		}
 		img.put(0, 0, data);
 
-
+		System.out.println("datares:"+data.length);
 		Mat fgdModel = new Mat();
 		fgdModel.setTo(new Scalar(255, 255, 255));
 		Mat bgdModel = new Mat();
 		bgdModel.setTo(new Scalar(255, 255, 255));
 
-		Rect rect = new Rect(0, 0,100,100);
-
-		//Imgproc.grabCut(img, controler.getFg(), rect, bgdModel, fgdModel, 2, Imgproc.GC_INIT_WITH_MASK);
+		Rect rect = new Rect(0, 0,rows,cols);
+		//System.out.println(controler.getFg().dump());
+		Imgproc.grabCut(img, controler.getFg(), rect, bgdModel, fgdModel, 2, Imgproc.GC_INIT_WITH_MASK);
 		byte[] data2;
 		data2 = new byte[rows * cols * (int)img.elemSize()];
 		controler.getFg().get(0, 0, data2); 
@@ -75,23 +75,17 @@ public class ControlerSegmentationValider implements ActionListener {
 		MatOfByte mb=new MatOfByte();  
 
 		img.get(0, 0, data);
-		int largeur=0, hauteur=0;
 		for(int i = 0; i < dataBuff.length-2; i=i+1)
 		{
-			if(data2[i]==0 || data2[i+1]==0 || data2[i+2]==0){
-				data[i*3]=0;
-				data[i*3+1]=0;
-				data[i*3+2]=0;
-			}
-			largeur++;
-			if(largeur==cols){
-				largeur=0;
-				hauteur++;
-			}	
 
+				if(data2[i]==0 || data2[i+1]==0 || data2[i+2]==0){
+					data[i*3]=0;
+					data[i*3+1]=0;
+					data[i*3+2]=0;
+				}
+		
 		}
 		img.put(0, 0, data);
-
 		Highgui.imencode(".jpg",img, mb); 
 		try {
 			imagegrab = ImageIO.read(new ByteArrayInputStream(mb.toArray()));

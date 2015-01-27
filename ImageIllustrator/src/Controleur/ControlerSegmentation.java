@@ -23,6 +23,7 @@ import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Imgproc.*;
 
+import Modele.Modele;
 import Modele.Outil;
 import Vue.CadreImage;
 public class ControlerSegmentation implements ActionListener{
@@ -43,6 +44,8 @@ public class ControlerSegmentation implements ActionListener{
 		controler.getModele().initAnnulerRefaire(controler.getModele().cadreImageCourant());
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
 		controler.setSegmentation(true);
+		controler.setFg(new Mat(controler.getModele().cadreImageCourant().getImage().getHeight(),controler.getModele().cadreImageCourant().getImage().getWidth(),CvType.CV_8UC1));
+		controler.getModele().remplirInit(controler.getFg(), controler.getModele().cadreImageCourant().getImage().getHeight(),  controler.getModele().cadreImageCourant().getImage().getWidth());
 		JButton valider= new JButton("valider");
 		controler.addControlerSegmentationValider(valider);
 		controler.getModele().getInterfaceGraphique().getPanelOption().getComponent(1).setEnabled(false);

@@ -272,12 +272,6 @@ public class Controler{
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
 
 		if(modele.estDansImage(x, y)){
-			if(segmentation){
-				if(fg==null){
-					fg=new Mat(modele.cadreImageCourant().getImage().getHeight(),modele.cadreImageCourant().getImage().getWidth(),CvType.CV_8UC1);
-					modele.remplirInit(fg, modele.cadreImageCourant().getImage().getHeight(), modele.cadreImageCourant().getImage().getWidth());
-				}
-			}
 			if(selectionActive && modele.estDansSelection(x, y)){
 				init();
 				ajustementSelection=true;
@@ -319,6 +313,7 @@ public class Controler{
 		if(segmentation){
 			modele.remplirMatrice(fg, selection[0], selection[1], x, y,modele.cadreImageCourant().getImage().getHeight(),modele.cadreImageCourant().getImage().getWidth());
 			//System.out.println(fg.dump());
+			System.out.println(selection[0]+" "+selection[1]+" "+x+" "+y);
 		}
 		if(ajustementSelection){
 			x=modele.ajustementSelectionX(x);
@@ -405,6 +400,21 @@ public class Controler{
 		init();
 		modele.refaire();
 		//modele.annulerSelection();
+	}
+	
+	public void copier(){
+		init();
+		modele.copier();
+	}
+	
+	public void coller(){
+		init();
+		modele.coller();
+	}
+	
+	public void couper(){
+		init();
+		modele.couper();
 	}
 
 	public void addControlerEgalisation(JMenuItem egalisation){
@@ -593,12 +603,22 @@ public class Controler{
 
 	public void addControlerNoirblanc(JMenuItem noirblanc) {
 		noirblanc.addActionListener(new ControlerNoirblanc(this));
-
 	}
 
 	public void addControlerSegmentationValider(JButton valider) {
 		valider.addActionListener(new ControlerSegmentationValider(this));
 
 	}
-
+	
+	public void addControlerCopier(JMenuItem copier) {
+		copier.addActionListener(new ControlerCopier(this));
+	}
+	
+	public void addControlerCouper(JMenuItem couper) {
+		couper.addActionListener(new ControlerCouper(this));
+	}
+	
+	public void addControlerColler(JMenuItem coller) {
+		coller.addActionListener(new ControlerColler(this));
+	}
 }
