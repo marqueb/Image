@@ -28,7 +28,7 @@ public class Modele {
 	private BufferedImage imaAvantTraitement = null;
 
 
-	private int xPrec=0, yPrec=0, xCour=0, yCour=0, dX, dY, dXscroll, dYscroll, distx1, disty1, distx2, disty2,nbAffichageHisto;
+	private int xPrec=0, yPrec=0, xCour=0, yCour=0, d1X, d1Y, d2X, d2Y, dXscroll, dYscroll, distx1, disty1, distx2, disty2,nbAffichageHisto;
 	private boolean estHistoCliquer,estEgalisation;
 
 
@@ -527,14 +527,15 @@ public class Modele {
 
 	public void actualiserImageIcon(){
 		CadreImage cadreImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex());
-		BufferedImage i = cadreImage.getImage();
-		cadreImage.setImageIcon(new ImageIcon(i));
+		cadreImage.setImageIcon(new ImageIcon(cadreImage.getImage()));
+		cadreImage.getLabelImage().setIcon(cadreImage.getImageIcon());
+		/*cadreImage.setLabelImage(labelImage);
 		JLabel icon=new JLabel(cadreImage.getImageIcon());
 		cadreImage.setImageScroller(new JScrollPane(icon));
-		controler.addControlerSouris(icon);
+		controler.addControlerSouris(icon);*/
 		int x=cadreImage.getImageScroller().getVerticalScrollBar().getValue();
 		int y=cadreImage.getImageScroller().getHorizontalScrollBar().getValue();
-		cadreImage.getImageScroller().setViewportView(icon);
+		cadreImage.getImageScroller().setViewportView(cadreImage.getLabelImage());
 		cadreImage.getImageScroller().getVerticalScrollBar().setValue(x);
 		cadreImage.getImageScroller().getHorizontalScrollBar().setValue(y);
 		//interfaceGraphique.getFrame().validate();
@@ -594,8 +595,6 @@ public class Modele {
 
 	public int ajustementSelectionX(int x){
 		BufferedImage image =cadreImageCourant().getImage();
-		int distx1=dX-xPrec;
-		int distx2=xCour-dX;
 		if(x+distx2>image.getWidth()){
 			x=image.getWidth()-1-distx2;
 		}else{
@@ -608,8 +607,6 @@ public class Modele {
 	
 	public int ajustementSelectionY(int y){
 		BufferedImage image =cadreImageCourant().getImage();
-		int disty1=dY-yPrec;
-		int disty2=yCour-dY;
 		if(y+disty2>image.getHeight()){
 			y=image.getHeight()-1-disty2;
 		}else{
@@ -637,12 +634,10 @@ public class Modele {
 				yCour=tmp;
 			}
 			outil.tracer(image,xPrec, yPrec, xCour, yCour);
-			cadreImage.setImageIcon(new ImageIcon(image));
-			JLabel icon=new JLabel(cadreImage.getImageIcon());
-			controler.addControlerSouris(icon);
+			cadreImage.getLabelImage().setIcon(new ImageIcon(image));
 			x=cadreImage.getImageScroller().getVerticalScrollBar().getValue();
 			y=cadreImage.getImageScroller().getHorizontalScrollBar().getValue();
-			cadreImage.getImageScroller().setViewportView(icon);
+			cadreImage.getImageScroller().setViewportView(cadreImage.getLabelImage());
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue(x);
 			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(y);
 		}else{
@@ -651,11 +646,15 @@ public class Modele {
 	}
 	
 	public void ajustementSelection(int x, int y){
-		dX=dX-x;
-		dY=dY-y;
-		xPrec=xPrec-dX;
-		yPrec=yPrec-dY;
-		selectionne(xCour-dX, yCour-dY);
+		xPrec=xPrec+d2X;
+		yPrec=yPrec+d2Y;
+		xCour=xCour+d2X;
+		yCour=yCour+d2Y;
+		d2X=d1X-x;
+		d2Y=d1Y-y;
+		xPrec=xPrec-d2X;
+		yPrec=yPrec-d2Y;
+		selectionne(xCour-d2X, yCour-d2Y);
 	}
 
 	public void deplacerScroll(int x, int y){
@@ -797,8 +796,8 @@ public class Modele {
 	}
 
 	public void setDelta(int x, int y){
-		dX=x;
-		dY=y;
+		d1X=x;
+		d1Y=y;
 	}
 	
 	public void setDeltaScroll(int x, int y){
@@ -807,11 +806,19 @@ public class Modele {
 	}
 
 	public int getDeltaX(){
-		return dX;
+		return d1X;
 	}
 
 	public int getDeltaY(){
-		return dY;
+		return d1Y;
+	}
+	
+	public int getDelta2X(){
+		return d2X;
+	}
+
+	public int getDelta2Y(){
+		return d2Y;
 	}
 	
 	public int getNbAffichageHisto() {
@@ -900,7 +907,14 @@ public class Modele {
 		cadreImage.getRefaire().clear();
 	}
 
-
+	public void majSelection(int x, int y){
+		xPrec=x-distx1;
+		yPrec=y-disty1;
+		xCour=x+distx2;
+		yCour=y+disty2;
+		d2X=0;
+		d2Y=0;
+	}
 }
 
 

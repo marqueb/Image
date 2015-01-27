@@ -41,6 +41,6 @@ public class ControlerSouris extends MouseMotionAdapter implements MouseListener
 	}
 
 	public void mouseDragged(MouseEvent e){
-		controler.sourisDragged(e.getX(), e.getY());
+		controler.sourisDragged(e.getX(), e.getY(), ((JLabel)e.getSource()).bounds().width, ((JLabel)e.getSource()).bounds().height);
 	}
 }

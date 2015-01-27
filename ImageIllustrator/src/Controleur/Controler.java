@@ -255,30 +255,18 @@ public class Controler{
 		if(selectionActive){
 			modele.setDeltaScroll(x, y);
 			deplacementScroll=true;
-			//modele.setDelta(x, y);
-			//modele.deplacerScroll(x,y,deplacementScroll);
 		}
-		/*if(ajustementSelection){
-			deplacementScroll=true;
-			modele.setDeltaScroll(x, y);
-		}*/
 	}
 
 	public void sourisClique(int x, int y){
 	}
 
 	public void sourisPresse(int x, int y, int u, int v){
-		//modele.afficherpos(x,y);
-		//modele.setScroll();
-		//init();
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
 		if(modele.estDansImage(x, y)){
-
-				//System.out.println("jambon1"+selectionActive);
 				if(selectionActive && modele.estDansSelection(x, y)){
 					init();
-					//System.out.println("jambon2");
 					ajustementSelection=true;
 					modele.setDelta(x, y);
 					modele.setDist(x, y);
@@ -288,20 +276,11 @@ public class Controler{
 					it.getButtonSegmenter().setEnabled(true);
 					modele.setPrec(x, y);
 				}
-
 		}else{
 			init();
 			modele.actualiserImageIcon();
 		}
 	}
-//TODO SEGMENTATION
-//	public Mat getFg() {
-//		return fg;
-//	}
-//
-//	public void setFg(Mat fg) {
-//		this.fg = fg;
-//	}
 
 	public boolean isSegmentation() {
 		return segmentation;
@@ -314,15 +293,6 @@ public class Controler{
 	public void sourisRelache(int x, int y, int u, int v){
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
-		if(selectionActive){
-			x=modele.ajustementX(x);
-			y=modele.ajustementY(y);
-			if(deplacementScroll){
-				modele.deplacerScroll(x, y);
-			}
-			modele.selectionne(x, y);
-			//modele.calculerHistogrammeRGB();
-		}
 		if(ajustementSelection){
 			//System.out.println("jambon1 "+x+" "+y);
 			x=modele.ajustementSelectionX(x);
@@ -331,12 +301,39 @@ public class Controler{
 			modele.deplacerScrollAjustement(x, y);
 			modele.ajustementSelection(x, y);
 			selectionActive=true;
+			modele.majSelection(x,y);
 			it.getButtonSegmenter().setEnabled(true);
+			//modele.calculerHistogrammeRGB();
+		}else if(selectionActive){
+			x=modele.ajustementX(x);
+			y=modele.ajustementY(y);
+			if(deplacementScroll){
+				modele.deplacerScroll(x, y);
+			}
+			modele.selectionne(x, y);
 			//modele.calculerHistogrammeRGB();
 		}
 	}
 
-	public void sourisDragged(int x, int y){}
+	public void sourisDragged(int x, int y, int u, int v){
+		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
+		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
+		if(ajustementSelection){
+			x=modele.ajustementSelectionX(x);
+			y=modele.ajustementSelectionY(y);
+			modele.deplacerScrollAjustement(x, y);
+			modele.ajustementSelection(x, y);
+			selectionActive=true;
+			it.getButtonSegmenter().setEnabled(true);
+		}else if(selectionActive){
+			x=modele.ajustementX(x);
+			y=modele.ajustementY(y);
+			if(deplacementScroll){
+				modele.deplacerScroll(x, y);
+			}
+			modele.selectionne(x, y);
+		}
+	}
 
 	public void boutonFusionClic()
 	{
