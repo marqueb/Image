@@ -29,8 +29,7 @@ public class Modele {
 
 
 	private int xPrec=0, yPrec=0, xCour=0, yCour=0, dX, dY, dXscroll, dYscroll, distx1, disty1, distx2, disty2,nbAffichageHisto;
-	private boolean estHistoCliquer,estEgalisation;
-
+	private boolean estHistoCliquer,estEgalisation, segmentation;
 
 	public Modele()
 	{

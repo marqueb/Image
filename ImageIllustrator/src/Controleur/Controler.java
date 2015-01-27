@@ -296,7 +296,7 @@ public class Controler{
 			modele.actualiserImageIcon();
 		}
 	}
-//TODO SEGMENTATION
+
 	public Mat getFg() {
 		return fg;
 	}
