@@ -383,6 +383,21 @@ public class Controler{
 		modele.refaire();
 		//modele.annulerSelection();
 	}
+	
+	public void copier(){
+		init();
+		modele.copier();
+	}
+	
+	public void coller(){
+		init();
+		modele.coller();
+	}
+	
+	public void couper(){
+		init();
+		modele.couper();
+	}
 
 	public void addControlerEgalisation(JMenuItem egalisation){
 		egalisation.addActionListener(new ControlerEgalisation(modele));
@@ -570,7 +585,17 @@ public class Controler{
 
 	public void addControlerNoirblanc(JMenuItem noirblanc) {
 		noirblanc.addActionListener(new ControlerNoirblanc(this));
-		
 	}
-
+	
+	public void addControlerCopier(JMenuItem copier) {
+		copier.addActionListener(new ControlerCopier(this));
+	}
+	
+	public void addControlerCouper(JMenuItem couper) {
+		couper.addActionListener(new ControlerCouper(this));
+	}
+	
+	public void addControlerColler(JMenuItem coller) {
+		coller.addActionListener(new ControlerColler(this));
+	}
 }

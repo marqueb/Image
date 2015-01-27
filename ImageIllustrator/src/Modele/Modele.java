@@ -26,7 +26,7 @@ public class Modele {
 	private ArrayList<JButton> listBoutonFermeture;
 	private CadreImage cadre_ima_fusion = null;
 	private BufferedImage imaAvantTraitement = null;
-
+	private BufferedImage copie;
 
 	private int xPrec=0, yPrec=0, xCour=0, yCour=0, d1X, d1Y, d2X, d2Y, dXscroll, dYscroll, distx1, disty1, distx2, disty2,nbAffichageHisto;
 	private boolean estHistoCliquer,estEgalisation;
@@ -623,6 +623,9 @@ public class Modele {
 		yCour=y;
 		int a, b, c,d;
 		if(existeSelection()){
+			interfaceGraphique.getCopier().setEnabled(true);
+			interfaceGraphique.getCouper().setEnabled(true);
+			interfaceGraphique.getDecouper().setEnabled(true);
 			BufferedImage image=Outil.deepCopy(cadreImage.getImage());
 			if(xPrec>xCour){
 				a=xCour;
@@ -646,6 +649,9 @@ public class Modele {
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue(x);
 			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(y);
 		}else{
+			interfaceGraphique.getCopier().setEnabled(false);
+			interfaceGraphique.getCouper().setEnabled(false);
+			interfaceGraphique.getDecouper().setEnabled(false);
 			actualiserImageIcon();
 		}
 	}
@@ -935,6 +941,48 @@ public class Modele {
 			yPrec=yCour;
 			yCour=tmp;
 		}
+	}
+	
+	public void copier(){
+		if(existeSelection()){
+			interfaceGraphique.getColler().setEnabled(true);
+			CadreImage cadreImage = cadreImageCourant();
+			int[] selection=selection();
+			copie=new BufferedImage(selection[2]-selection[0], selection[3]-selection[1],BufferedImage.TYPE_INT_ARGB);
+			for (int i=0; i<selection[2]-selection[0]; i++){
+				for(int j=0; j<selection[3]-selection[1]; j++){
+					copie.setRGB(i, j, cadreImage.getImage().getRGB(i+selection[0], j+selection[1]));
+				}
+			}
+		}
+	}
+	
+	public void couper(){
+		if(existeSelection()){
+			CadreImage cadreImage = cadreImageCourant();
+			interfaceGraphique.getColler().setEnabled(true);
+			int[] selection=selection();
+			copie=new BufferedImage(selection[2]-selection[0], selection[3]-selection[1],BufferedImage.TYPE_INT_ARGB);
+			for (int i=0; i<selection[2]-selection[0]; i++){
+				for(int j=0; j<selection[3]-selection[1]; j++){
+					copie.setRGB(i, j, cadreImage.getImage().getRGB(i+selection[0], j+selection[1]));
+					cadreImage.getImage().setRGB(i+selection[0], j+selection[1], outil.setAlpha(255)+outil.setR(255)+outil.setG(255)+outil.setB(255));
+				}
+			}
+			actualiserImageIcon();
+		}
+	}
+	
+	public void coller(){
+		if(copie!=null){
+			CadreImage cadreImage = cadreImageCourant();
+			for (int i=0; i<copie.getWidth(); i++){
+				for(int j=0; j<copie.getHeight(); j++){
+					cadreImage.getImage().setRGB(i+xPrec, j+yPrec, copie.getRGB(i, j));
+				}
+			}
+		}
+		actualiserImageIcon();
 	}
 }
 

@@ -52,7 +52,7 @@ public class InterfaceGraphique implements Runnable{
 	private Modele modele;
 	private Controler controler;
 	private JMenuItem sauvegarde, couleurPixel, fusion, imagris, moyen, egalisation, redimensionner, etalement,
-	inverser, decouper, annuler, refaire, median, utilisateur, contours, contraste,sepia, eclaircir, foncer, noirblanc, normal, intelligent;
+	inverser, decouper, annuler, refaire, median, utilisateur, contours, contraste,sepia, eclaircir, foncer, noirblanc, normal, intelligent, copier, couper, coller;
 	private CheckboxGroup groupe;
 	private Checkbox box1, box2;
 	private JCheckBox rouge,vert,bleu, luminance, chrominanceU , chrominanceV;
@@ -536,7 +536,6 @@ public class InterfaceGraphique implements Runnable{
 		getEgalisation().setEnabled(enable);
 		getEtalement().setEnabled(enable);
 		getInverser().setEnabled(enable);
-		decouper.setEnabled(enable);
 		moyen.setEnabled(enable);
 		contours.setEnabled(enable);
 		contraste.setEnabled(enable);
@@ -600,6 +599,22 @@ public class InterfaceGraphique implements Runnable{
 		decouper = new JMenuItem("Decouper");
 		controler.addControlerDecouper(decouper);
 		edition.add(decouper);
+		decouper.setEnabled(false);
+		//
+		copier = new JMenuItem("Copier");
+		controler.addControlerCopier(copier);
+		edition.add(copier);
+		copier.setEnabled(false);
+		//
+		couper = new JMenuItem("Couper");
+		controler.addControlerCouper(couper);
+		edition.add(couper);
+		couper.setEnabled(false);
+		//
+		coller = new JMenuItem("Coller");
+		controler.addControlerColler(coller);
+		edition.add(coller);
+		coller.setEnabled(false);
 
 		//Image
 		JMenu image = new JMenu("Image");
@@ -1075,6 +1090,36 @@ public class InterfaceGraphique implements Runnable{
 		return this.sliderChoixTailleFiltre.getValue();
 	}
 
+	public JMenuItem getCopier() {
+		return copier;
+	}
 
+	public void setCopier(JMenuItem copier) {
+		this.copier = copier;
+	}
+
+	public JMenuItem getCouper() {
+		return couper;
+	}
+
+	public void setCouper(JMenuItem couper) {
+		this.couper = couper;
+	}
+
+	public JMenuItem getColler() {
+		return coller;
+	}
+
+	public void setColler(JMenuItem coller) {
+		this.coller = coller;
+	}
+
+	public JMenuItem getDecouper() {
+		return decouper;
+	}
+
+	public void setDecouper(JMenuItem decouper) {
+		this.decouper = decouper;
+	}
 }
 
