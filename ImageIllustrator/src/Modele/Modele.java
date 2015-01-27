@@ -621,19 +621,24 @@ public class Modele {
 		CadreImage cadreImage=cadreImageCourant();
 		xCour=x;
 		yCour=y;
+		int a, b, c,d;
 		if(existeSelection()){
 			BufferedImage image=Outil.deepCopy(cadreImage.getImage());
 			if(xPrec>xCour){
-				int tmp=xPrec;
-				xPrec=xCour;
-				xCour=tmp;
+				a=xCour;
+				c=xPrec;
+			}else{
+				a=xPrec;
+				c=xCour;
 			}
 			if(yPrec>yCour){
-				int tmp=yPrec;
-				yPrec=yCour;
-				yCour=tmp;
+				b=yCour;
+				d=yPrec;
+			}else{
+				b=yPrec;
+				d=yCour;
 			}
-			outil.tracer(image,xPrec, yPrec, xCour, yCour);
+			outil.tracer(image,a, b, c, d);
 			cadreImage.getLabelImage().setIcon(new ImageIcon(image));
 			x=cadreImage.getImageScroller().getVerticalScrollBar().getValue();
 			y=cadreImage.getImageScroller().getHorizontalScrollBar().getValue();
@@ -858,6 +863,8 @@ public class Modele {
 		yPrec=-1;
 		xCour=-1;
 		yCour=-1;
+		d2X=0;
+		d2Y=0;
 		this.actualiserImageIcon();
 	}
 	
@@ -914,6 +921,20 @@ public class Modele {
 		yCour=y+disty2;
 		d2X=0;
 		d2Y=0;
+	}
+	
+	public void majSelection2(){
+		
+		if(xPrec>xCour){
+			int tmp=xPrec;
+			xPrec=xCour;
+			xCour=tmp;
+		}
+		if(yPrec>yCour){
+			int tmp=yPrec;
+			yPrec=yCour;
+			yCour=tmp;
+		}
 	}
 }
 

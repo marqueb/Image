@@ -152,7 +152,7 @@ public class Controler{
 	public void changerOnglet(){
 		init();
 		if(modele.existeSelection()){
-			//modele.annulerSelection();
+			modele.annulerSelection();
 		}
 
 		if(!modele.getListImage().isEmpty()){
@@ -311,6 +311,7 @@ public class Controler{
 				modele.deplacerScroll(x, y);
 			}
 			modele.selectionne(x, y);
+			modele.majSelection2();
 			//modele.calculerHistogrammeRGB();
 		}
 	}
