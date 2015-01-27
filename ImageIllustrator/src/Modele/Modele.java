@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.opencv.core.Mat;
+
 import Controleur.Controler;
 import Vue.CadreImage;
 import Vue.InterfaceGraphique;
@@ -28,7 +30,8 @@ public class Modele {
 	private BufferedImage imaAvantTraitement = null;
 
 
-	private int xPrec=0, yPrec=0, xCour=0, yCour=0, dX, dY, dXscroll, dYscroll, distx1, disty1, distx2, disty2,nbAffichageHisto;
+
+	private int xPrec=0, yPrec=0, xCour=0, yCour=0,  d1X, d1Y, d2X, d2Y, dXscroll, dYscroll, distx1, disty1, distx2, disty2,nbAffichageHisto;
 	private boolean estHistoCliquer,estEgalisation, segmentation;
 
 	public Modele()
@@ -83,17 +86,21 @@ public class Modele {
 		return (x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight());
 	}	
 
-
-
-	public void redimensionner( int newlargeur,int newhauteur) {
+	public void redimensionner( int newLargeur,int newHauteur) {
+		CadreImage  cadre = cadreImageCourant();
+		initAnnulerRefaire(cadre);
+		BufferedImage intermediaire =traiteurImage.redimenssionerLargeur(cadre.getImage(), newLargeur);
+		cadre.setImage(traiteurImage.redimenssionerHauteur(intermediaire, newHauteur));
+		actualiserImageIcon();
+	}
+	
+	public void redimensionnerIntelligement( int newlargeur,int newhauteur) {
 		CadreImage  cadre = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
+		initAnnulerRefaire(cadre);
 		int largeur=cadre.getImage().getWidth();
 		int hauteur=cadre.getImage().getHeight();
-		cadre.setImage(traiteurImage.redimenssioner(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
+		cadre.setImage(traiteurImage.redimensionnerIntelligement(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
 		actualiserImageIcon();
-		cadre.setVisible(true);
-		interfaceGraphique.getFrame().repaint();
-		interfaceGraphique.getFrame().validate();
 	}
 	
 	private JPanel createPanelCadreImage(CadreImage cadre)
@@ -519,14 +526,15 @@ public class Modele {
 
 	public void actualiserImageIcon(){
 		CadreImage cadreImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex());
-		BufferedImage i = cadreImage.getImage();
-		cadreImage.setImageIcon(new ImageIcon(i));
+		cadreImage.setImageIcon(new ImageIcon(cadreImage.getImage()));
+		cadreImage.getLabelImage().setIcon(cadreImage.getImageIcon());
+		/*cadreImage.setLabelImage(labelImage);
 		JLabel icon=new JLabel(cadreImage.getImageIcon());
 		cadreImage.setImageScroller(new JScrollPane(icon));
-		controler.addControlerSouris(icon);
+		controler.addControlerSouris(icon);*/
 		int x=cadreImage.getImageScroller().getVerticalScrollBar().getValue();
 		int y=cadreImage.getImageScroller().getHorizontalScrollBar().getValue();
-		cadreImage.getImageScroller().setViewportView(icon);
+		cadreImage.getImageScroller().setViewportView(cadreImage.getLabelImage());
 		cadreImage.getImageScroller().getVerticalScrollBar().setValue(x);
 		cadreImage.getImageScroller().getHorizontalScrollBar().setValue(y);
 		//interfaceGraphique.getFrame().validate();
@@ -586,8 +594,6 @@ public class Modele {
 
 	public int ajustementSelectionX(int x){
 		BufferedImage image =cadreImageCourant().getImage();
-		int distx1=dX-xPrec;
-		int distx2=xCour-dX;
 		if(x+distx2>image.getWidth()){
 			x=image.getWidth()-1-distx2;
 		}else{
@@ -600,8 +606,6 @@ public class Modele {
 	
 	public int ajustementSelectionY(int y){
 		BufferedImage image =cadreImageCourant().getImage();
-		int disty1=dY-yPrec;
-		int disty2=yCour-dY;
 		if(y+disty2>image.getHeight()){
 			y=image.getHeight()-1-disty2;
 		}else{
@@ -616,25 +620,28 @@ public class Modele {
 		CadreImage cadreImage=cadreImageCourant();
 		xCour=x;
 		yCour=y;
+		int a, b, c,d;
 		if(existeSelection()){
 			BufferedImage image=Outil.deepCopy(cadreImage.getImage());
 			if(xPrec>xCour){
-				int tmp=xPrec;
-				xPrec=xCour;
-				xCour=tmp;
+				a=xCour;
+				c=xPrec;
+			}else{
+				a=xPrec;
+				c=xCour;
 			}
 			if(yPrec>yCour){
-				int tmp=yPrec;
-				yPrec=yCour;
-				yCour=tmp;
+				b=yCour;
+				d=yPrec;
+			}else{
+				b=yPrec;
+				d=yCour;
 			}
-			outil.tracer(image,xPrec, yPrec, xCour, yCour);
-			cadreImage.setImageIcon(new ImageIcon(image));
-			JLabel icon=new JLabel(cadreImage.getImageIcon());
-			controler.addControlerSouris(icon);
+			outil.tracer(image,a, b, c, d);
+			cadreImage.getLabelImage().setIcon(new ImageIcon(image));
 			x=cadreImage.getImageScroller().getVerticalScrollBar().getValue();
 			y=cadreImage.getImageScroller().getHorizontalScrollBar().getValue();
-			cadreImage.getImageScroller().setViewportView(icon);
+			cadreImage.getImageScroller().setViewportView(cadreImage.getLabelImage());
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue(x);
 			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(y);
 		}else{
@@ -643,11 +650,15 @@ public class Modele {
 	}
 	
 	public void ajustementSelection(int x, int y){
-		dX=dX-x;
-		dY=dY-y;
-		xPrec=xPrec-dX;
-		yPrec=yPrec-dY;
-		selectionne(xCour-dX, yCour-dY);
+		xPrec=xPrec+d2X;
+		yPrec=yPrec+d2Y;
+		xCour=xCour+d2X;
+		yCour=yCour+d2Y;
+		d2X=d1X-x;
+		d2Y=d1Y-y;
+		xPrec=xPrec-d2X;
+		yPrec=yPrec-d2Y;
+		selectionne(xCour-d2X, yCour-d2Y);
 	}
 
 	public void deplacerScroll(int x, int y){
@@ -789,8 +800,8 @@ public class Modele {
 	}
 
 	public void setDelta(int x, int y){
-		dX=x;
-		dY=y;
+		d1X=x;
+		d1Y=y;
 	}
 	
 	public void setDeltaScroll(int x, int y){
@@ -799,11 +810,19 @@ public class Modele {
 	}
 
 	public int getDeltaX(){
-		return dX;
+		return d1X;
 	}
 
 	public int getDeltaY(){
-		return dY;
+		return d1Y;
+	}
+	
+	public int getDelta2X(){
+		return d2X;
+	}
+
+	public int getDelta2Y(){
+		return d2Y;
 	}
 	
 	public int getNbAffichageHisto() {
@@ -843,6 +862,8 @@ public class Modele {
 		yPrec=-1;
 		xCour=-1;
 		yCour=-1;
+		d2X=0;
+		d2Y=0;
 		this.actualiserImageIcon();
 	}
 	
@@ -892,7 +913,89 @@ public class Modele {
 		cadreImage.getRefaire().clear();
 	}
 
+	public void majSelection(int x, int y){
+		xPrec=x-distx1;
+		yPrec=y-disty1;
+		xCour=x+distx2;
+		yCour=y+disty2;
+		d2X=0;
+		d2Y=0;
+	}
+	
+	public void majSelection2(){
+		
+		if(xPrec>xCour){
+			int tmp=xPrec;
+			xPrec=xCour;
+			xCour=tmp;
+		}
+		if(yPrec>yCour){
+			int tmp=yPrec;
+			yPrec=yCour;
+			yCour=tmp;
+		}
+	}
 
+	
+	public void remplirInit(Mat fg, int width, int height) {
+		byte[] data;
+		data = new byte[height * width * 3];
+		fg.get(0, 0, data);
+		for(int i = 0; i < width* height; i=i+1)
+		{			
+			data[i*3]=0;
+			data[i*3+1]=0;
+			data[i*3+2]=0;
+		}
+		fg.put(0, 0, data);		
+	}
+	
+	public void remplirMatrice(Mat fg, int ancienx, int ancieny, int x, int y, int height, int width) {
+		byte[] data;
+		data = new byte[height * width * 3];
+		fg.get(0, 0, data);
+		int largeur=0, hauteur=0;
+		for(int i = 0; i < height * width; i=i+1)
+		{		
+				if((ancienx>=x) && (ancieny>=y)) {		System.out.println("1");
+					if((largeur>=x && largeur<=ancienx) && (hauteur>=y && hauteur<=ancieny)){
+				
+						data[i*3]=3;
+						data[i*3+1]=3;
+						data[i*3+2]=3;	
+					}
+				}
+				else if((ancienx>=x) && (ancieny<=y)) {System.out.println("2");
+					if((largeur>=x && largeur<=ancienx) && (hauteur>=ancieny && hauteur<=y)){
+						data[i*3]=3;
+						data[i*3+1]=3;
+						data[i*3+2]=3;	
+					}
+				}
+				else if((ancienx<=x) && (ancieny>=y)) {System.out.println("3");
+					if((largeur>=ancienx && largeur<=x) && (hauteur>=y && hauteur<=ancieny)){
+						data[i*3]=3;
+						data[i*3+1]=3;
+						data[i*3+2]=3;	
+					}
+				}
+				else if((ancienx<=x) && (ancieny<=y)) {System.out.println("4");
+					if((largeur>=ancienx && largeur<=x) && (hauteur>=ancieny && hauteur<=y)){
+						data[i*3]=3;
+						data[i*3+1]=3;
+						data[i*3+2]=3;	
+					}
+				}
+			
+				largeur++;
+				if(largeur==cadreImageCourant().getImage().getWidth()){
+					largeur=0;
+					hauteur++;
+				}	
+				//System.out.println(largeur+" "+hauteur);				
+		}
+		fg.put(0, 0, data);		
+	}
 }
 
 

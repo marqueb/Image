@@ -8,12 +8,14 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
 public class CadreImage extends JComponent{
 	private BufferedImage image;
 	private Graphics2D buffer;
 	private ImageIcon imageIcon;
+	private JLabel labelImage;
 	private String nomFichier;
 	private JScrollPane imageScroller;
 	private int maxScrollX, maxScrollY;
@@ -121,5 +123,13 @@ public class CadreImage extends JComponent{
 
 	public void setRefaire(ArrayList<BufferedImage> refaire) {
 		this.refaire = refaire;
+	}
+
+	public JLabel getLabelImage() {
+		return labelImage;
+	}
+
+	public void setLabelImage(JLabel labelImage) {
+		this.labelImage = labelImage;
 	}
 }
