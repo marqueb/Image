@@ -50,37 +50,118 @@ public class TraiteurImage {
 	{
 		float[][] ker = inverserNoyau(ker_in);
 		BufferedImage bufIma_out = Outil.deepCopy(bufIma_in);
+		BufferedImage im_agr = null, tmp = null;
 		int decalageBord = (ker.length-1)/2;
 		int i=0, j=0;
-
-
+		//si la convolution est sur toute l'image ou trop près d'un bord
+		//agrandir l'image avec les zones ajoutées initialisées à 0
+		if(selection==null || 
+				(selection[0]<=decalageBord && selection[2]>=bufIma_in.getWidth()-decalageBord-1
+				&& selection[1]<=decalageBord && selection[3]>=bufIma_in.getHeight()-decalageBord-1))
+		{
+			im_agr = new BufferedImage(bufIma_in.getWidth()+2*decalageBord, bufIma_in.getHeight()+2*decalageBord,BufferedImage.TYPE_INT_ARGB);
+			
+			for(i=0; i<decalageBord; i++)
+			{
+				im_agr.setRGB(i, 0, 0);
+				im_agr.setRGB(im_agr.getWidth()-1-i, 0, outil.setR(0)+outil.setG(0)+outil.setB(0)+outil.setAlpha(255));
+			}
+			for(j=0; j<decalageBord; j++)
+			{
+				im_agr.setRGB(0, j, 0);
+				im_agr.setRGB(0, im_agr.getHeight()-1-decalageBord, 0);
+			}
+			for(i=0; i<bufIma_in.getWidth()-1; i++)
+			{
+				for(j=0; j<bufIma_in.getHeight()-1; j++)
+				{
+					im_agr.setRGB(decalageBord+i, decalageBord+j, bufIma_in.getRGB(i, j));
+				}
+			}
+		}
+		else//pas besoin d'ajouter des zéros autour de l'image
+		{
+			im_agr = bufIma_in;
+		}
+		
 		int i_deb, i_fin, j_deb, j_fin;
 		if(existeSelection && selection[0]>=decalageBord) i_deb=selection[0];
 		else i_deb = decalageBord;
 		if(existeSelection && selection[2]<=bufIma_in.getWidth()-decalageBord-1) i_fin=selection[2];
-		else i_fin = bufIma_in.getWidth()-decalageBord-1;
+		else i_fin = bufIma_in.getWidth()-1-decalageBord;
 		if(existeSelection && selection[1]>=decalageBord) j_deb=selection[1];
 		else j_deb = decalageBord;
 		if(existeSelection && selection[3]<=bufIma_in.getHeight()-decalageBord-1) j_fin=selection[3];
-		else j_fin = bufIma_in.getHeight()-decalageBord-1;
-
-		//on applique la convolution ï¿½ la partie "VALID" de l'image.
+		else j_fin = bufIma_in.getHeight()-1-decalageBord;
+		
+		tmp = new BufferedImage(im_agr.getWidth(), im_agr.getHeight(),BufferedImage.TYPE_INT_ARGB);
+		//on applique la convolution ï¿½ la partie "Same" de l'image.
 		for(i=i_deb; i<i_fin; i++)
 		{
 			for(j=j_deb; j<j_fin; j++)
 			{
-				bufIma_out.setRGB(i, j, convolutionOneStep(bufIma_in, i, j, ker)+outil.setAlpha(255));
+				tmp.setRGB(i, j, convolutionOneStep(im_agr, i, j, ker)+outil.setAlpha(255));
 			}
 		}
-
+		
+		//supprimer les bords ajoutés
+		if(selection==null || 
+				(selection[0]<=decalageBord && selection[2]>=bufIma_in.getWidth()-decalageBord-1
+				&& selection[1]<=decalageBord && selection[3]>=bufIma_in.getHeight()-decalageBord-1))
+		{
+			for(i=0; i<bufIma_in.getWidth()-1; i++)
+			{
+				for(j=0; j<bufIma_in.getHeight()-1; j++)
+				{
+					bufIma_out.setRGB(i, j, bufIma_in.getRGB(decalageBord+i, decalageBord+j));
+				}
+			}
+		}
+		else//si pas de bords ajoutés
+		{
+			bufIma_out = tmp;
+		}
+		
 		return bufIma_out;
 	}
 
 	public BufferedImage convoluerFiltreMedian(BufferedImage bufIma_in, int nbVoisin, boolean existeSelection, int[] selection)
 	{
 		BufferedImage bufIma_out = Outil.deepCopy(bufIma_in);
+		BufferedImage im_agr = null, tmp = null;
 		int decalageBord = nbVoisin;
 		int i=0, j=0;
+
+		//si la convolution est sur toute l'image ou trop près d'un bord
+				//agrandir l'image avec les zones ajoutées initialisées à 0
+				if(selection==null || 
+						(selection[0]<=decalageBord && selection[2]>=bufIma_in.getWidth()-decalageBord-1
+						&& selection[1]<=decalageBord && selection[3]>=bufIma_in.getHeight()-decalageBord-1))
+				{
+					im_agr = new BufferedImage(bufIma_in.getWidth()+2*decalageBord, bufIma_in.getHeight()+2*decalageBord,BufferedImage.TYPE_INT_ARGB);
+					
+					for(i=0; i<decalageBord; i++)
+					{
+						im_agr.setRGB(i, 0, 0);
+						im_agr.setRGB(im_agr.getWidth()-1-i, 0, outil.setR(0)+outil.setG(0)+outil.setB(0)+outil.setAlpha(255));
+					}
+					for(j=0; j<decalageBord; j++)
+					{
+						im_agr.setRGB(0, j, 0);
+						im_agr.setRGB(0, im_agr.getHeight()-1-decalageBord, 0);
+					}
+					for(i=0; i<bufIma_in.getWidth()-1; i++)
+					{
+						for(j=0; j<bufIma_in.getHeight()-1; j++)
+						{
+							im_agr.setRGB(decalageBord+i, decalageBord+j, bufIma_in.getRGB(i, j));
+						}
+					}
+				}
+				else//pas besoin d'ajouter des zéros autour de l'image
+				{
+					im_agr = bufIma_in;
+				}
 
 
 		int i_deb, i_fin, j_deb, j_fin;
@@ -93,14 +174,35 @@ public class TraiteurImage {
 		if(existeSelection && selection[3]<=bufIma_in.getHeight()-decalageBord-1) j_fin=selection[3];
 		else j_fin = bufIma_in.getHeight()-decalageBord-1;
 
-		//on applique la convolution ï¿½ la partie "VALID" de l'image.
+		tmp = new BufferedImage(im_agr.getWidth(), im_agr.getHeight(),BufferedImage.TYPE_INT_ARGB);
+		
+		//on applique la convolution ï¿½ la partie "SAME" de l'image.
 		for(i=i_deb; i<i_fin; i++)
 		{
 			for(j=j_deb; j<j_fin; j++)
 			{
-				bufIma_out.setRGB(i, j, FiltreConvolution.GetValueFiltreMedian(i, j, nbVoisin, bufIma_in)+outil.setAlpha(255));
+				tmp.setRGB(i, j, FiltreConvolution.GetValueFiltreMedian(i, j, nbVoisin, im_agr)+outil.setAlpha(255));
 			}
 		}
+		
+		//supprimer les bords ajoutés
+				if(selection==null || 
+						(selection[0]<=decalageBord && selection[2]>=bufIma_in.getWidth()-decalageBord-1
+						&& selection[1]<=decalageBord && selection[3]>=bufIma_in.getHeight()-decalageBord-1))
+				{
+					for(i=0; i<bufIma_in.getWidth()-1; i++)
+					{
+						for(j=0; j<bufIma_in.getHeight()-1; j++)
+						{
+							bufIma_out.setRGB(i, j, bufIma_in.getRGB(decalageBord+i, decalageBord+j));
+						}
+					}
+				}
+				else//si pas de bords ajoutés
+				{
+					bufIma_out = tmp;
+				}
+				
 		return bufIma_out;
 	}
 
@@ -280,7 +382,7 @@ public class TraiteurImage {
 
 	public BufferedImage redimensionnerIntelligement(int largeur, int hauteur,	int newlargeur, int newhauteur, BufferedImage image) 
 	{
-		System.out.println("(largeur, hauteur) = ("+largeur+", "+hauteur+"); (newLargeur, newHauteur) = ("+newlargeur+", "+newhauteur+")");
+//		System.out.println("(largeur, hauteur) = ("+largeur+", "+hauteur+"); (newLargeur, newHauteur) = ("+newlargeur+", "+newhauteur+")");
 		//si pas de redimensionnement
 		if(largeur == newlargeur && hauteur == newhauteur)	return image;
 
@@ -326,7 +428,7 @@ public class TraiteurImage {
 			//			image = appliquerRedimensionnementIntelligentLargeur(image, newchemins, newlargeur);
 
 			image = appliquerRedimensionnementIntelligentLargeurCroisePas(image, newlargeur);
-//			System.out.println("done...");
+			//			System.out.println("done...");
 		}
 
 		return image;
@@ -337,7 +439,7 @@ public class TraiteurImage {
 
 	private BufferedImage calculerImageEnergie(BufferedImage image)
 	{
-		return this.convoluer(FiltreConvolution.getNoyauLaplacien3x3(), image, false, null);
+		return outil.imagris(this.convoluer(FiltreConvolution.getNoyauLaplacien3x3(), image, false, null), false, null);
 	}
 
 
@@ -511,103 +613,103 @@ public class TraiteurImage {
 	//	}
 
 	//pour redimensionnement en largeur
-//	private int[] trouverCheminsPoidsMinEnLargeur(CaseTableauChemins[][] chemins, int nbCheminsATrouver)
-//	{
-//		int[] indices = new int[nbCheminsATrouver];
-//		ArrayList<Integer> dernieresCase = new ArrayList<Integer>();
-//
-//		for(int j = 0; j < chemins[0].length; j++)
-//		{
-//			dernieresCase.add(new Integer(chemins[chemins.length-1][j].value));
-//		}
-//
-//		Collections.sort(dernieresCase);
-//
-//		int cpt = 0, j = 0;
-//		while(cpt < nbCheminsATrouver && j < chemins[0].length)
-//		{//si la valeur de chemins est dans la list des valeurs minimales alors c'est l'indice d'un chemin de poids min
-//			if(dernieresCase.contains(chemins[chemins.length-1][j])) 
-//			{
-//				indices[cpt] = j;
-//				cpt++;
-//			}
-//			j++;
-//		}
-//
-//
-//		//		System.out.println(indices.toString());
-//		//		System.out.flush();
-//		return indices;
-//	}
+	//	private int[] trouverCheminsPoidsMinEnLargeur(CaseTableauChemins[][] chemins, int nbCheminsATrouver)
+	//	{
+	//		int[] indices = new int[nbCheminsATrouver];
+	//		ArrayList<Integer> dernieresCase = new ArrayList<Integer>();
+	//
+	//		for(int j = 0; j < chemins[0].length; j++)
+	//		{
+	//			dernieresCase.add(new Integer(chemins[chemins.length-1][j].value));
+	//		}
+	//
+	//		Collections.sort(dernieresCase);
+	//
+	//		int cpt = 0, j = 0;
+	//		while(cpt < nbCheminsATrouver && j < chemins[0].length)
+	//		{//si la valeur de chemins est dans la list des valeurs minimales alors c'est l'indice d'un chemin de poids min
+	//			if(dernieresCase.contains(chemins[chemins.length-1][j])) 
+	//			{
+	//				indices[cpt] = j;
+	//				cpt++;
+	//			}
+	//			j++;
+	//		}
+	//
+	//
+	//		//		System.out.println(indices.toString());
+	//		//		System.out.flush();
+	//		return indices;
+	//	}
 
 
 	//1ere calcul des poids des chemins (utilisé une autre fonctions pour choisir les chemins suivants afin de ne pas
 	//croisé de chemin déjà choisi)
-//	private int[] trouverCheminsPoidsMinEnHauteur(CaseTableauChemins[][] chemins, int nbCheminsATrouver)
-//	{
-//		int[] indices = new int[nbCheminsATrouver];
-//		ArrayList<Integer> dernieresCase = new ArrayList<Integer>();
-//		int[] indiceCheminOrdreCroissant = new int[chemins.length];
-//
-//		//on rï¿½cupere les valeurs des diffï¿½rents chemins
-//		for(int i = 0; i < chemins.length; i++)
-//		{
-//			dernieresCase.add(new Integer(chemins[i][chemins[0].length-1].value));
-//			indiceCheminOrdreCroissant[i] = i;
-//		}
-//
-//		Integer[] derniereLigne = dernieresCase.toArray(new Integer[dernieresCase.size()]);
-//		//on tri les valeurs des chemins
-//		//Collections.sort(dernieresCase);
-//
-//		//on rï¿½cupere les indices des chemins dans l'ordre des poids des chemins croissants
-//		int tmp = 0;
-//		for(int k=0; k<chemins.length; k++)
-//		{
-//			for(int i=k+1; i<chemins.length; i++)
-//			{
-//				if(derniereLigne[k]>derniereLigne[i])
-//				{
-//					//on ï¿½change les valeurs
-//					tmp = derniereLigne[k];
-//					derniereLigne[k] = derniereLigne[i];
-//					derniereLigne[i] = tmp;
-//					//on ï¿½change l'ordre des indices
-//					tmp = indiceCheminOrdreCroissant[k];
-//					indiceCheminOrdreCroissant[k] = indiceCheminOrdreCroissant[i];
-//					indiceCheminOrdreCroissant[i] = tmp;
-//				}
-//			}
-//		}
-//
-//		for(int i = 0; i<nbCheminsATrouver; i++)
-//		{
-//			indices[i]=-1;
-//		}
-//
-//		//on trouve les chemins de poids minimum qui ne se croise pas (mï¿½thode non optimale)
-//		int cpt = 0, i = 0, indice = 0;;
-//		while(cpt<nbCheminsATrouver && i < chemins.length)
-//		{//si la valeur de chemins est dans la liste des valeurs minimales alors c'est l'indice d'un chemin de poids min
-//			//			if(dernieresCase.contains(chemins[i][chemins[0].length-1])) 
-//			//			{
-//			//				indices[cpt] = i;
-//			//				cpt++;
-//			//			}
-//			//			i++;
-//			//on rï¿½cupere les indice des chemins de poids min
-//			indice = indiceCheminOrdreCroissant[i];
-//			if(cheminLibre(indice, chemins, "HAUTEUR"))
-//			{
-//				indices[cpt] = indice;
-//				cpt++;
-//				chemins = marquerChemin(indice, chemins, "HAUTEUR");
-//			}
-//			i++;
-//		}
-//
-//		return indices;
-//	}
+	//	private int[] trouverCheminsPoidsMinEnHauteur(CaseTableauChemins[][] chemins, int nbCheminsATrouver)
+	//	{
+	//		int[] indices = new int[nbCheminsATrouver];
+	//		ArrayList<Integer> dernieresCase = new ArrayList<Integer>();
+	//		int[] indiceCheminOrdreCroissant = new int[chemins.length];
+	//
+	//		//on rï¿½cupere les valeurs des diffï¿½rents chemins
+	//		for(int i = 0; i < chemins.length; i++)
+	//		{
+	//			dernieresCase.add(new Integer(chemins[i][chemins[0].length-1].value));
+	//			indiceCheminOrdreCroissant[i] = i;
+	//		}
+	//
+	//		Integer[] derniereLigne = dernieresCase.toArray(new Integer[dernieresCase.size()]);
+	//		//on tri les valeurs des chemins
+	//		//Collections.sort(dernieresCase);
+	//
+	//		//on rï¿½cupere les indices des chemins dans l'ordre des poids des chemins croissants
+	//		int tmp = 0;
+	//		for(int k=0; k<chemins.length; k++)
+	//		{
+	//			for(int i=k+1; i<chemins.length; i++)
+	//			{
+	//				if(derniereLigne[k]>derniereLigne[i])
+	//				{
+	//					//on ï¿½change les valeurs
+	//					tmp = derniereLigne[k];
+	//					derniereLigne[k] = derniereLigne[i];
+	//					derniereLigne[i] = tmp;
+	//					//on ï¿½change l'ordre des indices
+	//					tmp = indiceCheminOrdreCroissant[k];
+	//					indiceCheminOrdreCroissant[k] = indiceCheminOrdreCroissant[i];
+	//					indiceCheminOrdreCroissant[i] = tmp;
+	//				}
+	//			}
+	//		}
+	//
+	//		for(int i = 0; i<nbCheminsATrouver; i++)
+	//		{
+	//			indices[i]=-1;
+	//		}
+	//
+	//		//on trouve les chemins de poids minimum qui ne se croise pas (mï¿½thode non optimale)
+	//		int cpt = 0, i = 0, indice = 0;;
+	//		while(cpt<nbCheminsATrouver && i < chemins.length)
+	//		{//si la valeur de chemins est dans la liste des valeurs minimales alors c'est l'indice d'un chemin de poids min
+	//			//			if(dernieresCase.contains(chemins[i][chemins[0].length-1])) 
+	//			//			{
+	//			//				indices[cpt] = i;
+	//			//				cpt++;
+	//			//			}
+	//			//			i++;
+	//			//on rï¿½cupere les indice des chemins de poids min
+	//			indice = indiceCheminOrdreCroissant[i];
+	//			if(cheminLibre(indice, chemins, "HAUTEUR"))
+	//			{
+	//				indices[cpt] = indice;
+	//				cpt++;
+	//				chemins = marquerChemin(indice, chemins, "HAUTEUR");
+	//			}
+	//			i++;
+	//		}
+	//
+	//		return indices;
+	//	}
 
 
 
@@ -663,14 +765,14 @@ public class TraiteurImage {
 		return estLibre;
 	}
 
-//	private CaseTableauChemins[][] marquerToutLesChemins(int[] indices, CaseTableauChemins[][] chemins, String orientation)
-//	{
-//		for(int i = 0; i<indices.length; i++)
-//		{
-//			chemins = marquerChemin(indices[i], chemins, orientation);
-//		}
-//		return chemins;
-//	}
+	//	private CaseTableauChemins[][] marquerToutLesChemins(int[] indices, CaseTableauChemins[][] chemins, String orientation)
+	//	{
+	//		for(int i = 0; i<indices.length; i++)
+	//		{
+	//			chemins = marquerChemin(indices[i], chemins, orientation);
+	//		}
+	//		return chemins;
+	//	}
 
 	//retourne un CaseTableauChemin[][] avec les chemins occupé marqué (boolean estCheminLibre = false)
 	private CaseTableauChemins[][] marquerChemin(int indice, CaseTableauChemins[][] chemins, String orientation)
@@ -727,7 +829,7 @@ public class TraiteurImage {
 			res = recopierChemins("LARGEUR", image, chemins, indicesChemins);
 			//on complete le reste de l'image
 			res = completerImageRedimEnLargeur(res, image, chemins, "AGRANDIR");
-//			System.out.println("Image agrandie!");
+			//			System.out.println("Image agrandie!");
 		}
 		else//TODO hauteur
 		{
@@ -736,7 +838,7 @@ public class TraiteurImage {
 			res = recopierChemins("HAUTEUR", image, chemins, indicesChemins);
 			//on complete le reste de l'image
 			res = completerImageRedimEnHauteur(res, image, chemins, "AGRANDIR");
-//			System.out.println("Image agrandie!");
+			//			System.out.println("Image agrandie!");
 		}
 
 		return res;
@@ -755,6 +857,7 @@ public class TraiteurImage {
 			//on marque les chemins à supprimer (estCheminLibre = false)
 			//chemins = marquerToutLesChemins(indicesChemins, chemins, "LARGEUR");
 			//on complete le reste de l'image
+			//			res = recopierChemins("LARGEUR", image, chemins, indicesChemins);
 			res = completerImageRedimEnLargeur(res, image, chemins, "RETRECIR");
 		}
 		else//TODO hauteur
@@ -762,8 +865,9 @@ public class TraiteurImage {
 			res = new BufferedImage(image.getWidth(), image.getHeight()-indicesChemins.length,BufferedImage.TYPE_INT_ARGB);
 			//chemins = marquerToutLesChemins(indicesChemins, chemins, "HAUTEUR");
 			//on complete le reste de l'image
+			//			res = recopierChemins("HAUTEUR", image, chemins, indicesChemins);
 			res = completerImageRedimEnHauteur(res, image, chemins, "RETRECIR");
-//			System.out.println("Image retrecie!");
+			//			System.out.println("Image retrecie!");
 		}
 
 		return res;
@@ -1002,7 +1106,73 @@ public class TraiteurImage {
 		}
 		else//hauteur TODO
 		{
-			System.out.println("pas implémenté 6");
+			//			System.out.println("pas implémenté 6");
+			res = new BufferedImage(image.getWidth(), image.getHeight()+indicesChemins.length,BufferedImage.TYPE_INT_ARGB);
+
+			//System.out.println(res.getRGB(0, 0));
+			for( int k=0; k<indicesChemins.length; k++)	//pour tout les chemins ï¿½ dupliquer
+			{
+				//trouver indice depart
+				indice = indicesChemins[k];
+				//				System.out.println(indice);
+				//				System.out.flush();
+				//pour toute la largeur
+				for(i = image.getWidth()-1; i>=0; i--)
+				{
+					tmp = 0;
+					//si valeur pas deja rempli
+					//					if(res.getRGB(indice+k, j)==-1)
+					//					{
+					//recopier valeur 
+					res.setRGB(i, indice+k, outil.setR(255)+outil.setB(0)+outil.setG(0)+outil.setAlpha(100));
+					//res.setRGB(indice+k, j, outil.setR(255)+outil.setB(0)+outil.setG(0)+outil.setAlpha(0));
+					//					}
+					//					//sinon 
+					//					else
+					//					{
+					//						System.out.println("Je dois pas passer lï¿½...");
+					//						//tant que valeur ï¿½ cotï¿½ deja rempli
+					//						tmp=1;
+					//						while(indice+tmp+k<res.getWidth() && res.getRGB(indice+tmp+k, j)==-1)
+					//						{
+					//							//dï¿½caler
+					//							tmp++;
+					//						}
+					//						//si on est pas sortie de l'image
+					//						if(indice+k+tmp<res.getWidth())
+					//						{
+					//							//remplir valeur
+					////							res.setRGB(indice+k+tmp, j, image.getRGB(indice, j));
+					//							res.setRGB(indice+k+tmp, j, outil.setR(255)+outil.setB(0)+outil.setG(0)+outil.setAlpha(100));
+					//						}
+					//						//sinon
+					//						else
+					//						{
+					//							//dï¿½caler dans l'autre sens
+					//							tmp = 1;
+					//							while(indice-tmp>=0 && res.getRGB(indice+k-tmp, j)==-1)
+					//							{
+					//								//dï¿½caler
+					//								tmp++;
+					//							}
+					//							//inserer la valeur
+					////							res.setRGB(indice+k-tmp, j, image.getRGB(indice, j));
+					//							res.setRGB(indice+k-tmp, j, outil.setR(255)+outil.setB(0)+outil.setG(0)+outil.setAlpha(100));
+					//						}
+					//
+					//					}
+					//trouver successeur
+					if(chemins[i][indice].direction == Direction.GAUCHE)
+					{
+						indice--;
+					}
+					else if(chemins[i][indice].direction == Direction.DROITE)
+					{
+						indice++;
+					}
+					//					System.out.println(chemins[indice][j].direction);
+				}
+			}
 		}
 
 		return res;
@@ -1063,7 +1233,7 @@ public class TraiteurImage {
 						//					System.out.println(i+"    "+(j+decalage));
 						//					System.out.flush();
 					}
-					//on rempli la valeur à partir de l'initiale sans le décalage
+					//on rempli la valeur à partir de l'initiale avec le décalage
 					toComplete.setRGB(i,  j+decalage, image.getRGB(i,  j));
 
 
@@ -1085,7 +1255,7 @@ public class TraiteurImage {
 						//					System.out.println(i+"    "+(j+decalage));
 						//					System.out.flush();
 					}
-					//on rempli la valeur à partir de l'initiale sans le décalage
+					//on rempli la valeur à partir de l'initiale avec le décalage
 					toComplete.setRGB(i,  j, image.getRGB(i,  j+decalage));
 
 				}
@@ -1125,8 +1295,8 @@ public class TraiteurImage {
 		}
 		else
 		{
-			System.out.println("toComplete.getWidth() = "+toComplete.getWidth()+"; toComplete.getHeight()"+toComplete.getHeight());
-			System.out.println("chemins.length = "+chemins.length+"; chemins[0].length = "+chemins[0].length);
+			//			System.out.println("toComplete.getWidth() = "+toComplete.getWidth()+"; toComplete.getHeight()"+toComplete.getHeight());
+			//			System.out.println("chemins.length = "+chemins.length+"; chemins[0].length = "+chemins[0].length);
 			for(int j = 0; j<toComplete.getHeight(); j++)
 			{
 				decalage = 0;
@@ -1175,15 +1345,11 @@ public class TraiteurImage {
 		BufferedImage newimage = new BufferedImage(image.getWidth(), newhauteur,BufferedImage.TYPE_INT_ARGB);
 
 
-		int pas = 15;
+		int pas = 30;
 		int nbPix = Math.abs(image.getHeight() - newhauteur);
 
 		CheminsASupprimer cheminsASupprimer = null;
 		//		int[] indicesCheminsASupprimer = trouverCheminsCroisePasPoidsMinEnHauteur(image, Math.abs(image.getWidth() - newlargeur));
-
-		//test intermï¿½diaire
-		//newimage = marquerChemins("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
-
 
 		if(image.getHeight() < newhauteur) //agrandir en hauteur
 		{
@@ -1193,8 +1359,8 @@ public class TraiteurImage {
 				image = agrandirImage("HAUTEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 				nbPix = nbPix - pas;
 			}
-//			System.out.println(image.toString());
-//			System.out.flush();
+			//			System.out.println(image.toString());
+			//			System.out.flush();
 			cheminsASupprimer = calculerCheminsMoinsCouteuxEnLargeurQuiCroisePas(image, nbPix);
 			newimage = agrandirImage("HAUTEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 		}
@@ -1206,13 +1372,17 @@ public class TraiteurImage {
 				image = retrecirImage("HAUTEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 				nbPix = nbPix - pas;
 			}
-//			System.out.println(image.toString());
-//			System.out.flush();
+			//			System.out.println(image.toString());
+			//			System.out.flush();
 			cheminsASupprimer = calculerCheminsMoinsCouteuxEnLargeurQuiCroisePas(image, nbPix);
 			newimage = retrecirImage("HAUTEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 
 		}
-//		System.out.println(outil.getR(outil.setR(255)+outil.setR(255)));
+		//		System.out.println(outil.getR(outil.setR(255)+outil.setR(255)));
+
+		//		cheminsASupprimer = calculerCheminsMoinsCouteuxEnLargeurQuiCroisePas(image, pas);
+		//		newimage = marquerChemins("HAUTEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
+
 
 		return newimage;
 	}
@@ -1223,14 +1393,14 @@ public class TraiteurImage {
 		BufferedImage newimage = new BufferedImage(newlargeur, image.getHeight(),BufferedImage.TYPE_INT_ARGB);
 
 
-		int pas = 15;
+		int pas = 30;
 		int nbPix = Math.abs(image.getWidth() - newlargeur);
 
 		CheminsASupprimer cheminsASupprimer = null;
+
+		//test intermédiaire//
 		//		int[] indicesCheminsASupprimer = trouverCheminsCroisePasPoidsMinEnHauteur(image, Math.abs(image.getWidth() - newlargeur));
 
-		//test intermédiaire
-		//newimage = marquerChemins("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 
 
 		if(image.getWidth() < newlargeur) //agrandir en largeur
@@ -1252,12 +1422,13 @@ public class TraiteurImage {
 				image = retrecirImage("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 				nbPix = nbPix - pas;
 			}
-//			System.out.println(image.toString());
-//			System.out.flush();
+			//			System.out.println(image.toString());
+			//			System.out.flush();
 			cheminsASupprimer = calculerCheminsMoinsCouteuxEnHauteurQuiCroisePas(image, nbPix);
 			newimage = retrecirImage("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 		}
-//		System.out.println(outil.getR(outil.setR(255)+outil.setR(255)));
+		//		System.out.println(outil.getR(outil.setR(255)+outil.setR(255)));
+		//		newimage = marquerChemins("LARGEUR", image, cheminsASupprimer.lesChemins, cheminsASupprimer.lesIndices);
 
 		return newimage;
 	}
@@ -1271,7 +1442,6 @@ public class TraiteurImage {
 		int[] indicesChemins = new int[nbCheminATrouver];
 		CaseTableauChemins[][] chemins = new CaseTableauChemins[image.getWidth()][image.getHeight()];
 		BufferedImage im_poids = this.calculerImageEnergie(image);
-
 		chemins = this.calculerCheminsMoinsCouteuxEnLargeur(im_poids);
 		//pour le nombre de chemin à trouver
 		for(int cpt = 0; cpt < nbCheminATrouver; cpt++)
@@ -1288,11 +1458,11 @@ public class TraiteurImage {
 			//			System.out.flush();
 		}
 
-//		for(int i = 0; i<indicesChemins.length; i++)
-//		{
-//			System.out.println("tab["+i+"] = "+indicesChemins[i]);
-//		}
-//		System.out.flush();
+		//		for(int i = 0; i<indicesChemins.length; i++)
+		//		{
+		//			System.out.println("tab["+i+"] = "+indicesChemins[i]);
+		//		}
+		//		System.out.flush();
 
 		cheminsASupprimer = new CheminsASupprimer(chemins, indicesChemins);
 		return cheminsASupprimer;
@@ -1321,11 +1491,39 @@ public class TraiteurImage {
 			//			System.out.flush();
 		}
 
-//		for(int i = 0; i<indicesChemins.length; i++)
-//		{
-//			System.out.println("tab["+i+"] = "+indicesChemins[i]);
-//		}
-//		System.out.flush();
+		//		for(int i = 0; i<indicesChemins.length; i++)
+		//		{
+		//			System.out.println("tab["+i+"] = "+indicesChemins[i]);
+		//		}
+		//		System.out.flush();
+
+		cheminsASupprimer = new CheminsASupprimer(chemins, indicesChemins);
+		return cheminsASupprimer;
+	}
+
+
+	private CheminsASupprimer calculerCheminsMoinsCouteuxEnHauteurAleatoire(BufferedImage image, int nbCheminATrouver)
+	{
+		CheminsASupprimer cheminsASupprimer = null;
+		int[] indicesChemins = new int[nbCheminATrouver];
+		CaseTableauChemins[][] chemins = new CaseTableauChemins[image.getWidth()][image.getHeight()];
+		BufferedImage im_poids = null;
+
+		chemins = this.calculerCheminsMoinsCouteuxEnHauteur(im_poids);
+		//pour le nombre de chemin ï¿½ trouver
+		for(int cpt = 0; cpt < nbCheminATrouver; cpt++)
+		{
+			im_poids = this.calculerImageEnergie(image);
+			chemins = calculerPoidsCheminsEnHauteur(im_poids);
+			//			indicesChemins[cpt] = trouverCheminAleatoirePoidsMinEnHauteur(chemins, indicesChemins, cpt);
+
+		}
+
+		//		for(int i = 0; i<indicesChemins.length; i++)
+		//		{
+		//			System.out.println("tab["+i+"] = "+indicesChemins[i]);
+		//		}
+		//		System.out.flush();
 
 		cheminsASupprimer = new CheminsASupprimer(chemins, indicesChemins);
 		return cheminsASupprimer;
@@ -1390,18 +1588,40 @@ public class TraiteurImage {
 	}
 
 
+	private int trouverCheminAleatoirePoidsMinEnHauteur(CaseTableauChemins[][] chemins)
+	{
+		int indice = 0;
+		int min = Integer.MAX_VALUE;
+		ArrayList<Integer> listIndicesValsMin = new ArrayList<Integer>();
+
+		for(int i = 0; i < chemins.length; i++)
+		{
+			if(chemins[i][chemins[0].length-1].value < min)
+			{
+				min = chemins[i][chemins[0].length-1].value;
+				indice = i;
+			}
+		}
+
+		for(int i = 0; i < chemins.length; i++)
+		{
+			//si la valeur du chemin n'est pas superieur à 10% du minimum alors on considere que c'est aussi un min 
+			if(chemins[i][chemins[0].length-1].value < min+(10*min/10));
+			{
+				listIndicesValsMin.add(i);
+			}
+		}
+
+		return (int) listIndicesValsMin.get((int)Math.round(Math.random())%listIndicesValsMin.size());
+	}
+
+
 	private boolean pasDejaPresent(int val, int[] tab, int nbElmt)
 	{
 		for(int i = 0; i < nbElmt; i++)
 		{
 			if(tab[i]==val) return false;
 		}
-		//		for(int i = 0; i<nbElmt; i++)
-		//		{
-		//			System.out.println("val = "+val+"test : "+tab[i]);
-		//		}
-		//		System.out.flush();
-
 		return true;
 	}
 
@@ -1433,20 +1653,20 @@ public class TraiteurImage {
 
 				min = Integer.MAX_VALUE;
 
-				if(j!=0 && chemins_in[i-1][j-1].value < min && chemins_in[i-1][j-1].estCheminLibre==true
+				if(j!=0 && chemins[i-1][j-1].value < min && chemins_in[i-1][j-1].estCheminLibre==true
 						&& chemins_in[i-1][j].estCheminLibre==true)
 				{
 					min = chemins[i-1][j-1].value;
 					direction = Direction.GAUCHE;
 				}
 
-				if(chemins_in[i-1][j].value < min && chemins_in[i-1][j].estCheminLibre==true)
+				if(chemins[i-1][j].value < min && chemins_in[i-1][j].estCheminLibre==true)
 				{
 					min = chemins[i-1][j].value;
 					direction = Direction.MILIEU;
 				}
 
-				if(j<image.getHeight()-1 && j>0 && chemins_in[i-1][j-1].value< min
+				if(j<image.getHeight()-1 && j>0 && chemins[i-1][j-1].value< min
 						&& chemins_in[i-1][j+1].estCheminLibre==true)
 				{
 					min = chemins[i-1][j+1].value;
@@ -1460,7 +1680,7 @@ public class TraiteurImage {
 				}
 				valCurrent = outil.getR(image.getRGB(i, j))+outil.getG(image.getRGB(i, j))+outil.getB(image.getRGB(i, j));
 				chemins[i][j] = new CaseTableauChemins(min+valCurrent, direction);
-				if(!chemins_in[i][j].estCheminLibre)  chemins[i][j].estCheminLibre = false;
+				chemins[i][j].estCheminLibre = chemins_in[i][j].estCheminLibre;
 			}
 		}
 
@@ -1491,20 +1711,20 @@ public class TraiteurImage {
 			{
 				min = Integer.MAX_VALUE;
 
-				if(i!=0 && chemins_in[i-1][j-1].value < min && chemins_in[i-1][j-1].estCheminLibre==true
+				if(i!=0 && chemins[i-1][j-1].value < min && chemins_in[i-1][j-1].estCheminLibre==true
 						&& chemins_in[i][j-1].estCheminLibre==true)
 				{
 					min = chemins[i-1][j-1].value;
 					direction = Direction.GAUCHE;
 				}
 
-				if(chemins_in[i][j-1].value < min && chemins_in[i][j-1].estCheminLibre==true)
+				if(chemins[i][j-1].value < min && chemins_in[i][j-1].estCheminLibre==true)
 				{
 					min = chemins[i][j-1].value;
 					direction = Direction.MILIEU;
 				}
 
-				if(i<image.getWidth()-1 && i>0 && chemins_in[i-1][j-1].value< min
+				if(i<image.getWidth()-1 && i>0 && chemins[i-1][j-1].value< min
 						&& chemins_in[i+1][j-1].estCheminLibre==true)
 				{
 					min = chemins[i+1][j-1].value;
@@ -1518,7 +1738,64 @@ public class TraiteurImage {
 				}
 				valCurrent = outil.getR(image.getRGB(i, j))+outil.getG(image.getRGB(i, j))+outil.getB(image.getRGB(i, j));
 				chemins[i][j] = new CaseTableauChemins(min+valCurrent, direction);
-				if(!chemins_in[i][j].estCheminLibre)  chemins[i][j].estCheminLibre = false;
+				chemins[i][j].estCheminLibre = chemins_in[i][j].estCheminLibre;
+			}
+		}
+
+		return chemins;
+	}
+
+
+
+	private CaseTableauChemins[][] calculerPoidsCheminsEnHauteur(BufferedImage image)
+	{
+		CaseTableauChemins[][] chemins = new CaseTableauChemins[image.getWidth()][image.getHeight()];
+		int i = 0, j = 0, min = Integer.MAX_VALUE;
+		Direction direction = Direction.MILIEU;
+
+		//on initialise les premieres valeurs
+		for(i=0; i<image.getWidth(); i++)
+		{
+			chemins[i][0] = new CaseTableauChemins(image.getRGB(i, 0), Direction.INIT);
+			chemins[i][0].estCheminLibre = chemins[i][0].estCheminLibre;
+		}
+
+		int valCurrent = 0;
+		//on calcul les suivantes
+		for(j = 1; j < image.getHeight(); j++)
+		{
+
+			for(i = 0; i<image.getWidth(); i++)
+			{
+				min = Integer.MAX_VALUE;
+
+				if(i!=0 && chemins[i-1][j-1].value < min/* && chemins_in[i-1][j-1].estCheminLibre==true
+						&& chemins_in[i][j-1].estCheminLibre==true*/)
+				{
+					min = chemins[i-1][j-1].value;
+					direction = Direction.GAUCHE;
+				}
+
+				if(chemins[i][j-1].value < min/* && chemins_in[i][j-1].estCheminLibre==true*/)
+				{
+					min = chemins[i][j-1].value;
+					direction = Direction.MILIEU;
+				}
+
+				if(i<image.getWidth()-1 && i>0 /*&& chemins_in[i-1][j-1].value< min
+						&& chemins_in[i+1][j-1].estCheminLibre==true*/)
+				{
+					min = chemins[i+1][j-1].value;
+					direction = Direction.DROITE;
+				}
+				if(min==Integer.MAX_VALUE) 
+				{
+					//					System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAYYYYYE");
+					min = chemins[i][j-1].value;
+					direction = Direction.MILIEU;
+				}
+				valCurrent = outil.getR(image.getRGB(i, j))+outil.getG(image.getRGB(i, j))+outil.getB(image.getRGB(i, j));
+				chemins[i][j] = new CaseTableauChemins(min+valCurrent, direction);
 			}
 		}
 

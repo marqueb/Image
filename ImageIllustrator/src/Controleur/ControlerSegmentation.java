@@ -35,7 +35,7 @@ public class ControlerSegmentation implements ActionListener{
 
 	Controler controler = null;
 
-	//static{ System.loadLibrary("opencv_java2410"); }
+//	static{ System.loadLibrary("opencv_java2410"); }
 	//	static{ System.loadLibrary("jniopencv_core"); }
 	//
 	//	static{ System.loadLibrary("opencv"); }
