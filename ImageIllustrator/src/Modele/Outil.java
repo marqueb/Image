@@ -73,16 +73,16 @@ public class Outil {
 
 	public CadreImage initCadre(BufferedImage image, Controler controler){
 		CadreImage cadreImage=new CadreImage(image);
-		JLabel icon=new JLabel(cadreImage.getImageIcon());
-		JScrollPane imageScroller =new JScrollPane(icon);
-		imageScroller.setViewportView(icon);
+		cadreImage.setLabelImage(new JLabel(cadreImage.getImageIcon()));
+		JScrollPane imageScroller =new JScrollPane(cadreImage.getLabelImage());
+		imageScroller.setViewportView(cadreImage.getLabelImage());
 		imageScroller.setAutoscrolls(true);
 		imageScroller.setWheelScrollingEnabled(true);
 		imageScroller.setPreferredSize(new Dimension(200,200)); 
 		cadreImage.setImageScroller(imageScroller);
 		imageScroller.getHorizontalScrollBar().setValue(imageScroller.getHorizontalScrollBar().getMaximum());
 		imageScroller.getVerticalScrollBar().setValue(imageScroller.getVerticalScrollBar().getMaximum());
-		controler.addControlerSouris(icon);
+		controler.addControlerSouris(cadreImage.getLabelImage());
 		return cadreImage;
 	}
 
@@ -219,7 +219,7 @@ public class Outil {
 				r=getR(couleur);
 				g=getG(couleur);
 				b=getB(couleur);
-				if((r+g+b/3)>200){
+				if((r+g+b/3)>215){
 					r=255;
 					b=255;
 					g=255;

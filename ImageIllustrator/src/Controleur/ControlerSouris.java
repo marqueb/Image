@@ -32,6 +32,16 @@ public class ControlerSouris extends MouseMotionAdapter implements MouseListener
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		int buttonDown = e.getButton();
+		if(controler.isSegmentation()){
+		    if (buttonDown == MouseEvent.BUTTON1) {
+		         controler.setBackground(false);
+		    } else if(buttonDown == MouseEvent.BUTTON2) {
+		    	 controler.setBackground(true);
+		    } else if(buttonDown == MouseEvent.BUTTON3) {
+		    	 controler.setBackground(true);
+		    }
+		}
 		controler.sourisPresse(e.getX(), e.getY(), ((JLabel)e.getSource()).bounds().width, ((JLabel)e.getSource()).bounds().height);
 	}
 
@@ -41,6 +51,6 @@ public class ControlerSouris extends MouseMotionAdapter implements MouseListener
 	}
 
 	public void mouseDragged(MouseEvent e){
-		controler.sourisDragged(e.getX(), e.getY());
+		controler.sourisDragged(e.getX(), e.getY(), ((JLabel)e.getSource()).bounds().width, ((JLabel)e.getSource()).bounds().height);
 	}
 }

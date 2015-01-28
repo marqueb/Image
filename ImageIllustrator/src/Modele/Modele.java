@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.opencv.core.Mat;
+
 import Controleur.Controler;
 import Vue.CadreImage;
 import Vue.InterfaceGraphique;
@@ -26,10 +28,11 @@ public class Modele {
 	private ArrayList<JButton> listBoutonFermeture;
 	private CadreImage cadre_ima_fusion = null;
 	private BufferedImage imaAvantTraitement = null;
+	private BufferedImage copie;
 
 
-	private int xPrec=0, yPrec=0, xCour=0, yCour=0, dX, dY, dXscroll, dYscroll, distx1, disty1, distx2, disty2,nbAffichageHisto;
-	private boolean estHistoCliquer,estEgalisation;
+	private int xPrec=0, yPrec=0, xCour=0, yCour=0,  d1X, d1Y, d2X, d2Y, dXscroll, dYscroll, distx1, disty1, distx2, disty2,nbAffichageHisto;
+	private boolean estHistoCliquer,estEgalisation, segmentation;
 
 
 	public Modele()
@@ -64,12 +67,12 @@ public class Modele {
 
 		}catch(Exception e){}
 	}
-	
-	
+
+
 	public boolean isImageVide(){
 		return listCadreImage.isEmpty();
 	}
-	
+
 	public void afficherpos(int x, int y){
 		System.out.println(x+" "+y);
 	}
@@ -86,33 +89,30 @@ public class Modele {
 
 	public void redimensionner( int newLargeur,int newHauteur) {
 		CadreImage  cadre = cadreImageCourant();
+		initAnnulerRefaire(cadre);
 		BufferedImage intermediaire =traiteurImage.redimenssionerLargeur(cadre.getImage(), newLargeur);
 		cadre.setImage(traiteurImage.redimenssionerHauteur(intermediaire, newHauteur));
 		actualiserImageIcon();
-		//traiteurImage.redimenssionerHauteur(cadre.getImage(), newHauteur);
-		//cadre.setImage(traiteurImage.redimenssioner(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
 	}
-	
+
 	public void redimensionnerIntelligement( int newlargeur,int newhauteur) {
 		CadreImage  cadre = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
+		initAnnulerRefaire(cadre);
 		int largeur=cadre.getImage().getWidth();
 		int hauteur=cadre.getImage().getHeight();
 		cadre.setImage(traiteurImage.redimensionnerIntelligement(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
 		actualiserImageIcon();
-		/*cadre.setVisible(true);
-		interfaceGraphique.getFrame().repaint();
-		interfaceGraphique.getFrame().validate();*/
 	}
-	
+
 	private JPanel createPanelCadreImage(CadreImage cadre)
 	{
 		JPanel res = new JPanel();
-		
-		
-		
+
+
+
 		return res;
 	}
-	
+
 	public void inverser(){
 
 		initAnnulerRefaire(cadreImageCourant());
@@ -206,7 +206,7 @@ public class Modele {
 		int imageCumule[]=new int[256];
 		initAnnulerRefaire(cadreImageCourant());
 		BufferedImage image= cadreImageCourant().getImage();
-		
+
 		outil.histogrammeCumule(image,imageCumule);
 		if(existeSelection()){
 			int[] selection=selection();
@@ -237,7 +237,7 @@ public class Modele {
 		actualiserImageIcon();
 	}
 
-	
+
 	public void afficherCouleurPixel(int x, int y, boolean isRGB){
 		//recupere la valeur du pixel en fonction de l'image et des coordonnées
 		int couleur = outil.couleurPixel(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage(), x, y);
@@ -272,28 +272,28 @@ public class Modele {
 		outil.eclaircir(cadreImage.getImage(), existeSelection(), selection());
 		actualiserImageIcon();
 	}
-	
+
 	public void foncer(){
 		CadreImage cadreImage=cadreImageCourant();
 		initAnnulerRefaire(cadreImage);
 		outil.foncer(cadreImage.getImage(), existeSelection(), selection());
 		actualiserImageIcon();
 	}
-	
+
 	public void noirblanc(){
 		CadreImage cadreImage=cadreImageCourant();
 		initAnnulerRefaire(cadreImage);
 		outil.noirblanc(cadreImage.getImage(), existeSelection(), selection());
 		actualiserImageIcon();
 	}
-	
+
 	public void sepia() {
 		CadreImage cadreImage=cadreImageCourant();
 		initAnnulerRefaire(cadreImage);
 		outil.sepia(cadreImage.getImage(), existeSelection(), selection());
 		actualiserImageIcon();		
 	}
-	
+
 	public void fermerOnglet(Object j){
 		//cherche l'index de l'onglet à l'aide de la table de bouton
 		int i = listBoutonFermeture.indexOf(j);
@@ -345,7 +345,7 @@ public class Modele {
 		float coef2 = (float) (pourcentImageSecondaire/100.0);
 		float rapportLargeur, rapportHauteur;
 		int[] selection = selection();
-		
+
 		// redimensionner les images 
 		if(existeSelection())
 		{
@@ -372,7 +372,7 @@ public class Modele {
 		int borneX = imaPrincipale.getWidth()<imaSecondaire.getWidth()?imaPrincipale.getWidth():imaSecondaire.getWidth();
 		int borneY = imaPrincipale.getHeight()<imaSecondaire.getHeight()?imaPrincipale.getHeight():imaSecondaire.getHeight();
 		int i_deb, i_fin, j_deb, j_fin;
-		
+
 		//borne de la fusion
 		if(existeSelection()){
 			i_deb=selection[0];
@@ -409,7 +409,7 @@ public class Modele {
 				imaToChange.setRGB(i, j, newRgb);
 			}
 		}
-		
+
 		actualiserImageIcon();
 		interfaceGraphique.getFrame().repaint();
 	}
@@ -446,7 +446,7 @@ public class Modele {
 
 		actualiserImageIcon();
 	}
-	
+
 	public void traiterChangementTailleFiltre(TypeFiltre typeFiltre, int taille)
 	{
 		float[][] filtre = null;
@@ -478,7 +478,7 @@ public class Modele {
 
 		actualiserImageIcon();
 	}
-	
+
 	public void rehausserContrastes()
 	{
 		BufferedImage im = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
@@ -488,7 +488,7 @@ public class Modele {
 		actualiserImageIcon();
 		interfaceGraphique.rafraichirComponentOption();
 	}
-	
+
 	public void rehausserContours()
 	{
 		BufferedImage im = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
@@ -503,7 +503,7 @@ public class Modele {
 	{
 		interfaceGraphique.ajouterHistoRgb(outil.getTabRgbHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage(), this.existeSelection(), this.selection()),outil.getTabyuvHisto(listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage(), this.existeSelection(), this.selection()));
 	}
-	
+
 	public void appliquerFiltre(float[][] noyau)
 	{
 		BufferedImage bufImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage();
@@ -527,20 +527,21 @@ public class Modele {
 
 	public void actualiserImageIcon(){
 		CadreImage cadreImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex());
-		BufferedImage i = cadreImage.getImage();
-		cadreImage.setImageIcon(new ImageIcon(i));
+		cadreImage.setImageIcon(new ImageIcon(cadreImage.getImage()));
+		cadreImage.getLabelImage().setIcon(cadreImage.getImageIcon());
+		/*cadreImage.setLabelImage(labelImage);
 		JLabel icon=new JLabel(cadreImage.getImageIcon());
 		cadreImage.setImageScroller(new JScrollPane(icon));
-		controler.addControlerSouris(icon);
+		controler.addControlerSouris(icon);*/
 		int x=cadreImage.getImageScroller().getVerticalScrollBar().getValue();
 		int y=cadreImage.getImageScroller().getHorizontalScrollBar().getValue();
-		cadreImage.getImageScroller().setViewportView(icon);
+		cadreImage.getImageScroller().setViewportView(cadreImage.getLabelImage());
 		cadreImage.getImageScroller().getVerticalScrollBar().setValue(x);
 		cadreImage.getImageScroller().getHorizontalScrollBar().setValue(y);
 		//interfaceGraphique.getFrame().validate();
 		interfaceGraphique.getTabbedPane().setComponentAt(interfaceGraphique.getTabbedPane().getSelectedIndex(), cadreImage.getImageScroller());
 	}
-	
+
 	public void actualiserImageIcon(BufferedImage im){
 		CadreImage cadreImage = getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex());
 		cadreImage.setImage(im);
@@ -567,7 +568,7 @@ public class Modele {
 		points[3]=yCour;
 		return points;
 	}
-	
+
 	public int ajustementX(int x){
 		BufferedImage image =cadreImageCourant().getImage();
 		if(x>image.getWidth()){
@@ -579,7 +580,7 @@ public class Modele {
 		}
 		return x;
 	}
-	
+
 	public int ajustementY(int y){
 		BufferedImage image =cadreImageCourant().getImage();
 		if(y>image.getHeight()){
@@ -594,8 +595,6 @@ public class Modele {
 
 	public int ajustementSelectionX(int x){
 		BufferedImage image =cadreImageCourant().getImage();
-		int distx1=dX-xPrec;
-		int distx2=xCour-dX;
 		if(x+distx2>image.getWidth()){
 			x=image.getWidth()-1-distx2;
 		}else{
@@ -605,11 +604,9 @@ public class Modele {
 		}
 		return x;
 	}
-	
+
 	public int ajustementSelectionY(int y){
 		BufferedImage image =cadreImageCourant().getImage();
-		int disty1=dY-yPrec;
-		int disty2=yCour-dY;
 		if(y+disty2>image.getHeight()){
 			y=image.getHeight()-1-disty2;
 		}else{
@@ -624,38 +621,51 @@ public class Modele {
 		CadreImage cadreImage=cadreImageCourant();
 		xCour=x;
 		yCour=y;
+		int a, b, c,d;
 		if(existeSelection()){
+			interfaceGraphique.getCopier().setEnabled(true);
+			interfaceGraphique.getCouper().setEnabled(true);
+			interfaceGraphique.getDecouper().setEnabled(true);
 			BufferedImage image=Outil.deepCopy(cadreImage.getImage());
 			if(xPrec>xCour){
-				int tmp=xPrec;
-				xPrec=xCour;
-				xCour=tmp;
+				a=xCour;
+				c=xPrec;
+			}else{
+				a=xPrec;
+				c=xCour;
 			}
 			if(yPrec>yCour){
-				int tmp=yPrec;
-				yPrec=yCour;
-				yCour=tmp;
+				b=yCour;
+				d=yPrec;
+			}else{
+				b=yPrec;
+				d=yCour;
 			}
-			outil.tracer(image,xPrec, yPrec, xCour, yCour);
-			cadreImage.setImageIcon(new ImageIcon(image));
-			JLabel icon=new JLabel(cadreImage.getImageIcon());
-			controler.addControlerSouris(icon);
+			outil.tracer(image,a, b, c, d);
+			cadreImage.getLabelImage().setIcon(new ImageIcon(image));
 			x=cadreImage.getImageScroller().getVerticalScrollBar().getValue();
 			y=cadreImage.getImageScroller().getHorizontalScrollBar().getValue();
-			cadreImage.getImageScroller().setViewportView(icon);
+			cadreImage.getImageScroller().setViewportView(cadreImage.getLabelImage());
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue(x);
 			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(y);
 		}else{
+			interfaceGraphique.getCopier().setEnabled(false);
+			interfaceGraphique.getCouper().setEnabled(false);
+			interfaceGraphique.getDecouper().setEnabled(false);
 			actualiserImageIcon();
 		}
 	}
-	
+
 	public void ajustementSelection(int x, int y){
-		dX=dX-x;
-		dY=dY-y;
-		xPrec=xPrec-dX;
-		yPrec=yPrec-dY;
-		selectionne(xCour-dX, yCour-dY);
+		xPrec=xPrec+d2X;
+		yPrec=yPrec+d2Y;
+		xCour=xCour+d2X;
+		yCour=yCour+d2Y;
+		d2X=d1X-x;
+		d2Y=d1Y-y;
+		xPrec=xPrec-d2X;
+		yPrec=yPrec-d2Y;
+		selectionne(xCour-d2X, yCour-d2Y);
 	}
 
 	public void deplacerScroll(int x, int y){
@@ -672,7 +682,7 @@ public class Modele {
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue(cadreImage.getImageScroller().getVerticalScrollBar().getValue()-dYscroll);
 		}
 	}
-	
+
 	public void deplacerScrollAjustement(int x, int y){		
 		CadreImage cadreImage=cadreImageCourant();
 		dXscroll=dXscroll-x;
@@ -687,7 +697,7 @@ public class Modele {
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue((cadreImage.getImageScroller().getVerticalScrollBar().getValue())+(y+disty2)-(cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()));
 		}
 	}
-	
+
 	public boolean isEstEgalisation() {
 		return estEgalisation;
 	}
@@ -695,16 +705,16 @@ public class Modele {
 	public void setEstEgalisation(boolean estEgalisation) {
 		this.estEgalisation = estEgalisation;
 	}
-	
+
 	public boolean estDansSelection(int x, int y){
 		return x>xPrec && x<xCour && y>yPrec && y<yCour;
 	}
-	
+
 	public BufferedImage calculerConvolution(float[][] filtre, BufferedImage im)
 	{
 		return traiteurImage.convoluer(filtre, im, existeSelection(), selection());
 	}
-	
+
 	public Outil getOutil() {
 		return outil;
 	}
@@ -797,23 +807,31 @@ public class Modele {
 	}
 
 	public void setDelta(int x, int y){
-		dX=x;
-		dY=y;
+		d1X=x;
+		d1Y=y;
 	}
-	
+
 	public void setDeltaScroll(int x, int y){
 		dXscroll=x;
 		dYscroll=y;
 	}
 
 	public int getDeltaX(){
-		return dX;
+		return d1X;
 	}
 
 	public int getDeltaY(){
-		return dY;
+		return d1Y;
 	}
-	
+
+	public int getDelta2X(){
+		return d2X;
+	}
+
+	public int getDelta2Y(){
+		return d2Y;
+	}
+
 	public int getNbAffichageHisto() {
 		return nbAffichageHisto;
 	}
@@ -828,32 +846,34 @@ public class Modele {
 		cadreImage.setMaxScrollX(cadreImage.getImageScroller().getHorizontalScrollBar().getValue());
 		cadreImage.setMaxScrollY(cadreImage.getImageScroller().getVerticalScrollBar().getValue());
 	}
-	
+
 	public int largeurImageVisible(){
 		CadreImage cadreImage=cadreImageCourant();
 		return cadreImage.getImage().getWidth()-cadreImage.getMaxScrollX();
 	}
-	
+
 	public int hauteurImageVisible(){
 		CadreImage cadreImage=cadreImageCourant();
 		return cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY();
 	}
-	
+
 	public void setDist(int x, int y){
 		distx1=x-xPrec;
 		disty1=y-yPrec;
 		distx2=xCour-x;
 		disty2=yCour-y;
 	}
-	
+
 	public void annulerSelection(){
 		xPrec=-1;
 		yPrec=-1;
 		xCour=-1;
 		yCour=-1;
+		d2X=0;
+		d2Y=0;
 		this.actualiserImageIcon();
 	}
-	
+
 	public void decouper(){
 		if(this.existeSelection()){
 			CadreImage cadreImage=cadreImageCourant();
@@ -861,7 +881,7 @@ public class Modele {
 			cadreImage.setImage(outil.decouper(cadreImage.getImage(), selection()));
 		}
 	}
-	
+
 	public void annuler(){
 		CadreImage cadreImage=cadreImageCourant();
 		BufferedImage image = outil.deepCopy(cadreImage.getImage());
@@ -875,7 +895,7 @@ public class Modele {
 		interfaceGraphique.getBtnRefaire().setEnabled(true);
 		actualiserImageIcon();
 	}
-	
+
 	public void refaire(){
 		CadreImage cadreImage=cadreImageCourant();
 		BufferedImage image = outil.deepCopy(cadreImage.getImage());
@@ -889,7 +909,7 @@ public class Modele {
 		interfaceGraphique.getBtnAnnuler().setEnabled(true);
 		actualiserImageIcon();
 	}
-	
+
 	public void initAnnulerRefaire(CadreImage cadreImage){
 		BufferedImage image = outil.deepCopy(cadreImage.getImage());
 		cadreImage.getAnnuler().add(image);
@@ -900,7 +920,153 @@ public class Modele {
 		cadreImage.getRefaire().clear();
 	}
 
+	public void majSelection(int x, int y){
+		xPrec=x-distx1;
+		yPrec=y-disty1;
+		xCour=x+distx2;
+		yCour=y+disty2;
+		d2X=0;
+		d2Y=0;
+	}
 
+	public void majSelection2(){
+
+		if(xPrec>xCour){
+			int tmp=xPrec;
+			xPrec=xCour;
+			xCour=tmp;
+		}
+		if(yPrec>yCour){
+			int tmp=yPrec;
+			yPrec=yCour;
+			yCour=tmp;
+		}
+	}
+
+
+	public void remplirInit(Mat fg, int width, int height) {
+		byte[] data;
+		data = new byte[height * width *3];
+		fg.get(0, 0, data);
+		for(int i = 0; i <  height * width*3; i=i+1)
+		{			
+			data[i]=2;
+		}
+		fg.put(0, 0, data);		
+	}
+
+	public void remplirMatrice(Mat fg, int ancienx, int ancieny, int x, int y, int height, int width, boolean background) {
+		byte[] data;
+		data = new byte[height * width * 3];
+		fg.get(0, 0, data);
+		int largeur=0, hauteur=0;
+		for(int i = 0; i < height * width*3; i=i+1)
+		{		
+			if(!background){
+				if((ancienx>=x) && (ancieny>=y)) {	
+					if((largeur>=x && largeur<=ancienx) && (hauteur>=y && hauteur<=ancieny)){				
+						data[i]=1;
+
+					}
+				}
+				else if((ancienx>=x) && (ancieny<=y)) {
+					if((largeur>=x && largeur<=ancienx) && (hauteur>=ancieny && hauteur<=y)){
+						data[i]=1;
+					}
+				}
+				else if((ancienx<=x) && (ancieny>=y)) {
+					if((largeur>=ancienx && largeur<=x) && (hauteur>=y && hauteur<=ancieny)){
+						data[i]=1;
+					}
+				}
+				else if((ancienx<=x) && (ancieny<=y)) {
+					if((largeur>=ancienx && largeur<=x) && (hauteur>=ancieny && hauteur<=y)){
+						data[i]=1;
+
+					}
+				}
+			}
+			else{
+				if((ancienx>=x) && (ancieny>=y)) {	
+					if((largeur>=x && largeur<=ancienx) && (hauteur>=y && hauteur<=ancieny)){				
+						data[i]=0;
+
+					}
+				}
+				else if((ancienx>=x) && (ancieny<=y)) {
+					if((largeur>=x && largeur<=ancienx) && (hauteur>=ancieny && hauteur<=y)){
+						data[i]=0;
+					}
+				}
+				else if((ancienx<=x) && (ancieny>=y)) {
+					if((largeur>=ancienx && largeur<=x) && (hauteur>=y && hauteur<=ancieny)){
+						data[i]=0;
+					}
+				}
+				else if((ancienx<=x) && (ancieny<=y)) {
+					if((largeur>=ancienx && largeur<=x) && (hauteur>=ancieny && hauteur<=y)){
+						data[i]=0;
+
+					}
+				}
+			}
+
+
+			largeur++;
+			if(largeur==cadreImageCourant().getImage().getWidth()){
+				largeur=0;
+				hauteur++;
+			}	
+
+		}
+		fg.put(0, 0, data);		
+	}
+
+	public void copier(){
+		if(existeSelection()){
+			initAnnulerRefaire(cadreImageCourant());
+			interfaceGraphique.getColler().setEnabled(true);
+			CadreImage cadreImage = cadreImageCourant();
+			int[] selection=selection();
+			copie=new BufferedImage(selection[2]-selection[0], selection[3]-selection[1],BufferedImage.TYPE_INT_ARGB);
+			for (int i=0; i<selection[2]-selection[0]; i++){
+				for(int j=0; j<selection[3]-selection[1]; j++){
+					copie.setRGB(i, j, cadreImage.getImage().getRGB(i+selection[0], j+selection[1]));
+				}
+			}
+		}
+	}
+
+	public void couper(){
+		if(existeSelection()){
+			initAnnulerRefaire(cadreImageCourant());
+			CadreImage cadreImage = cadreImageCourant();
+			interfaceGraphique.getColler().setEnabled(true);
+			int[] selection=selection();
+			copie=new BufferedImage(selection[2]-selection[0], selection[3]-selection[1],BufferedImage.TYPE_INT_ARGB);
+			for (int i=0; i<selection[2]-selection[0]; i++){
+				for(int j=0; j<selection[3]-selection[1]; j++){
+					copie.setRGB(i, j, cadreImage.getImage().getRGB(i+selection[0], j+selection[1]));
+					cadreImage.getImage().setRGB(i+selection[0], j+selection[1], outil.setAlpha(255)+outil.setR(255)+outil.setG(255)+outil.setB(255));
+				}
+			}
+			actualiserImageIcon();
+		}
+	}
+
+	public void coller(){
+
+		if(copie!=null){
+			initAnnulerRefaire(cadreImageCourant());
+			CadreImage cadreImage = cadreImageCourant();
+			for (int i=0; i<copie.getWidth(); i++){
+				for(int j=0; j<copie.getHeight(); j++){
+					cadreImage.getImage().setRGB(i+xPrec, j+yPrec, copie.getRGB(i, j));
+				}
+			}
+		}
+		actualiserImageIcon();
+	}
 }
 
 

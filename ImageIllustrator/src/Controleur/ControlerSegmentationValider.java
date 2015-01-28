@@ -1,57 +1,33 @@
 package Controleur;
 
-import java.awt.Point;
-import java.awt.color.CMMException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import javax.crypto.spec.GCMParameterSpec;
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
 
-import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
-import org.opencv.core.Range;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.imgproc.Imgproc.*;
 
-import Modele.Modele;
-import Modele.Outil;
 import Vue.CadreImage;
-public class ControlerSegmentation implements ActionListener{
 
-	Controler controler = null;
+public class ControlerSegmentationValider implements ActionListener {
 
-
-	static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
-	static{ System.loadLibrary("opencv_java2410"); }
-
-
-	public ControlerSegmentation(Controler c)
-	{
-		controler = c;
+	Controler controler;
+	public ControlerSegmentationValider(Controler controler) {
+		this.controler=controler;
 	}
-
-	public void actionPerformed(ActionEvent e) {
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
 		controler.getModele().initAnnulerRefaire(controler.getModele().cadreImageCourant());
-		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
-		controler.setSegmentation(true);
-		controler.setFg(new Mat(controler.getModele().cadreImageCourant().getImage().getHeight(),controler.getModele().cadreImageCourant().getImage().getWidth(),CvType.CV_8UC1));
-		controler.getModele().remplirInit(controler.getFg(), controler.getModele().cadreImageCourant().getImage().getHeight(),  controler.getModele().cadreImageCourant().getImage().getWidth());
-		JButton valider= new JButton("valider");
-		controler.addControlerSegmentationValider(valider);
-		controler.getModele().getInterfaceGraphique().getPanelOption().getComponent(1).setEnabled(false);
-		controler.getModele().getInterfaceGraphique().getPanelOption().add(valider);
-		controler.getModele().actualiserImageIcon();
-		/*int[] selection = controler.getModele().selection();
+		
 		int rows = controler.getModele().cadreImageCourant().getImage().getHeight();
 		int cols = controler.getModele().cadreImageCourant().getImage().getWidth();
 
@@ -70,21 +46,17 @@ public class ControlerSegmentation implements ActionListener{
 			data[i*3 ] = (byte) ((dataBuff[i] >> 0) & 0xFF);
 		}
 		img.put(0, 0, data);
-	
-
-		Rect rect = new Rect(selection[0], selection[1],selection[2],selection[3]);
-		Mat resultat = new Mat(rows,cols,type);
-		resultat.setTo(new Scalar(125));
 		Mat fgdModel = new Mat();
 		fgdModel.setTo(new Scalar(255, 255, 255));
 		Mat bgdModel = new Mat();
 		bgdModel.setTo(new Scalar(255, 255, 255));
 
-
-		Imgproc.grabCut(img, resultat, rect, bgdModel, fgdModel, 2, Imgproc.GC_INIT_WITH_RECT);
+		Rect rect = new Rect(0, 0,rows,cols);
+		//System.out.println(controler.getFg().dump());
+		Imgproc.grabCut(img, controler.getFg(), rect, bgdModel, fgdModel, 2, Imgproc.GC_INIT_WITH_MASK);
 		byte[] data2;
 		data2 = new byte[rows * cols * (int)img.elemSize()];
-		resultat.get(0, 0, data2); 
+		controler.getFg().get(0, 0, data2); 
 		//Separation entre foreground et background si résultat= 0-2 => 0 si resultat= 1-3 =>1
 		for(int i = 0; i < data2.length; i++)
 		{
@@ -95,45 +67,38 @@ public class ControlerSegmentation implements ActionListener{
 				data2[i] = 0;
 
 		}
-		resultat.put(0, 0, data2);
+		controler.getFg().put(0, 0, data2);
 		BufferedImage imagegrab = new BufferedImage(cols,rows, BufferedImage.TYPE_INT_ARGB);
 		MatOfByte bytemat = new MatOfByte();
 		MatOfByte mb=new MatOfByte();  
-        
-		Mat imageretour = new Mat(rows,cols,type);
-		byte[] dataretour = new byte[rows * cols*3];
-		
+
 		img.get(0, 0, data);
-		int largeur=0, hauteur=0;
 		for(int i = 0; i < dataBuff.length-2; i=i+1)
 		{
-		    if((largeur>selection[0] && largeur<selection[2]) && (hauteur>selection[1] && hauteur<selection[3])){ 
+
 				if(data2[i]==0 || data2[i+1]==0 || data2[i+2]==0){
 					data[i*3]=0;
 					data[i*3+1]=0;
 					data[i*3+2]=0;
 				}
-			}
-			largeur++;
-			if(largeur==cols){
-				largeur=0;
-				hauteur++;
-			}	
 		
 		}
 		img.put(0, 0, data);
-		imageretour.put(0,0,dataretour);	
-		
 		Highgui.imencode(".jpg",img, mb); 
 		try {
 			imagegrab = ImageIO.read(new ByteArrayInputStream(mb.toArray()));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} 
-		
+		controler.setSegmentation(false);
+		controler.getModele().getInterfaceGraphique().getPanelOption().remove(2);
 		CadreImage cadre = controler.getModele().cadreImageCourant();
 		cadre.setImage(imagegrab);
+		controler.getModele().actualiserImageIcon();
+		controler.getModele().getInterfaceGraphique().getPanelOption().getComponent(1).setEnabled(true);
+		controler.getModele().remplirInit(controler.getFg(),controler.getModele().cadreImageCourant().getImage().getHeight(),controler.getModele().cadreImageCourant().getImage().getWidth());
+
 		
-		controler.getModele().actualiserImageIcon();*/
 	}
+
 }
