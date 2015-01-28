@@ -29,7 +29,7 @@ public class Controler{
 	private boolean echantillonageActif=false,flouActive=false,utilisateurActive=false, fusionActive=false, 
 			selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
 	private Mat fg=null,bg;
-	private boolean segmentation=false;
+	private boolean segmentation=false, background=false;
 
 	public boolean selectionActive()
 	{
@@ -311,8 +311,7 @@ public class Controler{
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
 		if(segmentation){
-			modele.remplirMatrice(fg, selection[0], selection[1], x, y,modele.cadreImageCourant().getImage().getHeight(),modele.cadreImageCourant().getImage().getWidth());
-			//System.out.println(fg.dump());
+			modele.remplirMatrice(fg, selection[0], selection[1], x, y,modele.cadreImageCourant().getImage().getHeight(),modele.cadreImageCourant().getImage().getWidth(),background);
 			System.out.println(selection[0]+" "+selection[1]+" "+x+" "+y);
 		}
 		if(ajustementSelection){
@@ -620,5 +619,13 @@ public class Controler{
 	
 	public void addControlerColler(JMenuItem coller) {
 		coller.addActionListener(new ControlerColler(this));
+	}
+	
+	public boolean isBackground() {
+		return background;
+	}
+
+	public void setBackground(boolean background) {
+		this.background = background;
 	}
 }

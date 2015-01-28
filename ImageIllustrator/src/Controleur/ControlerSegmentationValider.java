@@ -46,8 +46,6 @@ public class ControlerSegmentationValider implements ActionListener {
 			data[i*3 ] = (byte) ((dataBuff[i] >> 0) & 0xFF);
 		}
 		img.put(0, 0, data);
-
-		System.out.println("datares:"+data.length);
 		Mat fgdModel = new Mat();
 		fgdModel.setTo(new Scalar(255, 255, 255));
 		Mat bgdModel = new Mat();
