@@ -4,6 +4,6 @@
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/javacpp"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/javacv"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/opencv_java2410"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Opencv-2.4.10"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

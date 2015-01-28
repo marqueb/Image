@@ -324,15 +324,12 @@ public class Modele {
 	{
 		cadre_ima_fusion = outil.charger();
 		if(cadre_ima_fusion!=null){
-			System.out.println("jambon1");
 			imaAvantTraitement = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
 			interfaceGraphique.ajouterComponentFusion(cadre_ima_fusion);
 			initAnnulerRefaire(cadreImageCourant());
 		}else{
 			controler.setFusionActive(false);
 		}
-		System.out.println("jambon2");
-		//actualiserImageIcon();
 	}
 
 	public void validerFusion()

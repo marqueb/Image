@@ -47,10 +47,15 @@ public class Controler{
 		}
 		echantillonageActif=false;
 		selectionActive=false;
-		it.getButtonSegmenter().setEnabled(false);
 		ajustementSelection=false;
 		deplacementScroll=false;
-		it.getPanelOption().removeAll();
+		if(!segmentation){
+			it.getPanelOption().removeAll();
+			it.getSegmenter().setEnabled(true);
+		}
+		else
+			it.getSegmenter().setEnabled(false);
+			
 		if(flouActive){
 			modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
 			modele.actualiserImageIcon();
@@ -325,7 +330,6 @@ public class Controler{
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
 		if(segmentation){
 			modele.remplirMatrice(fg, selection[0], selection[1], x, y,modele.cadreImageCourant().getImage().getHeight(),modele.cadreImageCourant().getImage().getWidth(),background);
-			System.out.println(selection[0]+" "+selection[1]+" "+x+" "+y);
 		}
 		if(ajustementSelection){
 			x=modele.ajustementSelectionX(x);
