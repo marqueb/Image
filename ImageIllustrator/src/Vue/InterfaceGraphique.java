@@ -283,7 +283,7 @@ public class InterfaceGraphique implements Runnable{
 
 	public void retirerComponentFusion()
 	{	
-		panelOption.remove(2);
+		panelOption.removeAll();
 		panelOption.repaint();
 		frame.validate();
 
@@ -291,7 +291,7 @@ public class InterfaceGraphique implements Runnable{
 	}
 	public void retirerComponent()
 	{	
-		panelOption.remove(2);
+		panelOption.removeAll();
 		panelOption.repaint();
 		frame.validate();
 	}

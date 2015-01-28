@@ -32,6 +32,7 @@ public class Controler{
 	}
 
 	public void init(){
+		
 		if(echantillonageActif){
 			modele.enleverCouleurPixel();
 			modele.getInterfaceGraphique().retraitChoixRGB();
@@ -44,8 +45,8 @@ public class Controler{
 		it.getButtonSegmenter().setEnabled(false);
 		ajustementSelection=false;
 		deplacementScroll=false;
+		it.getPanelOption().removeAll();
 		if(flouActive){
-			it.retirerComponent();
 			modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
 			modele.actualiserImageIcon();
 			flouActive=false;
@@ -61,6 +62,8 @@ public class Controler{
 		if(!modele.getListCadreImage().isEmpty()){	
 			it.rafraichirComponentOption();
 		}
+		it.getPanelOption().validate();
+		it.getFrame().validate();
 	}
 
 	public void annuler()
@@ -75,9 +78,9 @@ public class Controler{
 	public void valider()
 	{
 		modele.actualiserImageIcon();
-		it.rafraichirComponentOption();
-		flouActive=true;
-		init();
+		it.retirerComponent();
+		flouActive=false;
+		//init();
 	}
 
 	public Modele getModele()
@@ -92,6 +95,7 @@ public class Controler{
 	public void setInterfaceGraphique(InterfaceGraphique i){
 		this.it=i;
 	}
+	
 	public void addControlerCheckCouleur(JCheckBox rouge,JCheckBox vert, JCheckBox bleu,JCheckBox luminence, JCheckBox chrominenceU,JCheckBox chrominenceV){
 		rouge.addActionListener(new ControlerCheckCouleur(it,it.getHisto()));
 		vert.addActionListener(new ControlerCheckCouleur(it,it.getHisto()));
@@ -129,24 +133,33 @@ public class Controler{
 	public void imaGris(){
 		init();
 		modele.imagris();
+		if(modele.existeSelection()){
+			modele.annulerSelection();
+		}
 	}	
 
 	public void eclaircir() {
 		init();
 		modele.eclaircir();
-		
+		if(modele.existeSelection()){
+			modele.annulerSelection();
+		}
 	}
 	
 	public void foncer() {
 		init();
 		modele.foncer();
-		
+		if(modele.existeSelection()){
+			modele.annulerSelection();
+		}
 	}
 	
 	public void noirblanc() {
 		init();
 		modele.noirblanc();
-		
+		if(modele.existeSelection()){
+			modele.annulerSelection();
+		}
 	}
 	
 	public void changerOnglet(){
@@ -265,12 +278,14 @@ public class Controler{
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
 		if(modele.estDansImage(x, y)){
+			System.out.println("jambon1");
 				if(selectionActive && modele.estDansSelection(x, y)){
 					init();
 					ajustementSelection=true;
 					modele.setDelta(x, y);
 					modele.setDist(x, y);
 				}else{
+					System.out.println("jambon2");
 					init();
 					selectionActive=true;
 					it.getButtonSegmenter().setEnabled(true);
@@ -294,25 +309,21 @@ public class Controler{
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
 		if(ajustementSelection){
-			//System.out.println("jambon1 "+x+" "+y);
 			x=modele.ajustementSelectionX(x);
 			y=modele.ajustementSelectionY(y);
-			//System.out.println("jambon2 "+x+" "+y);
 			modele.deplacerScrollAjustement(x, y);
 			modele.ajustementSelection(x, y);
 			selectionActive=true;
 			modele.majSelection(x,y);
 			it.getButtonSegmenter().setEnabled(true);
-			//modele.calculerHistogrammeRGB();
 		}else if(selectionActive){
 			x=modele.ajustementX(x);
 			y=modele.ajustementY(y);
 			if(deplacementScroll){
 				modele.deplacerScroll(x, y);
 			}
-			modele.selectionne(x, y);
+			modele.selectionne(x, y, deplacementScroll);
 			modele.majSelection2();
-			//modele.calculerHistogrammeRGB();
 		}
 	}
 
@@ -332,7 +343,7 @@ public class Controler{
 			if(deplacementScroll){
 				modele.deplacerScroll(x, y);
 			}
-			modele.selectionne(x, y);
+			modele.selectionne(x, y, deplacementScroll);
 		}
 	}
 
@@ -597,5 +608,21 @@ public class Controler{
 	
 	public void addControlerColler(JMenuItem coller) {
 		coller.addActionListener(new ControlerColler(this));
+	}
+
+	public boolean isFusionActive() {
+		return fusionActive;
+	}
+
+	public void setFusionActive(boolean fusionActive) {
+		this.fusionActive = fusionActive;
+	}
+
+	public boolean isSelectionActive() {
+		return selectionActive;
+	}
+
+	public void setSelectionActive(boolean selectionActive) {
+		this.selectionActive = selectionActive;
 	}
 }
