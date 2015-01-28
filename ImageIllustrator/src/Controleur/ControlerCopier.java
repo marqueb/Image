@@ -15,3 +15,4 @@ public class ControlerCopier implements ActionListener {
 	}
 
 }
+

@@ -14,8 +14,12 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+
 import Modele.Modele;
 import Modele.TypeFiltre;
+import Vue.CadreImage;
 import Vue.InterfaceGraphique;
 
 
@@ -24,8 +28,9 @@ public class Controler{
 	private InterfaceGraphique it;
 	private boolean echantillonageActif=false,flouActive=false,utilisateurActive=false, fusionActive=false, 
 			selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
-//	private Mat fg,bg;
-	private boolean segmentation=false;
+	private Mat fg=null,bg;
+	private boolean segmentation=false, background=false;
+
 	public boolean selectionActive()
 	{
 		return selectionActive;
@@ -145,7 +150,7 @@ public class Controler{
 			modele.annulerSelection();
 		}
 	}
-	
+
 	public void foncer() {
 		init();
 		modele.foncer();
@@ -153,7 +158,7 @@ public class Controler{
 			modele.annulerSelection();
 		}
 	}
-	
+
 	public void noirblanc() {
 		init();
 		modele.noirblanc();
@@ -161,7 +166,7 @@ public class Controler{
 			modele.annulerSelection();
 		}
 	}
-	
+
 	public void changerOnglet(){
 		init();
 		if(modele.existeSelection()){
@@ -247,7 +252,7 @@ public class Controler{
 			public void windowOpened(WindowEvent e) {}
 		});
 	}
-	
+
 	public void sourisEntre(int x, int y, int u, int v){
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
@@ -275,26 +280,35 @@ public class Controler{
 	}
 
 	public void sourisPresse(int x, int y, int u, int v){
+
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
+
 		if(modele.estDansImage(x, y)){
-			System.out.println("jambon1");
-				if(selectionActive && modele.estDansSelection(x, y)){
-					init();
-					ajustementSelection=true;
-					modele.setDelta(x, y);
-					modele.setDist(x, y);
-				}else{
-					System.out.println("jambon2");
-					init();
-					selectionActive=true;
-					it.getButtonSegmenter().setEnabled(true);
-					modele.setPrec(x, y);
-				}
+			if(selectionActive && modele.estDansSelection(x, y)){
+				init();
+				ajustementSelection=true;
+				modele.setDelta(x, y);
+				modele.setDist(x, y);
+			}else{
+				init();
+				selectionActive=true;
+				it.getButtonSegmenter().setEnabled(true);
+				modele.setPrec(x, y);
+			}
 		}else{
 			init();
 			modele.actualiserImageIcon();
 		}
+
+	}
+
+	public Mat getFg() {
+		return fg;
+	}
+
+	public void setFg(Mat fg) {
+		this.fg = fg;
 	}
 
 	public boolean isSegmentation() {
@@ -306,8 +320,13 @@ public class Controler{
 	}
 
 	public void sourisRelache(int x, int y, int u, int v){
+		int[] selection = getModele().selection();
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
+		if(segmentation){
+			modele.remplirMatrice(fg, selection[0], selection[1], x, y,modele.cadreImageCourant().getImage().getHeight(),modele.cadreImageCourant().getImage().getWidth(),background);
+			System.out.println(selection[0]+" "+selection[1]+" "+x+" "+y);
+		}
 		if(ajustementSelection){
 			x=modele.ajustementSelectionX(x);
 			y=modele.ajustementSelectionY(y);
@@ -539,18 +558,18 @@ public class Controler{
 	public void addControlerAnnuler(JMenuItem annuler){
 		annuler.addActionListener(new ControlerAnnuler(this));
 	}
-	
+
 	public void addControlerAnnuler(JButton annuler){
 		annuler.addActionListener(new ControlerAnnuler(this));
 	}
-	
+
 	public void addControlerRefaire(JMenuItem refaire){
 		refaire.addActionListener(new ControlerRefaire(this));
 	}
 
 	public void addControlerSepia(JMenuItem sepia) {
 		sepia.addActionListener(new ControlerSepia(this));
-		
+
 	}
 
 	public void addControlerRefaire(JButton btnRefaire) {
@@ -559,33 +578,33 @@ public class Controler{
 
 	public void addControlerCouleurPixel(JButton btnCouleur) {
 		btnCouleur.addActionListener(new ControlerCouleurPixel(this));
-		
+
 	}
 
 	public void addControlerDecouper(JButton btnDecouper) {
 		btnDecouper.addActionListener(new ControlerDecouper(this));
-		
+
 	}
 
 	public void addControlerEclaircir(JMenuItem eclaircir) {
 		eclaircir.addActionListener(new ControlerEclaircir(this));
-		
+
 	}
-	
+
 	public void addControlerEclaircir(JButton btnEclaircir) {
 		btnEclaircir.addActionListener(new ControlerEclaircir(this));
-		
+
 	}
-	
+
 	public void addControlerFoncer(JMenuItem foncer) {
 		foncer.addActionListener(new ControlerFoncer(this));
-		
+
 	}
-	
+
 	public void addControlerFoncer(JButton btnFoncer) {
 		btnFoncer.addActionListener(new ControlerFoncer(this));		
 	}
-	
+
 	public boolean isUtilisateurActive() {
 		return utilisateurActive;
 	}
@@ -596,6 +615,11 @@ public class Controler{
 
 	public void addControlerNoirblanc(JMenuItem noirblanc) {
 		noirblanc.addActionListener(new ControlerNoirblanc(this));
+	}
+
+	public void addControlerSegmentationValider(JButton valider) {
+		valider.addActionListener(new ControlerSegmentationValider(this));
+
 	}
 	
 	public void addControlerCopier(JMenuItem copier) {
@@ -624,5 +648,13 @@ public class Controler{
 
 	public void setSelectionActive(boolean selectionActive) {
 		this.selectionActive = selectionActive;
+	}
+	
+	public boolean isBackground() {
+		return background;
+	}
+
+	public void setBackground(boolean background) {
+		this.background = background;
 	}
 }

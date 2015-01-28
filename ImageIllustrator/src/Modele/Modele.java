@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.opencv.core.Mat;
+
 import Controleur.Controler;
 import Vue.CadreImage;
 import Vue.InterfaceGraphique;
@@ -28,8 +30,9 @@ public class Modele {
 	private BufferedImage imaAvantTraitement = null;
 	private BufferedImage copie;
 
-	private int xPrec=0, yPrec=0, xCour=0, yCour=0, d1X, d1Y, d2X, d2Y, dXscroll, dYscroll, distx1, disty1, distx2, disty2,nbAffichageHisto;
-	private boolean estHistoCliquer,estEgalisation;
+
+	private int xPrec=0, yPrec=0, xCour=0, yCour=0,  d1X, d1Y, d2X, d2Y, dXscroll, dYscroll, distx1, disty1, distx2, disty2,nbAffichageHisto;
+	private boolean estHistoCliquer,estEgalisation, segmentation;
 
 
 	public Modele()
@@ -86,22 +89,19 @@ public class Modele {
 
 	public void redimensionner( int newLargeur,int newHauteur) {
 		CadreImage  cadre = cadreImageCourant();
+		initAnnulerRefaire(cadre);
 		BufferedImage intermediaire =traiteurImage.redimenssionerLargeur(cadre.getImage(), newLargeur);
 		cadre.setImage(traiteurImage.redimenssionerHauteur(intermediaire, newHauteur));
 		actualiserImageIcon();
-		//traiteurImage.redimenssionerHauteur(cadre.getImage(), newHauteur);
-		//cadre.setImage(traiteurImage.redimenssioner(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
 	}
 
 	public void redimensionnerIntelligement( int newlargeur,int newhauteur) {
 		CadreImage  cadre = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
+		initAnnulerRefaire(cadre);
 		int largeur=cadre.getImage().getWidth();
 		int hauteur=cadre.getImage().getHeight();
 		cadre.setImage(traiteurImage.redimensionnerIntelligement(largeur, hauteur, newlargeur, newhauteur,cadre.getImage()));
 		actualiserImageIcon();
-		/*cadre.setVisible(true);
-		interfaceGraphique.getFrame().repaint();
-		interfaceGraphique.getFrame().validate();*/
 	}
 
 	private JPanel createPanelCadreImage(CadreImage cadre)
@@ -960,8 +960,87 @@ public class Modele {
 		}
 	}
 
+	public void remplirInit(Mat fg, int width, int height) {
+		byte[] data;
+		data = new byte[height * width *3];
+		fg.get(0, 0, data);
+		for(int i = 0; i <  height * width*3; i=i+1)
+		{			
+			data[i]=2;
+		}
+		fg.put(0, 0, data);		
+	}
+
+	public void remplirMatrice(Mat fg, int ancienx, int ancieny, int x, int y, int height, int width, boolean background) {
+		byte[] data;
+		data = new byte[height * width * 3];
+		fg.get(0, 0, data);
+		int largeur=0, hauteur=0;
+		for(int i = 0; i < height * width*3; i=i+1)
+		{		
+			if(!background){
+				if((ancienx>=x) && (ancieny>=y)) {	
+					if((largeur>=x && largeur<=ancienx) && (hauteur>=y && hauteur<=ancieny)){				
+						data[i]=1;
+
+					}
+				}
+				else if((ancienx>=x) && (ancieny<=y)) {
+					if((largeur>=x && largeur<=ancienx) && (hauteur>=ancieny && hauteur<=y)){
+						data[i]=1;
+					}
+				}
+				else if((ancienx<=x) && (ancieny>=y)) {
+					if((largeur>=ancienx && largeur<=x) && (hauteur>=y && hauteur<=ancieny)){
+						data[i]=1;
+					}
+				}
+				else if((ancienx<=x) && (ancieny<=y)) {
+					if((largeur>=ancienx && largeur<=x) && (hauteur>=ancieny && hauteur<=y)){
+						data[i]=1;
+
+					}
+				}
+			}
+			else{
+				if((ancienx>=x) && (ancieny>=y)) {	
+					if((largeur>=x && largeur<=ancienx) && (hauteur>=y && hauteur<=ancieny)){				
+						data[i]=0;
+
+					}
+				}
+				else if((ancienx>=x) && (ancieny<=y)) {
+					if((largeur>=x && largeur<=ancienx) && (hauteur>=ancieny && hauteur<=y)){
+						data[i]=0;
+					}
+				}
+				else if((ancienx<=x) && (ancieny>=y)) {
+					if((largeur>=ancienx && largeur<=x) && (hauteur>=y && hauteur<=ancieny)){
+						data[i]=0;
+					}
+				}
+				else if((ancienx<=x) && (ancieny<=y)) {
+					if((largeur>=ancienx && largeur<=x) && (hauteur>=ancieny && hauteur<=y)){
+						data[i]=0;
+
+					}
+				}
+			}
+
+
+			largeur++;
+			if(largeur==cadreImageCourant().getImage().getWidth()){
+				largeur=0;
+				hauteur++;
+			}	
+
+		}
+		fg.put(0, 0, data);		
+	}
+
 	public void copier(){
 		if(existeSelection()){
+			initAnnulerRefaire(cadreImageCourant());
 			interfaceGraphique.getColler().setEnabled(true);
 			CadreImage cadreImage = cadreImageCourant();
 			int[] selection=selection();
@@ -976,6 +1055,7 @@ public class Modele {
 
 	public void couper(){
 		if(existeSelection()){
+			initAnnulerRefaire(cadreImageCourant());
 			CadreImage cadreImage = cadreImageCourant();
 			interfaceGraphique.getColler().setEnabled(true);
 			int[] selection=selection();
@@ -991,7 +1071,9 @@ public class Modele {
 	}
 
 	public void coller(){
+
 		if(copie!=null){
+			initAnnulerRefaire(cadreImageCourant());
 			CadreImage cadreImage = cadreImageCourant();
 			int i=0;
 			while(i<copie.getWidth() && i+xPrec<cadreImage.getImage().getWidth()){

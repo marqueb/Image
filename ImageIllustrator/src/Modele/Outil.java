@@ -219,7 +219,7 @@ public class Outil {
 				r=getR(couleur);
 				g=getG(couleur);
 				b=getB(couleur);
-				if((r+g+b/3)>200){
+				if((r+g+b/3)>215){
 					r=255;
 					b=255;
 					g=255;
