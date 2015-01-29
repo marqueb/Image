@@ -51,10 +51,10 @@ public class Controler{
 		deplacementScroll=false;
 		if(!segmentation){
 			it.getPanelOption().removeAll();
-			it.getSegmenter().setEnabled(true);
+			//it.getSegmenter().setEnabled(true);
 		}
 		else
-			it.getSegmenter().setEnabled(false);
+			//it.getSegmenter().setEnabled(false);
 			
 		if(flouActive){
 			modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
