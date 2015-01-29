@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -47,8 +48,13 @@ public class ControlerSegmentation implements ActionListener{
 		controler.setFg(new Mat(controler.getModele().cadreImageCourant().getImage().getHeight(),controler.getModele().cadreImageCourant().getImage().getWidth(),CvType.CV_8UC1));
 		controler.getModele().remplirInit(controler.getFg(), controler.getModele().cadreImageCourant().getImage().getHeight(),  controler.getModele().cadreImageCourant().getImage().getWidth());
 		JButton valider= new JButton("valider");
+		JLabel info = new JLabel("Sélection clique gauche pour premier plan, sélection clique droit pour arrière plan");
+		controler.getModele().getInterfaceGraphique().getPanelOption().add(valider);
+		controler.getModele().getInterfaceGraphique().getPanelInfo().add(info);
+		controler.getModele().getInterfaceGraphique().getPanelOption().repaint();
+		controler.getModele().getInterfaceGraphique().getFrame().validate();
 		controler.addControlerSegmentationValider(valider);
-		controler.getModele().getInterfaceGraphique().getPanelOption().getComponent(1).setEnabled(false);
+		//controler.getModele().getInterfaceGraphique().getPanelOption().getComponent(1).setEnabled(false);
 		controler.getModele().getInterfaceGraphique().getPanelOption().add(valider);
 		controler.getModele().actualiserImageIcon();
 		/*int[] selection = controler.getModele().selection();

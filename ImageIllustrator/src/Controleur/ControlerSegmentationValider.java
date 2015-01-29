@@ -91,11 +91,14 @@ public class ControlerSegmentationValider implements ActionListener {
 			e1.printStackTrace();
 		} 
 		controler.setSegmentation(false);
-		controler.getModele().getInterfaceGraphique().getPanelOption().remove(2);
+		controler.getModele().getInterfaceGraphique().getPanelOption().removeAll();
 		CadreImage cadre = controler.getModele().cadreImageCourant();
+		controler.getModele().getInterfaceGraphique().getPanelInfo().removeAll();
+		controler.getModele().getInterfaceGraphique().getPanelInfo().repaint();
+		controler.getModele().getInterfaceGraphique().getPanelOption().repaint();
+		controler.getModele().getInterfaceGraphique().getFrame().validate();
 		cadre.setImage(imagegrab);
 		controler.getModele().actualiserImageIcon();
-		controler.getModele().getInterfaceGraphique().getPanelOption().getComponent(1).setEnabled(true);
 		controler.getModele().remplirInit(controler.getFg(),controler.getModele().cadreImageCourant().getImage().getHeight(),controler.getModele().cadreImageCourant().getImage().getWidth());
 
 		

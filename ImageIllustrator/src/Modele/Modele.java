@@ -326,6 +326,8 @@ public class Modele {
 			imaAvantTraitement = Outil.deepCopy(getListCadreImage().get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage());
 			interfaceGraphique.ajouterComponentFusion(cadre_ima_fusion);
 			initAnnulerRefaire(cadreImageCourant());
+		}else{
+			controler.setFusionActive(false);
 		}
 	}
 
@@ -474,7 +476,6 @@ public class Modele {
 			BufferedImage res = traiteurImage.convoluerFiltreMedian(imaAvantTraitement, taille, existeSelection(), selection());
 			listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).setImage(res);
 		}
-
 		actualiserImageIcon();
 	}
 
@@ -556,7 +557,7 @@ public class Modele {
 	}
 
 	public boolean existeSelection(){
-		return xCour!=xPrec || yCour!=yPrec;
+		return xCour!=xPrec && yCour!=yPrec;
 	}
 
 	public int[] selection(){
@@ -616,11 +617,22 @@ public class Modele {
 		return y;
 	}
 
-	public void selectionne(int x, int y){
+	public void selectionne(int x, int y, boolean deplacementScroll){
 		CadreImage cadreImage=cadreImageCourant();
+		if(deplacementScroll){
+			if(x<cadreImage.getImageScroller().getHorizontalScrollBar().getValue()){
+				x=xCour-1;
+			}else if(y<cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
+				y=yCour-1;
+			}else if(x>cadreImage.getImage().getWidth()-cadreImage.getMaxScrollX()+cadreImage.getImageScroller().getHorizontalScrollBar().getValue()){
+				x=xCour+1;
+			}else if(y>cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
+				y=yCour+1;
+			}
+		}
 		xCour=x;
 		yCour=y;
-		int a, b, c,d;
+		int a, b, c, d;
 		if(existeSelection()){
 			interfaceGraphique.getCopier().setEnabled(true);
 			interfaceGraphique.getCouper().setEnabled(true);
@@ -664,7 +676,7 @@ public class Modele {
 		d2Y=d1Y-y;
 		xPrec=xPrec-d2X;
 		yPrec=yPrec-d2Y;
-		selectionne(xCour-d2X, yCour-d2Y);
+		selectionne(xCour-d2X, yCour-d2Y, false);
 	}
 
 	public void deplacerScroll(int x, int y){
@@ -672,13 +684,13 @@ public class Modele {
 		dXscroll=dXscroll-x;
 		dYscroll=dYscroll-y;
 		if(x<cadreImage.getImageScroller().getHorizontalScrollBar().getValue()){
-			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(cadreImage.getImageScroller().getHorizontalScrollBar().getValue()-dXscroll);
-		}else if(y<cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
-			cadreImage.getImageScroller().getVerticalScrollBar().setValue(cadreImage.getImageScroller().getVerticalScrollBar().getValue()-dYscroll);
-		}else if(x>cadreImage.getImage().getWidth()-cadreImage.getMaxScrollX()+cadreImage.getImageScroller().getHorizontalScrollBar().getValue()){
-			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(cadreImage.getImageScroller().getHorizontalScrollBar().getValue()-dXscroll);
-		}else if(y>cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
-			cadreImage.getImageScroller().getVerticalScrollBar().setValue(cadreImage.getImageScroller().getVerticalScrollBar().getValue()-dYscroll);
+			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(cadreImage.getImageScroller().getHorizontalScrollBar().getValue()-1);
+		}if(y<cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
+			cadreImage.getImageScroller().getVerticalScrollBar().setValue(cadreImage.getImageScroller().getVerticalScrollBar().getValue()-1);
+		}if(x>cadreImage.getImage().getWidth()-cadreImage.getMaxScrollX()+cadreImage.getImageScroller().getHorizontalScrollBar().getValue()){
+			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(cadreImage.getImageScroller().getHorizontalScrollBar().getValue()+1);
+		}if(y>cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
+			cadreImage.getImageScroller().getVerticalScrollBar().setValue(cadreImage.getImageScroller().getVerticalScrollBar().getValue()+1);
 		}
 	}
 
@@ -688,11 +700,12 @@ public class Modele {
 		dYscroll=dYscroll-y;
 		if(x-distx1<cadreImage.getImageScroller().getHorizontalScrollBar().getValue()){
 			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(x-distx1);
-		}else if(y-disty1<cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
+		}if(y-disty1<cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue(y-disty1);
-		}else if(x+distx2>cadreImage.getImage().getWidth()-cadreImage.getMaxScrollX()+cadreImage.getImageScroller().getHorizontalScrollBar().getValue()){
+		}if(x+distx2>cadreImage.getImage().getWidth()-cadreImage.getMaxScrollX()+cadreImage.getImageScroller().getHorizontalScrollBar().getValue()){
+			//System.out.println("x "+x+", distx"+distx2+", taille image "+cadreImage.getImage().getWidth()+", max scroll "+cadreImage.getMaxScrollX()+", value courante "+cadreImage.getImageScroller().getHorizontalScrollBar().getValue());
 			cadreImage.getImageScroller().getHorizontalScrollBar().setValue((cadreImage.getImageScroller().getHorizontalScrollBar().getValue())+(x+distx2)-(cadreImage.getImage().getWidth()-cadreImage.getMaxScrollX()+cadreImage.getImageScroller().getHorizontalScrollBar().getValue()));
-		}else if(y+disty2>cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
+		}if(y+disty2>cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue((cadreImage.getImageScroller().getVerticalScrollBar().getValue())+(y+disty2)-(cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()));
 		}
 	}
@@ -864,6 +877,7 @@ public class Modele {
 	}
 
 	public void annulerSelection(){
+		controler.setSelectionActive(false);
 		xPrec=-1;
 		yPrec=-1;
 		xCour=-1;
@@ -941,7 +955,6 @@ public class Modele {
 			yCour=tmp;
 		}
 	}
-
 
 	public void remplirInit(Mat fg, int width, int height) {
 		byte[] data;
@@ -1058,10 +1071,14 @@ public class Modele {
 		if(copie!=null){
 			initAnnulerRefaire(cadreImageCourant());
 			CadreImage cadreImage = cadreImageCourant();
-			for (int i=0; i<copie.getWidth(); i++){
-				for(int j=0; j<copie.getHeight(); j++){
+			int i=0;
+			while(i<copie.getWidth() && i+xPrec<cadreImage.getImage().getWidth()){
+				int j=0;
+				while(j<copie.getHeight() && j+yPrec<cadreImage.getImage().getHeight()){
 					cadreImage.getImage().setRGB(i+xPrec, j+yPrec, copie.getRGB(i, j));
+					j++;
 				}
+				i++;
 			}
 		}
 		actualiserImageIcon();

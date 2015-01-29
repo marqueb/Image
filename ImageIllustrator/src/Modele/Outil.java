@@ -404,6 +404,12 @@ public class Outil {
 
 	public void tracer (BufferedImage image, int xPrec, int yPrec, int xCour, int yCour){
 		//System.out.println(xPrec+" "+yPrec+" "+xCour+" "+yCour);
+		while(xCour>=image.getWidth()){
+			xCour--;
+		}
+		while(yCour>=image.getHeight()){
+			yCour--;
+		}
 		for (int i=xPrec; i<= xCour; i++){
 			image.setRGB(i, yPrec,0);
 			image.setRGB(i, yCour,0);
