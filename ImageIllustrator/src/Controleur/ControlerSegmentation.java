@@ -30,8 +30,7 @@ public class ControlerSegmentation implements ActionListener{
 
 	Controler controler = null;
 
-
-	static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
+	//static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
 	static{ System.loadLibrary("opencv_java2410"); }
 
 
@@ -41,8 +40,9 @@ public class ControlerSegmentation implements ActionListener{
 	}
 
 	public void actionPerformed(ActionEvent e) {
+
 		controler.getModele().initAnnulerRefaire(controler.getModele().cadreImageCourant());
-		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
+		//System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
 		controler.setSegmentation(true);
 		controler.setFg(new Mat(controler.getModele().cadreImageCourant().getImage().getHeight(),controler.getModele().cadreImageCourant().getImage().getWidth(),CvType.CV_8UC1));
 		controler.getModele().remplirInit(controler.getFg(), controler.getModele().cadreImageCourant().getImage().getHeight(),  controler.getModele().cadreImageCourant().getImage().getWidth());
@@ -85,7 +85,7 @@ public class ControlerSegmentation implements ActionListener{
 		byte[] data2;
 		data2 = new byte[rows * cols * (int)img.elemSize()];
 		resultat.get(0, 0, data2); 
-		//Separation entre foreground et background si résultat= 0-2 => 0 si resultat= 1-3 =>1
+		//Separation entre foreground et background si rï¿½sultat= 0-2 => 0 si resultat= 1-3 =>1
 		for(int i = 0; i < data2.length; i++)
 		{
 			if(data2[i]==1|| data2[i]==3){

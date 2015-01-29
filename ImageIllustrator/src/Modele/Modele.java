@@ -233,7 +233,6 @@ public class Modele {
 					image.setRGB(i, j,outil.setR((int) (imageCumule[r]*ratio))+outil.setG((int) (imageCumule[g]*ratio))+outil.setB((int) (imageCumule[b]*ratio))+outil.setAlpha(255));
 			}
 		}
-		//cadreImageCourant().setImage(image);
 		actualiserImageIcon();
 	}
 
