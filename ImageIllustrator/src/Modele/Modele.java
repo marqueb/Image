@@ -23,7 +23,7 @@ public class Modele {
 	private InterfaceGraphique interfaceGraphique;
 	private TraiteurImage traiteurImage;
 	private Outil outil;
-
+	private int ongletPrec=-1, ongletCour=-1;;
 	private ArrayList<CadreImage> listCadreImage;
 	private ArrayList<JButton> listBoutonFermeture;
 	private CadreImage cadre_ima_fusion = null;
@@ -87,7 +87,7 @@ public class Modele {
 		return (x>=0 && x<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getWidth() && y>=0 && y<listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex()).getImage().getHeight());
 	}	
 
-	public void redimensionner( int newLargeur,int newHauteur) {
+	public void redimensionner(int newHauteur, int newLargeur) {
 		CadreImage  cadre = cadreImageCourant();
 		initAnnulerRefaire(cadre);
 		BufferedImage intermediaire =traiteurImage.redimenssionerLargeur(cadre.getImage(), newLargeur);
@@ -95,7 +95,7 @@ public class Modele {
 		actualiserImageIcon();
 	}
 
-	public void redimensionnerIntelligement( int newlargeur,int newhauteur) {
+	public void redimensionnerIntelligement(int newhauteur,int newlargeur) {
 		CadreImage  cadre = listCadreImage.get(interfaceGraphique.getTabbedPane().getSelectedIndex());
 		initAnnulerRefaire(cadre);
 		int largeur=cadre.getImage().getWidth();
@@ -182,9 +182,18 @@ public class Modele {
 					minb=b;
 			}
 		}
-		ratior=255/(maxr-minr);
-		ratiog=255/(maxg-ming);
-		ratiob=255/(maxb-minb);
+		if(maxr-minr<=0)
+			ratior=255;			
+		else
+			ratior=255/(maxr-minr);
+		if(maxg-ming<=0)
+			ratiog=255;
+		else
+			ratiog=255/(maxg-ming);
+		if(maxb-minb<=0)
+			ratiob=255;
+		else
+			ratiob=255/(maxb-minb);
 		for (int i=i_deb;i<i_fin;i++){
 			for (int j=j_deb;j<j_fin;j++){	
 				pixel = image.getRGB(i, j);
@@ -708,6 +717,10 @@ public class Modele {
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue((cadreImage.getImageScroller().getVerticalScrollBar().getValue())+(y+disty2)-(cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()));
 		}
 	}
+	
+	public int getOngletPrecedent(){
+		return ongletPrec;
+	}
 
 	public boolean isEstEgalisation() {
 		return estEgalisation;
@@ -1081,6 +1094,22 @@ public class Modele {
 			}
 		}
 		actualiserImageIcon();
+	}
+
+	public int getOngletPrec() {
+		return ongletPrec;
+	}
+
+	public void setOngletPrec(int ongletPrec) {
+		this.ongletPrec = ongletPrec;
+	}
+
+	public int getOngletCour() {
+		return ongletCour;
+	}
+
+	public void setOngletCour(int ongletCour) {
+		this.ongletCour = ongletCour;
 	}
 }
 

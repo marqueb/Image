@@ -82,6 +82,7 @@ public class Outil {
 		cadreImage.setImageScroller(imageScroller);
 		imageScroller.getHorizontalScrollBar().setValue(imageScroller.getHorizontalScrollBar().getMaximum());
 		imageScroller.getVerticalScrollBar().setValue(imageScroller.getVerticalScrollBar().getMaximum());
+		imageScroller.getVerticalScrollBar().setUnitIncrement(imageScroller.getVerticalScrollBar().getUnitIncrement()*10);
 		controler.addControlerSouris(cadreImage.getLabelImage());
 		return cadreImage;
 	}

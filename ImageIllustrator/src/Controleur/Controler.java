@@ -27,7 +27,7 @@ public class Controler{
 	private Modele modele;
 	private InterfaceGraphique it;
 	private boolean echantillonageActif=false,flouActive=false,utilisateurActive=false, fusionActive=false, 
-			selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
+			selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB, medianActif=false;
 	private Mat fg=null,bg;
 	private boolean segmentation=false, background=false, existeresultat=false;
 
@@ -37,7 +37,6 @@ public class Controler{
 	}
 
 	public void init(){
-		
 		if(echantillonageActif){
 			modele.enleverCouleurPixel();
 			modele.getInterfaceGraphique().retraitChoixRGB();
@@ -51,11 +50,11 @@ public class Controler{
 		deplacementScroll=false;
 		if(!segmentation){
 			it.getPanelOption().removeAll();
-			//it.getSegmenter().setEnabled(true);
 		}
 		if(flouActive){
 			modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
 			modele.actualiserImageIcon();
+			it.rafraichirComponentOption();
 			flouActive=false;
 		}
 		if(utilisateurActive){
@@ -63,9 +62,9 @@ public class Controler{
 			utilisateurActive=false;
 		}
 		if(fusionActive){
-			it.retirerComponent();
 			modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
 			modele.actualiserImageIcon();
+			it.rafraichirComponentOption();
 			fusionActive=false;
 		}
 		if(!modele.getListCadreImage().isEmpty()){	
@@ -104,7 +103,7 @@ public class Controler{
 	public void setInterfaceGraphique(InterfaceGraphique i){
 		this.it=i;
 	}
-	
+
 	public void addControlerCheckCouleur(JCheckBox rouge,JCheckBox vert, JCheckBox bleu,JCheckBox luminence, JCheckBox chrominenceU,JCheckBox chrominenceV){
 		rouge.addActionListener(new ControlerCheckCouleur(it,it.getHisto()));
 		vert.addActionListener(new ControlerCheckCouleur(it,it.getHisto()));
@@ -172,11 +171,47 @@ public class Controler{
 	}
 
 	public void changerOnglet(){
-		init();
-		if(modele.existeSelection()){
-			modele.annulerSelection();
+		int precedent=modele.getOngletPrec();
+		if(precedent!=-1){
+			modele.actualiserImageIcon();
+			if(echantillonageActif){
+				modele.enleverCouleurPixel();
+				modele.getInterfaceGraphique().retraitChoixRGB();
+			}
+			if(modele.isImageVide()){
+				modele.getInterfaceGraphique().setEnable(false);
+			}
+			echantillonageActif=false;
+			selectionActive=false;
+			ajustementSelection=false;
+			deplacementScroll=false;
+			if(!segmentation){
+				it.getPanelOption().removeAll();
+			}
+			if(flouActive){
+				modele.getListCadreImage().get(precedent).setImage(modele.getImaAvantTraitement());
+				it.rafraichirComponentOption();
+				flouActive=false;
+			}
+			if(utilisateurActive){
+				it.retirerComponent();
+				utilisateurActive=false;
+			}
+			if(fusionActive){
+				modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
+				it.rafraichirComponentOption();
+				fusionActive=false;
+			}
+			if(!modele.getListCadreImage().isEmpty()){	
+				it.rafraichirComponentOption();
+			}
+			it.getPanelOption().validate();
+			it.getFrame().validate();
+			if(modele.existeSelection()){
+				modele.annulerSelection();
+			}
 		}
-
+		modele.setOngletPrec(modele.getInterfaceGraphique().getTabbedPane().getSelectedIndex());
 		if(!modele.getListImage().isEmpty()){
 			if(modele.cadreImageCourant().getAnnuler().isEmpty()){
 				it.getAnnuler().setEnabled(false);
@@ -201,6 +236,33 @@ public class Controler{
 	}
 
 	public void fermerOnglet(Object o){
+
+		//System.out.println("precedent1");
+		if(!segmentation){
+			it.getPanelOption().removeAll();
+		}
+		if(flouActive){
+			modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
+			modele.actualiserImageIcon();
+			it.rafraichirComponentOption();
+			flouActive=false;
+		}
+		if(utilisateurActive){
+			it.retirerComponent();
+			utilisateurActive=false;
+		}
+		if(fusionActive){
+			modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
+			modele.actualiserImageIcon();
+			it.rafraichirComponentOption();
+			fusionActive=false;
+		}
+		if(!modele.getListCadreImage().isEmpty()){	
+			it.rafraichirComponentOption();
+		}
+		it.getPanelOption().validate();
+		it.getFrame().validate();
+		modele.setOngletPrec(-1);
 		modele.fermerOnglet(o);
 	}
 
@@ -418,17 +480,17 @@ public class Controler{
 		modele.refaire();
 		//modele.annulerSelection();
 	}
-	
+
 	public void copier(){
 		init();
 		modele.copier();
 	}
-	
+
 	public void coller(){
 		init();
 		modele.coller();
 	}
-	
+
 	public void couper(){
 		init();
 		modele.couper();
@@ -496,6 +558,7 @@ public class Controler{
 
 	public void addControlerChoixTailleFiltre(JComboBox<String> boxTaille, JButton annuler, JButton b, TypeFiltre filtre, JComboBox<String> typeFlou)
 	{
+		//init();
 		ControlerChoixTailleFiltre c =new ControlerChoixTailleFiltre(this, filtre, typeFlou, boxTaille);
 		if(typeFlou!=null) typeFlou.addActionListener(c);
 		annuler.addActionListener(c);
@@ -515,6 +578,7 @@ public class Controler{
 
 	public void addControlerFiltreUser(JButton valider, JButton annuler, JButton previsualiser, JComboBox<String> boxChoixTailleFiltre, JPanel panelUser)
 	{
+		init();
 		ControlerFiltreUser c = new ControlerFiltreUser(this.it, this.modele, boxChoixTailleFiltre, panelUser);		
 		previsualiser.addActionListener(c);
 		annuler.addActionListener(c);
@@ -626,15 +690,15 @@ public class Controler{
 		valider.addActionListener(new ControlerSegmentationValider(this));
 
 	}
-	
+
 	public void addControlerCopier(JMenuItem copier) {
 		copier.addActionListener(new ControlerCopier(this));
 	}
-	
+
 	public void addControlerCouper(JMenuItem couper) {
 		couper.addActionListener(new ControlerCouper(this));
 	}
-	
+
 	public void addControlerColler(JMenuItem coller) {
 		coller.addActionListener(new ControlerColler(this));
 	}
@@ -654,7 +718,7 @@ public class Controler{
 	public void setSelectionActive(boolean selectionActive) {
 		this.selectionActive = selectionActive;
 	}
-	
+
 	public boolean isBackground() {
 		return background;
 	}
@@ -669,5 +733,21 @@ public class Controler{
 
 	public void setBackground(boolean background) {
 		this.background = background;
+	}
+
+	public boolean isMedianActif() {
+		return medianActif;
+	}
+
+	public void setMedianActif(boolean medianActif) {
+		this.medianActif = medianActif;
+	}
+
+	public boolean isFlouActive() {
+		return flouActive;
+	}
+
+	public void setFlouActive(boolean flouActive) {
+		this.flouActive = flouActive;
 	}
 }

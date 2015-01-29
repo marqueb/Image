@@ -20,6 +20,8 @@ public class ControlerMedian implements ActionListener{
 
 	public void actionPerformed(ActionEvent e) {
 		modele.memoriseImage();
+		modele.getControler().init();
+		modele.getControler().setFlouActive(true);
 		it.ajouterComponentChoixTailleFiltre(TypeFiltre.MEDIAN);
 	}
 
