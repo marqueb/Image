@@ -29,7 +29,7 @@ public class Controler{
 	private boolean echantillonageActif=false,flouActive=false,utilisateurActive=false, fusionActive=false, 
 			selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
 	private Mat fg=null,bg;
-	private boolean segmentation=false, background=false;
+	private boolean segmentation=false, background=false, existeresultat=false;
 
 	public boolean selectionActive()
 	{
@@ -656,6 +656,14 @@ public class Controler{
 	
 	public boolean isBackground() {
 		return background;
+	}
+
+	public boolean isExisteresultat() {
+		return existeresultat;
+	}
+
+	public void setExisteresultat(boolean existeresultat) {
+		this.existeresultat = existeresultat;
 	}
 
 	public void setBackground(boolean background) {
