@@ -14,12 +14,12 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+
+//import org.opencv.core.Mat;
 
 import Modele.Modele;
 import Modele.TypeFiltre;
-import Vue.CadreImage;
 import Vue.InterfaceGraphique;
 
 
@@ -27,7 +27,12 @@ public class Controler{
 	private Modele modele;
 	private InterfaceGraphique it;
 	private boolean echantillonageActif=false,flouActive=false,utilisateurActive=false, fusionActive=false, 
+<<<<<<< HEAD
 			selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB, medianActif=false;
+=======
+			selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
+
+>>>>>>> branch 'master' of https://github.com/marqueb/Image.git
 	private Mat fg=null,bg;
 	private boolean segmentation=false, background=false, existeresultat=false;
 
@@ -368,7 +373,6 @@ public class Controler{
 		}
 
 	}
-
 	public Mat getFg() {
 		return fg;
 	}
@@ -390,7 +394,12 @@ public class Controler{
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
 		if(segmentation){
+<<<<<<< HEAD
+//			modele.remplirMatrice(fg, selection[0], selection[1], x, y,modele.cadreImageCourant().getImage().getHeight(),modele.cadreImageCourant().getImage().getWidth(),background);
+			System.out.println(selection[0]+" "+selection[1]+" "+x+" "+y);
+=======
 			modele.remplirMatrice(fg, selection[0], selection[1], x, y,modele.cadreImageCourant().getImage().getHeight(),modele.cadreImageCourant().getImage().getWidth(),background);
+>>>>>>> branch 'master' of https://github.com/marqueb/Image.git
 		}
 		if(ajustementSelection){
 			x=modele.ajustementSelectionX(x);
