@@ -2,8 +2,8 @@ package Modele;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Random;
 
 //classe outils
 public class TraiteurImage {
@@ -60,7 +60,7 @@ public class TraiteurImage {
 				&& selection[1]<=decalageBord && selection[3]>=bufIma_in.getHeight()-decalageBord-1))
 		{
 			im_agr = new BufferedImage(bufIma_in.getWidth()+2*decalageBord, bufIma_in.getHeight()+2*decalageBord,BufferedImage.TYPE_INT_ARGB);
-			
+
 			for(i=0; i<decalageBord; i++)
 			{
 				im_agr.setRGB(i, 0, 0);
@@ -83,17 +83,17 @@ public class TraiteurImage {
 		{
 			im_agr = bufIma_in;
 		}
-		
+
 		int i_deb, i_fin, j_deb, j_fin;
 		if(existeSelection && selection[0]>=decalageBord) i_deb=selection[0];
 		else i_deb = decalageBord;
 		if(existeSelection && selection[2]<=bufIma_in.getWidth()-decalageBord-1) i_fin=selection[2];
-		else i_fin = bufIma_in.getWidth()-1-decalageBord;
+		else i_fin = im_agr.getWidth()-1-decalageBord;
 		if(existeSelection && selection[1]>=decalageBord) j_deb=selection[1];
 		else j_deb = decalageBord;
 		if(existeSelection && selection[3]<=bufIma_in.getHeight()-decalageBord-1) j_fin=selection[3];
-		else j_fin = bufIma_in.getHeight()-1-decalageBord;
-		
+		else j_fin = im_agr.getHeight()-1-decalageBord;
+
 		tmp = new BufferedImage(im_agr.getWidth(), im_agr.getHeight(),BufferedImage.TYPE_INT_ARGB);
 		//on applique la convolution ï¿½ la partie "Same" de l'image.
 		for(i=i_deb; i<i_fin; i++)
@@ -103,7 +103,7 @@ public class TraiteurImage {
 				tmp.setRGB(i, j, convolutionOneStep(im_agr, i, j, ker)+outil.setAlpha(255));
 			}
 		}
-		
+
 		//supprimer les bords ajoutés
 		if(selection==null || 
 				(selection[0]<=decalageBord && selection[2]>=bufIma_in.getWidth()-decalageBord-1
@@ -113,7 +113,7 @@ public class TraiteurImage {
 			{
 				for(j=0; j<bufIma_in.getHeight()-1; j++)
 				{
-					bufIma_out.setRGB(i, j, bufIma_in.getRGB(decalageBord+i, decalageBord+j));
+					bufIma_out.setRGB(i, j, tmp.getRGB(decalageBord+i, decalageBord+j));
 				}
 			}
 		}
@@ -121,7 +121,7 @@ public class TraiteurImage {
 		{
 			bufIma_out = tmp;
 		}
-		
+
 		return bufIma_out;
 	}
 
@@ -133,35 +133,35 @@ public class TraiteurImage {
 		int i=0, j=0;
 
 		//si la convolution est sur toute l'image ou trop près d'un bord
-				//agrandir l'image avec les zones ajoutées initialisées à 0
-				if(selection==null || 
-						(selection[0]<=decalageBord && selection[2]>=bufIma_in.getWidth()-decalageBord-1
-						&& selection[1]<=decalageBord && selection[3]>=bufIma_in.getHeight()-decalageBord-1))
+		//agrandir l'image avec les zones ajoutées initialisées à 0
+		if(selection==null || 
+				(selection[0]<=decalageBord && selection[2]>=bufIma_in.getWidth()-decalageBord-1
+				&& selection[1]<=decalageBord && selection[3]>=bufIma_in.getHeight()-decalageBord-1))
+		{
+			im_agr = new BufferedImage(bufIma_in.getWidth()+2*decalageBord, bufIma_in.getHeight()+2*decalageBord,BufferedImage.TYPE_INT_ARGB);
+
+			for(i=0; i<decalageBord; i++)
+			{
+				im_agr.setRGB(i, 0, 0);
+				im_agr.setRGB(im_agr.getWidth()-1-i, 0, outil.setR(0)+outil.setG(0)+outil.setB(0)+outil.setAlpha(255));
+			}
+			for(j=0; j<decalageBord; j++)
+			{
+				im_agr.setRGB(0, j, 0);
+				im_agr.setRGB(0, im_agr.getHeight()-1-decalageBord, 0);
+			}
+			for(i=0; i<bufIma_in.getWidth()-1; i++)
+			{
+				for(j=0; j<bufIma_in.getHeight()-1; j++)
 				{
-					im_agr = new BufferedImage(bufIma_in.getWidth()+2*decalageBord, bufIma_in.getHeight()+2*decalageBord,BufferedImage.TYPE_INT_ARGB);
-					
-					for(i=0; i<decalageBord; i++)
-					{
-						im_agr.setRGB(i, 0, 0);
-						im_agr.setRGB(im_agr.getWidth()-1-i, 0, outil.setR(0)+outil.setG(0)+outil.setB(0)+outil.setAlpha(255));
-					}
-					for(j=0; j<decalageBord; j++)
-					{
-						im_agr.setRGB(0, j, 0);
-						im_agr.setRGB(0, im_agr.getHeight()-1-decalageBord, 0);
-					}
-					for(i=0; i<bufIma_in.getWidth()-1; i++)
-					{
-						for(j=0; j<bufIma_in.getHeight()-1; j++)
-						{
-							im_agr.setRGB(decalageBord+i, decalageBord+j, bufIma_in.getRGB(i, j));
-						}
-					}
+					im_agr.setRGB(decalageBord+i, decalageBord+j, bufIma_in.getRGB(i, j));
 				}
-				else//pas besoin d'ajouter des zéros autour de l'image
-				{
-					im_agr = bufIma_in;
-				}
+			}
+		}
+		else//pas besoin d'ajouter des zéros autour de l'image
+		{
+			im_agr = tmp;
+		}
 
 
 		int i_deb, i_fin, j_deb, j_fin;
@@ -175,7 +175,7 @@ public class TraiteurImage {
 		else j_fin = bufIma_in.getHeight()-decalageBord-1;
 
 		tmp = new BufferedImage(im_agr.getWidth(), im_agr.getHeight(),BufferedImage.TYPE_INT_ARGB);
-		
+
 		//on applique la convolution ï¿½ la partie "SAME" de l'image.
 		for(i=i_deb; i<i_fin; i++)
 		{
@@ -184,25 +184,25 @@ public class TraiteurImage {
 				tmp.setRGB(i, j, FiltreConvolution.GetValueFiltreMedian(i, j, nbVoisin, im_agr)+outil.setAlpha(255));
 			}
 		}
-		
+
 		//supprimer les bords ajoutés
-				if(selection==null || 
-						(selection[0]<=decalageBord && selection[2]>=bufIma_in.getWidth()-decalageBord-1
-						&& selection[1]<=decalageBord && selection[3]>=bufIma_in.getHeight()-decalageBord-1))
+		if(selection==null || 
+				(selection[0]<=decalageBord && selection[2]>=bufIma_in.getWidth()-decalageBord-1
+				&& selection[1]<=decalageBord && selection[3]>=bufIma_in.getHeight()-decalageBord-1))
+		{
+			for(i=0; i<bufIma_in.getWidth()-1; i++)
+			{
+				for(j=0; j<bufIma_in.getHeight()-1; j++)
 				{
-					for(i=0; i<bufIma_in.getWidth()-1; i++)
-					{
-						for(j=0; j<bufIma_in.getHeight()-1; j++)
-						{
-							bufIma_out.setRGB(i, j, bufIma_in.getRGB(decalageBord+i, decalageBord+j));
-						}
-					}
+					bufIma_out.setRGB(i, j, tmp.getRGB(decalageBord+i, decalageBord+j));
 				}
-				else//si pas de bords ajoutés
-				{
-					bufIma_out = tmp;
-				}
-				
+			}
+		}
+		else//si pas de bords ajoutés
+		{
+			bufIma_out = tmp;
+		}
+
 		return bufIma_out;
 	}
 
@@ -382,9 +382,12 @@ public class TraiteurImage {
 
 	public BufferedImage redimensionnerIntelligement(int largeur, int hauteur,	int newlargeur, int newhauteur, BufferedImage image) 
 	{
-//		System.out.println("(largeur, hauteur) = ("+largeur+", "+hauteur+"); (newLargeur, newHauteur) = ("+newlargeur+", "+newhauteur+")");
+		//		System.out.println("(largeur, hauteur) = ("+largeur+", "+hauteur+"); (newLargeur, newHauteur) = ("+newlargeur+", "+newhauteur+")");
 		//si pas de redimensionnement
-		if(largeur == newlargeur && hauteur == newhauteur)	return image;
+		if(largeur == newlargeur && hauteur == newhauteur)
+		{
+			return calculerImageEnergie(image);
+		}
 
 		//calculer image energie
 		//		BufferedImage im_energie = calculerImageEnergie(image);
@@ -439,7 +442,7 @@ public class TraiteurImage {
 
 	private BufferedImage calculerImageEnergie(BufferedImage image)
 	{
-		return outil.imagris(this.convoluer(FiltreConvolution.getNoyauLaplacien3x3(), image, false, null), false, null);
+		return this.convoluer(FiltreConvolution.getNoyauLaplacien3x3(), image/*outil.imagris(image, false, null)*/, false, null);
 	}
 
 
@@ -489,12 +492,12 @@ public class TraiteurImage {
 	private CaseTableauChemins[][] calculerCheminsMoinsCouteuxEnLargeur(BufferedImage image)
 	{
 		CaseTableauChemins[][] chemins = new CaseTableauChemins[image.getWidth()][image.getHeight()];
-		int i = 0, j = 0, min = Integer.MAX_VALUE;
+		int i = 0, j = 0, min = Integer.MAX_VALUE, diffCouleur = 0, diffR = 0, diffG = 0, diffB = 0, ind_j = 0;
 		Direction direction = Direction.MILIEU;
 
 		for(j=0; j<image.getHeight(); j++)
 		{
-			chemins[0][j] = new CaseTableauChemins(image.getRGB(0, j), Direction.INIT);
+			chemins[0][j] = new CaseTableauChemins(outil.getR(image.getRGB(0, j))+outil.getG(image.getRGB(0, j))+outil.getB(image.getRGB(0, j)), Direction.INIT);
 		}
 
 		int valCurrent = 0;
@@ -505,19 +508,26 @@ public class TraiteurImage {
 
 				min = chemins[i-1][j].value;
 				direction = Direction.MILIEU;
+				ind_j = j;
 
 				if(j!=0 && chemins[i-1][j-1].value<min)
 				{
 					min = chemins[i-1][j-1].value;
 					direction = Direction.GAUCHE;
+					ind_j = j-1;
 				}
 				if(j<image.getHeight()-1 && chemins[i-1][j+1].value < min)
 				{
 					min = chemins[i-1][j+1].value;
 					direction = Direction.DROITE;
+					ind_j = j+1;
 				}
 				valCurrent = outil.getR(image.getRGB(i, j))+outil.getG(image.getRGB(i, j))+outil.getB(image.getRGB(i, j));
-				chemins[i][j] = new CaseTableauChemins(min+valCurrent, direction);
+				diffR = Math.abs(outil.getR(image.getRGB(i, j))-outil.getR(image.getRGB(i-1, ind_j)));
+				diffG = Math.abs(outil.getG(image.getRGB(i, j))-outil.getG(image.getRGB(i-1, ind_j)));
+				diffB = Math.abs(outil.getB(image.getRGB(i, j))-outil.getB(image.getRGB(i-1, ind_j)));
+				diffCouleur = diffR+diffG+diffB;
+				chemins[i][j] = new CaseTableauChemins(min+valCurrent+diffCouleur, direction);
 			}
 		}
 
@@ -533,11 +543,12 @@ public class TraiteurImage {
 	{
 		CaseTableauChemins[][] chemins = new CaseTableauChemins[image.getWidth()][image.getHeight()];
 		int i = 0, j = 0, min = outil.setR(255)+outil.setB(255)+outil.setG(255);
+		int diffCouleur = 0, diffR = 0, diffG = 0, diffB = 0, ind_i = 0;
 		Direction direction = Direction.MILIEU;
 
 		for(i=0; i<image.getWidth(); i++)
 		{
-			chemins[i][0] = new CaseTableauChemins(image.getRGB(i, 0), Direction.INIT);
+			chemins[i][0] = new CaseTableauChemins(outil.getR(image.getRGB(i, 0))+outil.getG(image.getRGB(i, 0))+outil.getB(image.getRGB(i, 0)), Direction.INIT);
 		}
 
 		int valCurrent = 0;
@@ -547,19 +558,26 @@ public class TraiteurImage {
 			{
 				min = chemins[i][j-1].value;
 				direction = Direction.MILIEU;
+				ind_i = i;
 
 				if(i!=0 && chemins[i-1][j-1].value<min)
 				{
 					min = chemins[i-1][j-1].value;
 					direction = Direction.GAUCHE;
+					ind_i = i-1;
 				}
 				if(i<image.getWidth()-1 && chemins[i+1][j-1].value < min)
 				{
 					min = chemins[i+1][j-1].value;
 					direction = Direction.DROITE;
+					ind_i = i+1;
 				}
 				valCurrent = outil.getR(image.getRGB(i, j))+outil.getG(image.getRGB(i, j))+outil.getB(image.getRGB(i, j));
-				chemins[i][j] = new CaseTableauChemins(min+valCurrent, direction);
+				diffR = Math.abs(outil.getR(image.getRGB(i, j))-outil.getR(image.getRGB(ind_i, j-1)));
+				diffG = Math.abs(outil.getG(image.getRGB(i, j))-outil.getG(image.getRGB(ind_i, j-1)));
+				diffB = Math.abs(outil.getB(image.getRGB(i, j))-outil.getB(image.getRGB(ind_i, j-1)));
+				diffCouleur = diffR+diffG+diffB;
+				chemins[i][j] = new CaseTableauChemins(min+valCurrent+diffCouleur, direction);
 			}
 		}
 
@@ -1345,7 +1363,7 @@ public class TraiteurImage {
 		BufferedImage newimage = new BufferedImage(image.getWidth(), newhauteur,BufferedImage.TYPE_INT_ARGB);
 
 
-		int pas = 30;
+		int pas = 1;
 		int nbPix = Math.abs(image.getHeight() - newhauteur);
 
 		CheminsASupprimer cheminsASupprimer = null;
@@ -1353,6 +1371,7 @@ public class TraiteurImage {
 
 		if(image.getHeight() < newhauteur) //agrandir en hauteur
 		{
+			pas = image.getHeight()/50;
 			while(nbPix>pas)
 			{
 				cheminsASupprimer = calculerCheminsMoinsCouteuxEnLargeurQuiCroisePas(image, pas);
@@ -1393,7 +1412,7 @@ public class TraiteurImage {
 		BufferedImage newimage = new BufferedImage(newlargeur, image.getHeight(),BufferedImage.TYPE_INT_ARGB);
 
 
-		int pas = 30;
+		int pas = 1;
 		int nbPix = Math.abs(image.getWidth() - newlargeur);
 
 		CheminsASupprimer cheminsASupprimer = null;
@@ -1405,6 +1424,7 @@ public class TraiteurImage {
 
 		if(image.getWidth() < newlargeur) //agrandir en largeur
 		{
+			pas = image.getWidth()/50;
 			while(nbPix>pas)
 			{
 				cheminsASupprimer = calculerCheminsMoinsCouteuxEnHauteurQuiCroisePas(image, pas);
@@ -1440,16 +1460,26 @@ public class TraiteurImage {
 	{
 		CheminsASupprimer cheminsASupprimer = null;
 		int[] indicesChemins = new int[nbCheminATrouver];
+		
 		CaseTableauChemins[][] chemins = new CaseTableauChemins[image.getWidth()][image.getHeight()];
+		
 		BufferedImage im_poids = this.calculerImageEnergie(image);
 		chemins = this.calculerCheminsMoinsCouteuxEnLargeur(im_poids);
+		
 		//pour le nombre de chemin à trouver
 		for(int cpt = 0; cpt < nbCheminATrouver; cpt++)
 		{
 			//			-calcul des poids des chemins qui n'en traverse pas d'autre
 			chemins = calculerPoidsCheminsCroisePasEnLargeur(im_poids, chemins);
 			//			-mémorer indice chemin poids min
-			indicesChemins[cpt] = trouverCheminCroisePasPoidsMinEnLargeur(chemins, indicesChemins, cpt);
+			if(nbCheminATrouver==1)
+			{
+				indicesChemins[cpt] = trouverCheminCroisePasPoidsMinEnLargeur(chemins, indicesChemins, cpt);
+			}
+			else
+			{
+				indicesChemins[cpt] = trouverCheminCroisePasPoidsMinEnLargeurAleatoire(chemins, indicesChemins, cpt);
+			}
 			//			-marquerChemin(indice chemin poids min)
 			//			System.out.println(indicesChemins.toString());
 			//			System.out.flush();
@@ -1482,7 +1512,14 @@ public class TraiteurImage {
 			//			-calcul des poids des chemins qui n'en traverse pas d'autre
 			chemins = calculerPoidsCheminsCroisePasEnHauteur(im_poids, chemins);
 			//			-mï¿½morer indice chemin poids min
-			indicesChemins[cpt] = trouverCheminCroisePasPoidsMinEnHauteur(chemins, indicesChemins, cpt);
+			if(nbCheminATrouver==1)
+			{
+				indicesChemins[cpt] = trouverCheminCroisePasPoidsMinEnHauteur(chemins, indicesChemins, cpt);
+			}
+			else
+			{
+				indicesChemins[cpt] = trouverCheminCroisePasPoidsMinEnHauteurAleatoire(chemins, indicesChemins, cpt);
+			}
 			//			-marquerChemin(indice chemin poids min)
 			//			System.out.println(indicesChemins.toString());
 			//			System.out.flush();
@@ -1560,6 +1597,84 @@ public class TraiteurImage {
 	}
 
 
+
+	private int trouverCheminCroisePasPoidsMinEnLargeurAleatoire(CaseTableauChemins[][] chemins, int[] indices, int nbElmt)
+	{
+		int indice = 0;
+		int nbVal = chemins[0].length/2;
+
+		ArrayList<Integer> listIndiceMin = new ArrayList<Integer>();
+		ArrayList<Integer> listVals = new ArrayList<Integer>();
+		ArrayList<Integer> listValsMin = new ArrayList<Integer>();
+
+		//on récupere les valeurs des chemins
+		for(int j = 0; j < chemins[0].length; j++)
+		{
+			listVals.add(chemins[chemins.length-1][j].value);
+		}
+		//on tri les valeurs des chemins
+		Collections.sort(listVals);
+		
+		//on mémorise les valeurs les plus faible
+		if(listVals.size()>nbVal) for(int j = 0; j < nbVal; j++) listValsMin.add(listVals.get(j));
+		else for(int j = 0; j < listVals.size(); j++) listValsMin.add(listVals.get(j));
+		
+		//on cherche les indices des chemins ayant les plus faibles valeurs
+		for(int j = 0; j < chemins[0].length; j++)
+		{
+			if(listValsMin.contains(chemins[chemins.length-1][j].value) && pasDejaPresent(j, indices, nbElmt) && this.cheminLibre(j, chemins, "LARGEUR"))
+			{
+				listIndiceMin.add(j);
+			}
+		}
+		//on choisi un chemin aléatoirement parmis les meilleurs
+		Random generator = new Random(chemins[0].length*chemins.length);
+		if(listIndiceMin.size()<nbVal)		indice = listIndiceMin.get(Math.abs(generator.nextInt())%listIndiceMin.size());
+		else if(listIndiceMin.size()>0) indice = listIndiceMin.get(Math.abs(generator.nextInt())%nbVal);
+		
+		return indice;
+	}
+	
+	
+	
+	private int trouverCheminCroisePasPoidsMinEnHauteurAleatoire(CaseTableauChemins[][] chemins, int[] indices, int nbElmt)
+	{
+		int indice = 0;
+		int nbVal = chemins.length/2;
+
+		ArrayList<Integer> listIndiceMin = new ArrayList<Integer>();
+		ArrayList<Integer> listVals = new ArrayList<Integer>();
+		ArrayList<Integer> listValsMin = new ArrayList<Integer>();
+
+		//on récupere les valeurs des chemins
+		for(int i = 0; i < chemins.length; i++)
+		{
+			listVals.add(chemins[i][chemins[0].length-1].value);
+		}
+		//on tri les valeurs des chemins
+		Collections.sort(listVals);
+		
+		//on mémorise les valeurs les plus faible
+		if(listVals.size()>nbVal) for(int j = 0; j < nbVal; j++) listValsMin.add(listVals.get(j));
+		else for(int j = 0; j < listVals.size(); j++) listValsMin.add(listVals.get(j));
+		
+		//on cherche les indices des chemins ayant les plus faibles valeurs
+		for(int i = 0; i < chemins.length; i++)
+		{
+			if(listValsMin.contains(chemins[i][chemins[0].length-1].value) && pasDejaPresent(i, indices, nbElmt) && this.cheminLibre(i, chemins, "HAUTEUR"))
+			{
+				listIndiceMin.add(i);
+			}
+		}
+		//on choisi un chemin aléatoirement parmis les meilleurs
+		Random generator = new Random(chemins[0].length*chemins.length);
+		if(listIndiceMin.size()<nbVal)		indice = listIndiceMin.get(Math.abs(generator.nextInt())%listIndiceMin.size());
+		else if(listIndiceMin.size()>0) indice = listIndiceMin.get(Math.abs(generator.nextInt())%nbVal);
+		
+		return indice;
+	}
+
+
 	private int trouverCheminCroisePasPoidsMinEnHauteur(CaseTableauChemins[][] chemins, int[] indices, int nbElmt)
 	{
 		int indice = 0;
@@ -1633,13 +1748,15 @@ public class TraiteurImage {
 	private CaseTableauChemins[][] calculerPoidsCheminsCroisePasEnLargeur(BufferedImage image, CaseTableauChemins[][] chemins_in)
 	{
 		CaseTableauChemins[][] chemins = new CaseTableauChemins[image.getWidth()][image.getHeight()];
-		int i = 0, j = 0, min = Integer.MAX_VALUE;
+		int i = 0, j = 0, min = Integer.MAX_VALUE, rgb = 0;
+		int diffCouleur = 0, diffR = 0, diffG = 0, diffB = 0, ind_j = 0;
 		Direction direction = Direction.MILIEU;
 
 		//on initialise les premieres valeurs
 		for(j=0; j<image.getHeight(); j++)
 		{
-			chemins[0][j] = new CaseTableauChemins(image.getRGB(0, j), Direction.INIT);
+			rgb = image.getRGB(0, j);
+			chemins[0][j] = new CaseTableauChemins(outil.getR(rgb)+outil.getG(rgb)+outil.getB(rgb), Direction.INIT);
 			chemins[0][j].estCheminLibre = chemins_in[0][j].estCheminLibre;
 		}
 
@@ -1653,17 +1770,25 @@ public class TraiteurImage {
 
 				min = Integer.MAX_VALUE;
 
+				
+//				diffR = Math.abs(outil.getR(image.getRGB(i, j))-outil.getR(image.getRGB(i-1, j-1)));
+//				diffG = Math.abs(outil.getG(image.getRGB(i, j))-outil.getG(image.getRGB(i-1, j-1)));
+//				diffB = Math.abs(outil.getB(image.getRGB(i, j))-outil.getB(image.getRGB(i-1, j-1)));
+//				diffCouleur = diffR+diffG+diffB;
+				
 				if(j!=0 && chemins[i-1][j-1].value < min && chemins_in[i-1][j-1].estCheminLibre==true
 						&& chemins_in[i-1][j].estCheminLibre==true)
 				{
 					min = chemins[i-1][j-1].value;
 					direction = Direction.GAUCHE;
+					ind_j = j-1;
 				}
 
 				if(chemins[i-1][j].value < min && chemins_in[i-1][j].estCheminLibre==true)
 				{
 					min = chemins[i-1][j].value;
 					direction = Direction.MILIEU;
+					ind_j = j;
 				}
 
 				if(j<image.getHeight()-1 && j>0 && chemins[i-1][j-1].value< min
@@ -1671,15 +1796,21 @@ public class TraiteurImage {
 				{
 					min = chemins[i-1][j+1].value;
 					direction = Direction.DROITE;
+					ind_j = j+1;
 				}
 				if(min==Integer.MAX_VALUE) 
 				{
 					//					System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAYYYYYE");
 					min = chemins[i-1][j].value;
 					direction = Direction.MILIEU;
+					ind_j = j;
 				}
 				valCurrent = outil.getR(image.getRGB(i, j))+outil.getG(image.getRGB(i, j))+outil.getB(image.getRGB(i, j));
-				chemins[i][j] = new CaseTableauChemins(min+valCurrent, direction);
+				diffR = Math.abs(outil.getR(image.getRGB(i, j))-outil.getR(image.getRGB(i-1, ind_j)));
+				diffG = Math.abs(outil.getG(image.getRGB(i, j))-outil.getG(image.getRGB(i-1, ind_j)));
+				diffB = Math.abs(outil.getB(image.getRGB(i, j))-outil.getB(image.getRGB(i-1, ind_j)));
+				diffCouleur = diffR+diffG+diffB;
+				chemins[i][j] = new CaseTableauChemins(min+valCurrent+diffCouleur, direction);
 				chemins[i][j].estCheminLibre = chemins_in[i][j].estCheminLibre;
 			}
 		}
@@ -1692,13 +1823,15 @@ public class TraiteurImage {
 	private CaseTableauChemins[][] calculerPoidsCheminsCroisePasEnHauteur(BufferedImage image, CaseTableauChemins[][] chemins_in)
 	{
 		CaseTableauChemins[][] chemins = new CaseTableauChemins[image.getWidth()][image.getHeight()];
-		int i = 0, j = 0, min = Integer.MAX_VALUE;
+		int i = 0, j = 0, min = Integer.MAX_VALUE, rgb = 0;
+		int diffCouleur = 0, diffR = 0, diffG = 0, diffB = 0, ind_i = 0;
 		Direction direction = Direction.MILIEU;
 
 		//on initialise les premieres valeurs
 		for(i=0; i<image.getWidth(); i++)
 		{
-			chemins[i][0] = new CaseTableauChemins(image.getRGB(i, 0), Direction.INIT);
+			rgb = image.getRGB(i, 0);
+			chemins[i][0] = new CaseTableauChemins(outil.getR(rgb)+outil.getG(rgb)+outil.getB(rgb), Direction.INIT);
 			chemins[i][0].estCheminLibre = chemins_in[i][0].estCheminLibre;
 		}
 
@@ -1716,12 +1849,14 @@ public class TraiteurImage {
 				{
 					min = chemins[i-1][j-1].value;
 					direction = Direction.GAUCHE;
+					ind_i = i-1;
 				}
 
 				if(chemins[i][j-1].value < min && chemins_in[i][j-1].estCheminLibre==true)
 				{
 					min = chemins[i][j-1].value;
 					direction = Direction.MILIEU;
+					ind_i = i;
 				}
 
 				if(i<image.getWidth()-1 && i>0 && chemins[i-1][j-1].value< min
@@ -1729,15 +1864,21 @@ public class TraiteurImage {
 				{
 					min = chemins[i+1][j-1].value;
 					direction = Direction.DROITE;
+					ind_i = i+1;
 				}
 				if(min==Integer.MAX_VALUE) 
 				{
 					//					System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAYYYYYE");
 					min = chemins[i][j-1].value;
 					direction = Direction.MILIEU;
+					ind_i = i;
 				}
 				valCurrent = outil.getR(image.getRGB(i, j))+outil.getG(image.getRGB(i, j))+outil.getB(image.getRGB(i, j));
-				chemins[i][j] = new CaseTableauChemins(min+valCurrent, direction);
+				diffR = Math.abs(outil.getR(image.getRGB(i, j))-outil.getR(image.getRGB(ind_i, j-1)));
+				diffG = Math.abs(outil.getG(image.getRGB(i, j))-outil.getG(image.getRGB(ind_i, j-1)));
+				diffB = Math.abs(outil.getB(image.getRGB(i, j))-outil.getB(image.getRGB(ind_i, j-1)));
+				diffCouleur = diffR+diffG+diffB;
+				chemins[i][j] = new CaseTableauChemins(min+valCurrent+diffCouleur, direction);
 				chemins[i][j].estCheminLibre = chemins_in[i][j].estCheminLibre;
 			}
 		}
@@ -1750,13 +1891,14 @@ public class TraiteurImage {
 	private CaseTableauChemins[][] calculerPoidsCheminsEnHauteur(BufferedImage image)
 	{
 		CaseTableauChemins[][] chemins = new CaseTableauChemins[image.getWidth()][image.getHeight()];
-		int i = 0, j = 0, min = Integer.MAX_VALUE;
+		int i = 0, j = 0, min = Integer.MAX_VALUE, rgb = 0;
 		Direction direction = Direction.MILIEU;
 
 		//on initialise les premieres valeurs
 		for(i=0; i<image.getWidth(); i++)
 		{
-			chemins[i][0] = new CaseTableauChemins(image.getRGB(i, 0), Direction.INIT);
+			rgb = image.getRGB(i, 0);
+			chemins[i][0] = new CaseTableauChemins(outil.getR(rgb)+outil.getG(rgb)+outil.getB(rgb), Direction.INIT);
 			chemins[i][0].estCheminLibre = chemins[i][0].estCheminLibre;
 		}
 

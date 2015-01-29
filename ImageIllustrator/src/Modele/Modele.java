@@ -8,7 +8,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import org.opencv.core.Mat;
 
@@ -946,9 +945,9 @@ public class Modele {
 
 	public void remplirInit(Mat fg, int width, int height) {
 		byte[] data;
-		data = new byte[height * width *3];
+	data = new byte[height * width *3];
 		fg.get(0, 0, data);
-		for(int i = 0; i <  height * width*3; i=i+1)
+	for(int i = 0; i <  height * width*3; i=i+1)
 		{			
 			data[i]=2;
 		}
@@ -1021,7 +1020,7 @@ public class Modele {
 		}
 		fg.put(0, 0, data);		
 	}
-
+	
 	public void copier(){
 		if(existeSelection()){
 			initAnnulerRefaire(cadreImageCourant());

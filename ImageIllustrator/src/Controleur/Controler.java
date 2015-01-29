@@ -14,12 +14,12 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+
+//import org.opencv.core.Mat;
 
 import Modele.Modele;
 import Modele.TypeFiltre;
-import Vue.CadreImage;
 import Vue.InterfaceGraphique;
 
 
@@ -28,7 +28,7 @@ public class Controler{
 	private InterfaceGraphique it;
 	private boolean echantillonageActif=false,flouActive=false,utilisateurActive=false, fusionActive=false, 
 			selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
-	private Mat fg=null,bg;
+	private Mat fg=null;
 	private boolean segmentation=false, background=false;
 
 	public boolean selectionActive()
@@ -289,7 +289,6 @@ public class Controler{
 		}
 
 	}
-
 	public Mat getFg() {
 		return fg;
 	}
@@ -311,7 +310,7 @@ public class Controler{
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
 		if(segmentation){
-			modele.remplirMatrice(fg, selection[0], selection[1], x, y,modele.cadreImageCourant().getImage().getHeight(),modele.cadreImageCourant().getImage().getWidth(),background);
+//			modele.remplirMatrice(fg, selection[0], selection[1], x, y,modele.cadreImageCourant().getImage().getHeight(),modele.cadreImageCourant().getImage().getWidth(),background);
 			System.out.println(selection[0]+" "+selection[1]+" "+x+" "+y);
 		}
 		if(ajustementSelection){
