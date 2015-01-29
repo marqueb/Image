@@ -16,14 +16,12 @@ public class ControlerAfficherHisto implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		modele.setEstHistoCliquer(!modele.isEstHistoCliquer());
 		if(modele.isEstHistoCliquer()){
-				modele.calculerHistogrammeRGB();
-				modele.setNbAffichageHisto(modele.getNbAffichageHisto()+1);
-				System.out.println(modele.getNbAffichageHisto());
+			modele.calculerHistogrammeRGB();
+			modele.setNbAffichageHisto(modele.getNbAffichageHisto()+1);
 		}
 		else{
 			modele.getInterfaceGraphique().getFrameHisto().dispose();
 			modele.setNbAffichageHisto(modele.getNbAffichageHisto()-1);
 		}
 	}			
-
 }

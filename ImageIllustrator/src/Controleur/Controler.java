@@ -53,9 +53,6 @@ public class Controler{
 			it.getPanelOption().removeAll();
 			//it.getSegmenter().setEnabled(true);
 		}
-		else
-			//it.getSegmenter().setEnabled(false);
-			
 		if(flouActive){
 			modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
 			modele.actualiserImageIcon();
@@ -67,6 +64,8 @@ public class Controler{
 		}
 		if(fusionActive){
 			it.retirerComponent();
+			modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
+			modele.actualiserImageIcon();
 			fusionActive=false;
 		}
 		if(!modele.getListCadreImage().isEmpty()){	
@@ -384,6 +383,8 @@ public class Controler{
 
 	public void boutonAppliquerFusionClic()
 	{
+		fusionActive=false;
+		it.retirerComponent();
 		init();
 	}
 

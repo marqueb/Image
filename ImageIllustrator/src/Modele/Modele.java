@@ -65,7 +65,8 @@ public class Modele {
 			cadreImage.getImageScroller().getHorizontalScrollBar().setValue(0);
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue(0);
 
-		}catch(Exception e){}
+		}catch(Exception e){
+		}
 	}
 
 
@@ -74,7 +75,6 @@ public class Modele {
 	}
 
 	public void afficherpos(int x, int y){
-		System.out.println(x+" "+y);
 	}
 
 	public void sauvegarder(){
@@ -703,7 +703,6 @@ public class Modele {
 		}if(y-disty1<cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue(y-disty1);
 		}if(x+distx2>cadreImage.getImage().getWidth()-cadreImage.getMaxScrollX()+cadreImage.getImageScroller().getHorizontalScrollBar().getValue()){
-			//System.out.println("x "+x+", distx"+distx2+", taille image "+cadreImage.getImage().getWidth()+", max scroll "+cadreImage.getMaxScrollX()+", value courante "+cadreImage.getImageScroller().getHorizontalScrollBar().getValue());
 			cadreImage.getImageScroller().getHorizontalScrollBar().setValue((cadreImage.getImageScroller().getHorizontalScrollBar().getValue())+(x+distx2)-(cadreImage.getImage().getWidth()-cadreImage.getMaxScrollX()+cadreImage.getImageScroller().getHorizontalScrollBar().getValue()));
 		}if(y+disty2>cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()){
 			cadreImage.getImageScroller().getVerticalScrollBar().setValue((cadreImage.getImageScroller().getVerticalScrollBar().getValue())+(y+disty2)-(cadreImage.getImage().getHeight()-cadreImage.getMaxScrollY()+cadreImage.getImageScroller().getVerticalScrollBar().getValue()));
