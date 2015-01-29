@@ -28,8 +28,9 @@ public class Controler{
 	private InterfaceGraphique it;
 	private boolean echantillonageActif=false,flouActive=false,utilisateurActive=false, fusionActive=false, 
 			selectionActive=false, ajustementSelection=false, deplacementScroll=false, isRGB;
-	private Mat fg=null;
-	private boolean segmentation=false, background=false;
+
+	private Mat fg=null,bg;
+	private boolean segmentation=false, background=false, existeresultat=false;
 
 	public boolean selectionActive()
 	{
@@ -37,6 +38,7 @@ public class Controler{
 	}
 
 	public void init(){
+		
 		if(echantillonageActif){
 			modele.enleverCouleurPixel();
 			modele.getInterfaceGraphique().retraitChoixRGB();
@@ -46,11 +48,16 @@ public class Controler{
 		}
 		echantillonageActif=false;
 		selectionActive=false;
-		it.getButtonSegmenter().setEnabled(false);
 		ajustementSelection=false;
 		deplacementScroll=false;
+		if(!segmentation){
+			it.getPanelOption().removeAll();
+			//it.getSegmenter().setEnabled(true);
+		}
+		else
+			//it.getSegmenter().setEnabled(false);
+			
 		if(flouActive){
-			it.retirerComponent();
 			modele.getListCadreImage().get(it.getTabbedPane().getSelectedIndex()).setImage(modele.getImaAvantTraitement());
 			modele.actualiserImageIcon();
 			flouActive=false;
@@ -66,6 +73,8 @@ public class Controler{
 		if(!modele.getListCadreImage().isEmpty()){	
 			it.rafraichirComponentOption();
 		}
+		it.getPanelOption().validate();
+		it.getFrame().validate();
 	}
 
 	public void annuler()
@@ -80,9 +89,9 @@ public class Controler{
 	public void valider()
 	{
 		modele.actualiserImageIcon();
-		it.rafraichirComponentOption();
-		flouActive=true;
-		init();
+		it.retirerComponent();
+		flouActive=false;
+		//init();
 	}
 
 	public Modele getModele()
@@ -97,6 +106,7 @@ public class Controler{
 	public void setInterfaceGraphique(InterfaceGraphique i){
 		this.it=i;
 	}
+	
 	public void addControlerCheckCouleur(JCheckBox rouge,JCheckBox vert, JCheckBox bleu,JCheckBox luminence, JCheckBox chrominenceU,JCheckBox chrominenceV){
 		rouge.addActionListener(new ControlerCheckCouleur(it,it.getHisto()));
 		vert.addActionListener(new ControlerCheckCouleur(it,it.getHisto()));
@@ -134,24 +144,33 @@ public class Controler{
 	public void imaGris(){
 		init();
 		modele.imagris();
+		if(modele.existeSelection()){
+			modele.annulerSelection();
+		}
 	}	
 
 	public void eclaircir() {
 		init();
 		modele.eclaircir();
-
+		if(modele.existeSelection()){
+			modele.annulerSelection();
+		}
 	}
 
 	public void foncer() {
 		init();
 		modele.foncer();
-
+		if(modele.existeSelection()){
+			modele.annulerSelection();
+		}
 	}
 
 	public void noirblanc() {
 		init();
 		modele.noirblanc();
-
+		if(modele.existeSelection()){
+			modele.annulerSelection();
+		}
 	}
 
 	public void changerOnglet(){
@@ -310,8 +329,12 @@ public class Controler{
 		x=x-(u/2-modele.cadreImageCourant().getImage().getWidth()/2);
 		y=y-(v/2-modele.cadreImageCourant().getImage().getHeight()/2);
 		if(segmentation){
+<<<<<<< HEAD
 //			modele.remplirMatrice(fg, selection[0], selection[1], x, y,modele.cadreImageCourant().getImage().getHeight(),modele.cadreImageCourant().getImage().getWidth(),background);
 			System.out.println(selection[0]+" "+selection[1]+" "+x+" "+y);
+=======
+			modele.remplirMatrice(fg, selection[0], selection[1], x, y,modele.cadreImageCourant().getImage().getHeight(),modele.cadreImageCourant().getImage().getWidth(),background);
+>>>>>>> branch 'master' of https://github.com/marqueb/Image.git
 		}
 		if(ajustementSelection){
 			x=modele.ajustementSelectionX(x);
@@ -327,7 +350,7 @@ public class Controler{
 			if(deplacementScroll){
 				modele.deplacerScroll(x, y);
 			}
-			modele.selectionne(x, y);
+			modele.selectionne(x, y, deplacementScroll);
 			modele.majSelection2();
 		}
 	}
@@ -348,7 +371,7 @@ public class Controler{
 			if(deplacementScroll){
 				modele.deplacerScroll(x, y);
 			}
-			modele.selectionne(x, y);
+			modele.selectionne(x, y, deplacementScroll);
 		}
 	}
 
@@ -619,9 +642,33 @@ public class Controler{
 	public void addControlerColler(JMenuItem coller) {
 		coller.addActionListener(new ControlerColler(this));
 	}
+
+	public boolean isFusionActive() {
+		return fusionActive;
+	}
+
+	public void setFusionActive(boolean fusionActive) {
+		this.fusionActive = fusionActive;
+	}
+
+	public boolean isSelectionActive() {
+		return selectionActive;
+	}
+
+	public void setSelectionActive(boolean selectionActive) {
+		this.selectionActive = selectionActive;
+	}
 	
 	public boolean isBackground() {
 		return background;
+	}
+
+	public boolean isExisteresultat() {
+		return existeresultat;
+	}
+
+	public void setExisteresultat(boolean existeresultat) {
+		this.existeresultat = existeresultat;
 	}
 
 	public void setBackground(boolean background) {

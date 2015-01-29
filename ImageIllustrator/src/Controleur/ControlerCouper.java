@@ -14,5 +14,4 @@ public class ControlerCouper implements ActionListener {
 		controler.getModele().couper();
 
 	}
-
 }

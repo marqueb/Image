@@ -125,6 +125,12 @@ public class InterfaceGraphique implements Runnable{
 			} catch (IOException ex) {
 			}
 			break;
+		case "Segmenter" :
+			try {
+				img = ImageIO.read(getClass().getResource("Image/segmenter.png"));
+			} catch (IOException ex) {
+			}
+			break;
 		}
 
 		return img;
@@ -283,7 +289,7 @@ public class InterfaceGraphique implements Runnable{
 
 	public void retirerComponentFusion()
 	{	
-		panelOption.remove(2);
+		panelOption.removeAll();
 		panelOption.repaint();
 		frame.validate();
 
@@ -291,7 +297,7 @@ public class InterfaceGraphique implements Runnable{
 	}
 	public void retirerComponent()
 	{	
-		panelOption.remove(2);
+		panelOption.removeAll();
 		panelOption.repaint();
 		frame.validate();
 	}
@@ -551,6 +557,7 @@ public class InterfaceGraphique implements Runnable{
 		btnEclaircir.setEnabled(enable);
 		btnFoncer.setEnabled(enable);
 		noirblanc.setEnabled(enable);
+		segmenter.setEnabled(enable);
 	}
 
 	public void run(){
@@ -798,6 +805,13 @@ public class InterfaceGraphique implements Runnable{
 		controler.addControlerAfficherHisto(btnHisto);
 		toolBar.add(btnHisto);	
 		
+		segmenter = new JButton();
+		segmenter.setIcon(new ImageIcon(chargerImage("Segmenter")));
+		btnHisto.setToolTipText("Segmenter");
+		segmenter.setEnabled(false);
+		controler.addControlerSegmentation(segmenter);
+		toolBar.add(segmenter);
+		
 		JLabel vide3 = new JLabel("    ");
 		toolBar.add(vide3);	
 		
@@ -836,11 +850,7 @@ public class InterfaceGraphique implements Runnable{
 		afficherHisto.setVisible(false);
 		panelOption.add(afficherHisto);
 
-		//Image => Segmenter
-		segmenter = new JButton("Extraire le 1er plan");
-		segmenter.setEnabled(false);
-		panelOption.add(segmenter);
-		controler.addControlerSegmentation(segmenter);
+	
 
 		panelInfo = new JPanel();
 		PixelCouleur= new JLabel();
@@ -1032,6 +1042,14 @@ public class InterfaceGraphique implements Runnable{
 
 	public JTabbedPane getTabbedPane() {
 		return tabbedPane;
+	}
+
+	public JButton getSegmenter() {
+		return segmenter;
+	}
+
+	public void setSegmenter(JButton segmenter) {
+		this.segmenter = segmenter;
 	}
 
 	public void setTabbedPane(JTabbedPane tabbedPane) {
